@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">MealCalculator</string>
+    <string name="clear_values">Empty all fields</string>
+    <string name="save_item">Save or update item in database</string>
+    <string name="search_item">Search item in database\t</string>
+    <string name="add_item_to_meal">Add item to meal</string>
+    <string name="clear_menu">Mahlzeit löschen</string>
+    <string name="meal_title">Mahlzeit:</string>
+    <string name="sum">Summe:</string>
+    <string name="label_fat">Fett</string>
+    <string name="label_carbs">KH</string>
+    <string name="label_protein">EW</string>
+    <string name="label_gram">gr</string>
+    <string name="label_calculated_carbs">grKH:</string>
+    <string name="label_calculated_fpe">grFPE:</string>
+</resources>
