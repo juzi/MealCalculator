@@ -3,6 +3,7 @@ package at.zimmercarral.mealcalc.data.db.model
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import androidx.room.TypeConverters
 import java.util.Date
 
 @Entity(tableName = "fooditems")
@@ -27,7 +28,7 @@ data class FoodItem(
     val amount: Int,
 
     @ColumnInfo("lastModifiedAt")
-    val lastModifiedAt: Date,
+    val lastModifiedAt: Date?,
 
     @ColumnInfo("isDeleted")
     val isDeleted: Boolean

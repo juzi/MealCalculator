@@ -16,6 +16,7 @@ class FoodItemViewModel(
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(FoodItemsState())
+    val state = _state
 
     fun onEvent(event: FoodItemEvent) {
         when (event) {
@@ -34,7 +35,13 @@ class FoodItemViewModel(
                     foodItemDao.insert(item)
                 }
             }
-
+            is FoodItemEvent.SetUuid -> {
+                _state.update {
+                    it.copy(
+                        uuid = event.uuid
+                    )
+                }
+            }
             is FoodItemEvent.SetName -> {
                 _state.update {
                     it.copy(
@@ -42,39 +49,48 @@ class FoodItemViewModel(
                     )
                 }
             }
-
-            is FoodItemEvent.setAmount -> {
-                _state.update {
-                    it.copy(
-                        amount = event.amount
-                    )
-                }
-            }
-
-            is FoodItemEvent.setCarbs -> {
+           is FoodItemEvent.SetCarbs -> {
                 _state.update {
                     it.copy(
                         carbs = event.carbs
                     )
                 }
             }
-
-            is FoodItemEvent.setFat -> {
+            is FoodItemEvent.SetFat -> {
                 _state.update {
                     it.copy(
                         fat = event.fat
                     )
                 }
             }
-
-            is FoodItemEvent.setProtein -> {
+            is FoodItemEvent.SetProtein -> {
                 _state.update {
                     it.copy(
                         protein = event.protein
                     )
                 }
             }
+            is FoodItemEvent.SetAmount -> {
+                _state.update {
+                    it.copy(
+                        amount = event.amount
+                    )
+                }
+            }
+            is FoodItemEvent.SetLastModifiedAt -> {
+                _state.update {
+                    it.copy(
+                        lastModifiedAt = event.lastModifiedAt
+                    )
+                }
+            }
+            is FoodItemEvent.SetDeleted -> {
+                _state.update {
+                    it.copy(
+                        isDeleted = event.isDeleted
+                    )
+                }
+            }
         }
-
     }
 }
