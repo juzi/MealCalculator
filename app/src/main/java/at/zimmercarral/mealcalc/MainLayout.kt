@@ -12,7 +12,7 @@ import at.zimmercarral.mealcalc.meal.MealViewModel
 fun MainLayout(currentItemViewModel: CurrentItemViewModel, mealViewModel: MealViewModel) {
     Column(verticalArrangement = Arrangement.Top,
         modifier = Modifier.fillMaxSize()) {
-        TopActionIcons(currentItemViewModel)
+        TopActionIcons(currentItemViewModel, mealViewModel)
         CurrentItemView(currentItemViewModel, mealViewModel)
         MealInfo(currentItemViewModel, mealViewModel)
     }

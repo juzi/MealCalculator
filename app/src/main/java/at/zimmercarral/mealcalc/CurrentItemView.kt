@@ -183,6 +183,7 @@ fun ItemInfo(currentItemViewModel: CurrentItemViewModel) {
                         currentItemViewModel.setAmount(input)
                     }
                 },
+                modifier = Modifier.focusRequester(currentItemViewModel.amountFocusRequester.value),
                 imeAction = ImeAction.Done)
         }
     }

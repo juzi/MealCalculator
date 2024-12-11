@@ -31,24 +31,24 @@ import java.util.UUID
 
 class MainActivity : ComponentActivity() {
 
-    private val db by lazy {
-        Room.databaseBuilder(
-            applicationContext,
-            FoodItemDatabase::class.java,
-            "food-items.db"
-        ).allowMainThreadQueries().build()
-    }
-    @Suppress("UNCHECKED_CAST")
-    private val foodItemViewModel by viewModels<FoodItemViewModel>(
-
-        factoryProducer = {
-            object : ViewModelProvider.Factory {
-                override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                    return FoodItemViewModel(db.dao()) as T
-                }
-            }
-        }
-    )
+//    private val db by lazy {
+//        Room.databaseBuilder(
+//            applicationContext,
+//            FoodItemDatabase::class.java,
+//            "food-items.db"
+//        ).allowMainThreadQueries().build()
+//    }
+//    @Suppress("UNCHECKED_CAST")
+//    private val foodItemViewModel by viewModels<FoodItemViewModel>(
+//
+//        factoryProducer = {
+//            object : ViewModelProvider.Factory {
+//                override fun <T : ViewModel> create(modelClass: Class<T>): T {
+//                    return FoodItemViewModel(db.dao()) as T
+//                }
+//            }
+//        }
+//    )
 
     val availableItems: List<FoodItem> = listOf(
         FoodItem(
@@ -77,32 +77,32 @@ class MainActivity : ComponentActivity() {
     @SuppressLint("StateFlowValueCalledInComposition")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        lifecycleScope.launch {
-            for (foodItem in availableItems) {
-                db.dao().insert(foodItem)
-            }
-        }
+//        lifecycleScope.launch {
+//            for (foodItem in availableItems) {
+//                db.dao().insert(foodItem)
+//            }
+//        }
 
         enableEdgeToEdge()
         setContent {
             AppTheme {
-                val state by foodItemViewModel.state.collectAsState()
+//                val state by foodItemViewModel.state.collectAsState()
 
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Column(modifier = Modifier
-                        .padding(innerPadding)
-                        .background(color = Color.White)
-                    ) {
-                        state.items.forEach {
-                            Text(text = it.name)
-                        }
-                    }
 //                    Column(modifier = Modifier
 //                        .padding(innerPadding)
 //                        .background(color = Color.White)
 //                    ) {
-//                        MainLayout(currentItemViewModel, mealViewModel)
+//                        state.items.forEach {
+//                            Text(text = it.name)
+//                        }
 //                    }
+                    Column(modifier = Modifier
+                        .padding(innerPadding)
+                        .background(color = Color.White)
+                    ) {
+                        MainLayout(currentItemViewModel, mealViewModel)
+                    }
                 }
             }
         }

@@ -48,7 +48,7 @@ fun MealInfo(
                 maxLines = 1,
                 text = stringResource(R.string.meal_title))
 
-            ActionButton(text = stringResource(id = R.string.clear_menu),
+            ActionButton(description = stringResource(id = R.string.clear_menu),
                 icon = Icons.Rounded.DeleteOutline, color = Color(120, 0, 0, 0),
                 modifier = Modifier
                     .padding(start = 0.dp, end = 10.dp, top = 0.dp, bottom = 0.dp)

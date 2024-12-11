@@ -21,7 +21,7 @@ import com.example.compose.AppTheme
 
 @Composable
 fun ActionButton(
-    text: String,
+    description: String,
     icon: ImageVector,
     color: Color,
     modifier: Modifier = Modifier,
@@ -32,10 +32,10 @@ fun ActionButton(
         modifier = modifier
     ) {
         Icon(icon,
-            contentDescription = text,
+            contentDescription = description,
             modifier = Modifier
                 .fillMaxSize()
-                .background(colorScheme.background),
+                .background(Color.Transparent),
             tint = colorScheme.primary)
     }
 }

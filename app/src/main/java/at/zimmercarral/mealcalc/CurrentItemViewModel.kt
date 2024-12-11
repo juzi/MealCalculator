@@ -24,9 +24,14 @@ class CurrentItemViewModel {
         private set
 
     var fatFocusRequester = mutableStateOf(FocusRequester())
+    var amountFocusRequester = mutableStateOf(FocusRequester())
 
     fun requestFatFocus() {
         fatFocusRequester.value.requestFocus()
+    }
+
+    fun requestAmountFocus() {
+        amountFocusRequester.value.requestFocus()
     }
 
     fun getFoodItem(): FoodItem {
@@ -104,5 +109,6 @@ class CurrentItemViewModel {
     fun calculateFPE(): String {
         return "0"
     }
+
 
 }
