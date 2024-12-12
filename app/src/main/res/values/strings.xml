@@ -13,4 +13,5 @@
     <string name="label_gram">gr</string>
     <string name="label_calculated_carbs">grKH:</string>
     <string name="label_calculated_fpe">grFPE:</string>
+    <string name="edit_name">Edit name</string>
 </resources>

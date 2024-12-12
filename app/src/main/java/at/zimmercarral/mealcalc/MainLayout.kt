@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import at.zimmercarral.mealcalc.item.CurrentItemView
 import at.zimmercarral.mealcalc.meal.MealInfo
 import at.zimmercarral.mealcalc.meal.MealViewModel
 
