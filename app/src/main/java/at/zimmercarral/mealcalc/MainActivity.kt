@@ -5,28 +5,17 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
-import androidx.room.Room
-import at.zimmercarral.mealcalc.data.db.FoodItemDatabase
-import at.zimmercarral.mealcalc.data.db.FoodItemEvent
 import at.zimmercarral.mealcalc.data.db.model.FoodItem
-import at.zimmercarral.mealcalc.domain.FoodItemViewModel
+import at.zimmercarral.mealcalc.item.CurrentItemViewModel
 import at.zimmercarral.mealcalc.meal.MealViewModel
 import com.example.compose.AppTheme
-import kotlinx.coroutines.launch
 import java.util.UUID
 
 class MainActivity : ComponentActivity() {

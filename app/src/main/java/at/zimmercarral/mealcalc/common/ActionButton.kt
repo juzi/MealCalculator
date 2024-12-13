@@ -1,4 +1,4 @@
-package at.zimmercarral.mealcalc
+package at.zimmercarral.mealcalc.common
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,6 +17,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
+import at.zimmercarral.mealcalc.R
 import com.example.compose.AppTheme
 
 @Composable

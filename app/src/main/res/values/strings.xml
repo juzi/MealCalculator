@@ -8,10 +8,11 @@
     <string name="meal_title">Mahlzeit:</string>
     <string name="sum">Summe:</string>
     <string name="label_fat">Fett</string>
-    <string name="label_carbs">KH</string>
-    <string name="label_protein">EW</string>
-    <string name="label_gram">gr</string>
+    <string name="label_carbs">Kohlenhydrate</string>
+    <string name="label_protein">Eiweiß</string>
+    <string name="label_gram">gr gegessen</string>
     <string name="label_calculated_carbs">grKH:</string>
     <string name="label_calculated_fpe">grFPE:</string>
     <string name="edit_name">Edit name</string>
+    <string name="label_name">Name</string>
 </resources>

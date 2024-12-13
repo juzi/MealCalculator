@@ -15,12 +15,12 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import at.zimmercarral.mealcalc.data.db.model.FoodItem
+import at.zimmercarral.mealcalc.common.ActionButton
+import at.zimmercarral.mealcalc.item.CurrentItemViewModel
 import at.zimmercarral.mealcalc.meal.MealViewModel
 import at.zimmercarral.mealcalc.search.SearchableItemList
 
@@ -34,7 +34,7 @@ fun TopActionIcons(
             .fillMaxWidth()
             .padding(5.dp),
         shape = RoundedCornerShape(30.dp),
-        elevation = CardDefaults.cardElevation(12.dp),
+        elevation = CardDefaults.cardElevation(22.dp),
     ) {
         Row(
             modifier = Modifier

@@ -1,6 +1,5 @@
 package at.zimmercarral.mealcalc.search
 
-import android.view.Gravity
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -28,13 +27,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.State
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -45,17 +41,14 @@ import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import androidx.compose.ui.window.DialogWindowProvider
-import androidx.lifecycle.Lifecycle
-import at.zimmercarral.mealcalc.ActionButton
 import at.zimmercarral.mealcalc.R
+import at.zimmercarral.mealcalc.common.ActionButton
 import at.zimmercarral.mealcalc.data.db.model.FoodItem
-import kotlinx.coroutines.delay
 
 @Composable
 fun SearchableItemList(
     // Now items are a State<List<String>> to allow dynamic updates
-    availableitems:  List<FoodItem>,
+    availableitems: List<FoodItem>,
     onItemSelected: (FoodItem) -> Unit
 ) {
     // State to manage search visibility and input
@@ -82,15 +75,15 @@ fun SearchableItemList(
 
     // Search overlay dialog
     if (isSearchVisible) {
-    Dialog(
-        properties = DialogProperties(
-            dismissOnBackPress = true,
-            dismissOnClickOutside = true,
-            usePlatformDefaultWidth = false
-        ),
-        onDismissRequest = { isSearchVisible = false })
-    {
-        Surface(
+        Dialog(
+            properties = DialogProperties(
+                dismissOnBackPress = true,
+                dismissOnClickOutside = true,
+                usePlatformDefaultWidth = false
+            ),
+            onDismissRequest = { isSearchVisible = false })
+        {
+            Surface(
                 shape = MaterialTheme.shapes.medium,
                 modifier = Modifier
                     .fillMaxWidth(0.90f)

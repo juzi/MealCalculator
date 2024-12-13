@@ -1,4 +1,4 @@
-package at.zimmercarral.mealcalc
+package at.zimmercarral.mealcalc.item
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.focus.FocusRequester
@@ -20,7 +20,7 @@ class CurrentItemViewModel {
     var amount = mutableStateOf("")
         private set
 
-    var inUpdateMode = mutableStateOf(false)
+    var inEditMode = mutableStateOf(false)
         private set
 
     var fatFocusRequester = mutableStateOf(FocusRequester())
@@ -60,7 +60,7 @@ class CurrentItemViewModel {
     }
 
     fun setInUpdateMode(updating: Boolean) {
-        inUpdateMode.value = updating
+        inEditMode.value = updating
     }
 
     fun setItem(item: FoodItem) {

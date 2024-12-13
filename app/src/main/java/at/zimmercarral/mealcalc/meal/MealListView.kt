@@ -13,7 +13,7 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import at.zimmercarral.mealcalc.CurrentItemViewModel
+import at.zimmercarral.mealcalc.item.CurrentItemViewModel
 import at.zimmercarral.mealcalc.data.db.model.FoodItem
 
 @Composable

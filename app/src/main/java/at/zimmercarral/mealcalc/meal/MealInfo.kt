@@ -24,10 +24,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
-import at.zimmercarral.mealcalc.ActionButton
-import at.zimmercarral.mealcalc.CurrentItemViewModel
-import at.zimmercarral.mealcalc.Label
+import at.zimmercarral.mealcalc.item.CurrentItemViewModel
 import at.zimmercarral.mealcalc.R
+import at.zimmercarral.mealcalc.common.ActionButton
+import at.zimmercarral.mealcalc.common.Label
 
 
 @Composable
