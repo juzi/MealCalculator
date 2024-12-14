@@ -15,4 +15,9 @@
     <string name="label_calculated_fpe">grFPE:</string>
     <string name="edit_name">Edit name</string>
     <string name="label_name">Name</string>
+    <string name="carbs_description">Gramm Kohlenhydrate pro 100 Gramm.</string>
+    <string name="fat_description">Gramm Fett in 100 Gramm.</string>
+    <string name="protein_description">Gramm Eiweiß in 100 Gramm.</string>
+    <string name="amount_description">Gegessene Gramm.</string>
+    <string name="clear">löschen</string>
 </resources>

@@ -1,20 +1,23 @@
 package at.zimmercarral.mealcalc.item
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Clear
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -25,6 +28,7 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
+import at.zimmercarral.mealcalc.R
 import com.example.compose.AppTheme
 import com.example.ui.theme.robotoFamily
 
@@ -33,23 +37,26 @@ import com.example.ui.theme.robotoFamily
 fun InputField(
     label: String = "",
     value: String = "",
+    leadingIconResource: Int,
+    leadingIconDescription: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
-    imeAction: ImeAction = ImeAction.Next
+    imeAction: ImeAction = ImeAction.Next,
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
 
     OutlinedTextField(
         singleLine = true,
         modifier = modifier
-            .width(130.dp)
+            .background(color = colorScheme.surface)
+            .width(170.dp)
             .height(55.dp),
         textStyle = TextStyle(
             fontFamily = robotoFamily,
             fontWeight = FontWeight.Normal,
             fontSize = TextUnit(16f, TextUnitType.Sp),
             textAlign = TextAlign.Center,
-            color = colorScheme.primary
+            color = colorScheme.onSurface,
         ),
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Decimal,
@@ -60,13 +67,21 @@ fun InputField(
                 keyboardController?.hide()
             }
         ),
+        leadingIcon = {
+            Icon(
+                painter = painterResource(id = leadingIconResource),
+                contentDescription = leadingIconDescription,
+                modifier = Modifier.size(25.dp),
+                tint = colorScheme.primary,
+            )
+        },
         label = {
             Text(text = label,
                 fontFamily = robotoFamily,
                 fontWeight = FontWeight.Normal,
                 fontSize = TextUnit(11f, TextUnitType.Sp),
                 textAlign = TextAlign.Center,
-                color = colorScheme.onSurface
+                color = colorScheme.primary
             )
         },
         value = value,
@@ -83,8 +98,10 @@ fun InputField(
 private fun InputFieldPreview1() {
     AppTheme() {
         InputField(
-            label = "Fett",
-            value = "10.34",
+            label = "Kohlenhydrate",
+            value = "",
+            leadingIconResource = R.drawable.carbs,
+            leadingIconDescription = stringResource(R.string.carbs_description),
             onValueChange = {},
             imeAction = ImeAction.Next)
     }
@@ -98,7 +115,10 @@ private fun InputFieldPreview2() {
         InputField(
             label = "Eiweiß",
             value = "",
+            leadingIconResource = R.drawable.protein,
+            leadingIconDescription = stringResource(R.string.protein_description),
             onValueChange = {},
-            imeAction = ImeAction.Next)
+            imeAction = ImeAction.Next,
+        )
     }
 }
