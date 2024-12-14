@@ -6,7 +6,7 @@ import at.zimmercarral.mealcalc.data.db.model.FoodItem
 import java.util.Date
 import java.util.UUID
 
-class CurrentItemViewModel {
+class EditItemDialogViewModel {
     var uuid = UUID.randomUUID().toString()
         private set
     var name = mutableStateOf("Unknown")
@@ -20,18 +20,21 @@ class CurrentItemViewModel {
     var amount = mutableStateOf("")
         private set
 
+    var isVisible = mutableStateOf(false)
+        private set
     var inEditMode = mutableStateOf(false)
         private set
 
     var fatFocusRequester = mutableStateOf(FocusRequester())
     var amountFocusRequester = mutableStateOf(FocusRequester())
+    var initialFocus = mutableStateOf(Focus.AMOUNT)
 
-    fun requestFatFocus() {
-        fatFocusRequester.value.requestFocus()
-    }
-
-    fun requestAmountFocus() {
-        amountFocusRequester.value.requestFocus()
+    fun requestFocus(focus: Focus) {
+        when (focus) {
+            Focus.FAT -> fatFocusRequester.value.requestFocus()
+            Focus.AMOUNT -> amountFocusRequester.value.requestFocus()
+            else -> {}
+        }
     }
 
     fun getFoodItem(): FoodItem {
@@ -61,6 +64,10 @@ class CurrentItemViewModel {
 
     fun setInUpdateMode(updating: Boolean) {
         inEditMode.value = updating
+    }
+
+    fun setVisible(visible: Boolean) {
+        isVisible.value = visible
     }
 
     fun setItem(item: FoodItem) {
@@ -108,6 +115,10 @@ class CurrentItemViewModel {
 
     fun calculateFPE(): String {
         return "0"
+    }
+
+    fun setInitialFocus(amount: Focus) {
+
     }
 
 

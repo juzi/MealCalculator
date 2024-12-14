@@ -14,12 +14,14 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import at.zimmercarral.mealcalc.R
 import at.zimmercarral.mealcalc.data.db.model.FoodItem
-import com.example.compose.AppTheme
-
-val validIntPattern = """^\\d*$""".toRegex()
+import at.zimmercarral.mealcalc.ui.AmountIcon
+import at.zimmercarral.mealcalc.ui.CarbsIcon
+import at.zimmercarral.mealcalc.ui.FatIcon
+import at.zimmercarral.mealcalc.ui.ProteinIcon
+import at.zimmercarral.mealcalc.ui.theme.AppTheme
 
 @Composable
-fun NutritionalValues(currentItemViewModel: CurrentItemViewModel) {
+fun NutritionalValues(editItemDialogViewModel: EditItemDialogViewModel) {
     Column(modifier = Modifier
         .padding(start = 40.dp, top = 10.dp, end = 20.dp, bottom = 10.dp),
         verticalArrangement = Arrangement.spacedBy(15.dp)
@@ -27,58 +29,59 @@ fun NutritionalValues(currentItemViewModel: CurrentItemViewModel) {
         Row() {
             InputField(
                 label = stringResource(R.string.label_fat),
-                value = currentItemViewModel.fatPer100g.value,
-                leadingIconResource = R.drawable.fat,
+                value = editItemDialogViewModel.fatPer100g.value,
+                leadingIcon = FatIcon,
                 leadingIconDescription = stringResource(R.string.fat_description),
                 onValueChange = {
                     val input = it.replace(",", ".").trim()
                     if (isValidFloat(input)) {
-                        currentItemViewModel.setFatPer100g(input)
+                        editItemDialogViewModel.setFatPer100g(input)
                     }
                 },
-                modifier = Modifier.focusRequester(currentItemViewModel.fatFocusRequester.value),
+                modifier = Modifier.focusRequester(editItemDialogViewModel.fatFocusRequester.value),
             )
         }
         Row() {
-            InputField(label = stringResource(R.string.label_carbs),
-                value = currentItemViewModel.carbsPer100g.value,
-                leadingIconResource = R.drawable.carbs,
+            InputField(
+                label = stringResource(R.string.label_carbs),
+                value = editItemDialogViewModel.carbsPer100g.value,
+                leadingIcon = CarbsIcon,
                 leadingIconDescription = stringResource(R.string.carbs_description),
                 onValueChange = {
                     val input = it.replace(",", ".")
                     if (isValidFloat(input)) {
-                        currentItemViewModel.setCarbsPer100g(input)
+                        editItemDialogViewModel.setCarbsPer100g(input)
                     }
-                }
+                },
             )
         }
         Row() {
             InputField(
                 label = stringResource(R.string.label_protein),
-                value = currentItemViewModel.proteinPer100g.value,
-                leadingIconResource = R.drawable.protein,
+                value = editItemDialogViewModel.proteinPer100g.value,
+                leadingIcon = ProteinIcon,
                 leadingIconDescription = stringResource(R.string.protein_description),
                 onValueChange = {
                     val input = it.replace(",", ".")
                     if (isValidFloat(input)) {
-                        currentItemViewModel.setProteinPer100g(input)
+                        editItemDialogViewModel.setProteinPer100g(input)
                     }
                 },
             )
         }
         Row() {
             InputField(
-                label = stringResource(R.string.label_gram),
-                value = currentItemViewModel.amount.value,
-                leadingIconResource = R.drawable.weight,
+                label = stringResource(R.string.label_amount),
+                value = editItemDialogViewModel.amount.value,
+                leadingIcon = AmountIcon,
                 leadingIconDescription = stringResource(R.string.amount_description),
                 onValueChange = {
                     val input = it.trim()
                     if (isValidInt(input)) {
-                        currentItemViewModel.setAmount(input)
+                        editItemDialogViewModel.setAmount(input)
                     }
                 },
-                modifier = Modifier.focusRequester(currentItemViewModel.amountFocusRequester.value),
+                modifier = Modifier.focusRequester(editItemDialogViewModel.amountFocusRequester.value),
                 imeAction = ImeAction.Done,
             )
         }
@@ -104,7 +107,7 @@ private fun isValidFloat(input: String): Boolean {
 @Composable
 private fun InputFieldPreview() {
     AppTheme() {
-        val viewModel = CurrentItemViewModel()
+        val viewModel = EditItemDialogViewModel()
         viewModel.setItem(FoodItem(
             uuid = "123",
             name = "Apfelpfannkuchen",
@@ -115,7 +118,7 @@ private fun InputFieldPreview() {
             lastModifiedAt = null,
             isDeleted = false,
         ))
-        NutritionalValues(currentItemViewModel = viewModel)
+        NutritionalValues(editItemDialogViewModel = viewModel)
     }
 }
 

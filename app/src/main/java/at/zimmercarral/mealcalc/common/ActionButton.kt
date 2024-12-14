@@ -18,7 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import at.zimmercarral.mealcalc.R
-import com.example.compose.AppTheme
+import at.zimmercarral.mealcalc.ui.theme.AppTheme
 
 @Composable
 fun ActionButton(

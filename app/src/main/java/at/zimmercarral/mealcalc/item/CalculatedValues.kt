@@ -19,10 +19,10 @@ import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import at.zimmercarral.mealcalc.R
 import at.zimmercarral.mealcalc.common.Label
-import com.example.ui.theme.robotoFamily
+import at.zimmercarral.mealcalc.ui.theme.robotoFamily
 
 @Composable
-fun CalculatedValues(currentItemViewModel: CurrentItemViewModel) {
+fun CalculatedValues(editItemDialogViewModel: EditItemDialogViewModel) {
     Card(
         modifier = Modifier
             .background(color = colorScheme.surface)
@@ -49,7 +49,7 @@ fun CalculatedValues(currentItemViewModel: CurrentItemViewModel) {
                     fontWeight = FontWeight.Bold,
                     fontSize = TextUnit(20f, TextUnitType.Sp),
                     maxLines = 1,
-                    text = currentItemViewModel.calculateCarbs()
+                    text = editItemDialogViewModel.calculateCarbs()
                 )
             }
             Row {
@@ -65,7 +65,7 @@ fun CalculatedValues(currentItemViewModel: CurrentItemViewModel) {
                     fontWeight = FontWeight.Bold,
                     fontSize = TextUnit(20f, TextUnitType.Sp),
                     maxLines = 1,
-                    text = currentItemViewModel.calculateFPE())
+                    text = editItemDialogViewModel.calculateFPE())
             }
         }
     }

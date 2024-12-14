@@ -12,8 +12,8 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -26,15 +26,17 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import at.zimmercarral.mealcalc.R
-import com.example.compose.AppTheme
-import com.example.ui.theme.robotoFamily
+import at.zimmercarral.mealcalc.ui.CarbsIcon
+import at.zimmercarral.mealcalc.ui.ProteinIcon
+import at.zimmercarral.mealcalc.ui.theme.AppTheme
+import at.zimmercarral.mealcalc.ui.theme.robotoFamily
 
 
 @Composable
 fun InputField(
     label: String = "",
     value: String = "",
-    leadingIconResource: Int,
+    leadingIcon: ImageVector,
     leadingIconDescription: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
@@ -66,7 +68,7 @@ fun InputField(
         ),
         leadingIcon = {
             Icon(
-                painter = painterResource(id = leadingIconResource),
+                imageVector = leadingIcon,
                 contentDescription = leadingIconDescription,
                 modifier = Modifier.size(25.dp),
                 tint = colorScheme.primary,
@@ -97,10 +99,11 @@ private fun InputFieldPreview1() {
         InputField(
             label = "Kohlenhydrate",
             value = "",
-            leadingIconResource = R.drawable.carbs,
+            leadingIcon = CarbsIcon,
             leadingIconDescription = stringResource(R.string.carbs_description),
             onValueChange = {},
-            imeAction = ImeAction.Next)
+            imeAction = ImeAction.Next,
+        )
     }
 }
 
@@ -112,10 +115,10 @@ private fun InputFieldPreview2() {
         InputField(
             label = "Eiweiß",
             value = "10.5",
-            leadingIconResource = R.drawable.protein,
+            leadingIcon = ProteinIcon,
             leadingIconDescription = stringResource(R.string.protein_description),
             onValueChange = {},
-            imeAction = ImeAction.Next,
+            imeAction = ImeAction.Next
         )
     }
 }

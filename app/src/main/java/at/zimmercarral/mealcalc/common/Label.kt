@@ -16,8 +16,8 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import at.zimmercarral.mealcalc.R
-import com.example.compose.AppTheme
-import com.example.ui.theme.robotoFamily
+import at.zimmercarral.mealcalc.ui.theme.AppTheme
+import at.zimmercarral.mealcalc.ui.theme.robotoFamily
 
 @Composable
 fun Label(text: String, modifier: Modifier = Modifier) {

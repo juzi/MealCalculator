@@ -13,9 +13,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import at.zimmercarral.mealcalc.data.db.model.FoodItem
-import at.zimmercarral.mealcalc.item.CurrentItemViewModel
+import at.zimmercarral.mealcalc.item.EditItemDialogViewModel
 import at.zimmercarral.mealcalc.meal.MealViewModel
-import com.example.compose.AppTheme
+import at.zimmercarral.mealcalc.ui.theme.AppTheme
 import java.util.UUID
 
 class MainActivity : ComponentActivity() {
@@ -61,7 +61,7 @@ class MainActivity : ComponentActivity() {
             false
         ))
     private val mealViewModel = MealViewModel(availableItems)
-    private val currentItemViewModel = CurrentItemViewModel()
+    private val editItemDialogViewModel = EditItemDialogViewModel()
 
     @SuppressLint("StateFlowValueCalledInComposition")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -90,7 +90,7 @@ class MainActivity : ComponentActivity() {
                         .padding(innerPadding)
                         .background(color = Color.White)
                     ) {
-                        MainLayout(currentItemViewModel, mealViewModel)
+                        MainLayout(editItemDialogViewModel, mealViewModel)
                     }
                 }
             }

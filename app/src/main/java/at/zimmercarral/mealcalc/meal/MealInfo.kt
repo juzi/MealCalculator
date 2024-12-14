@@ -27,12 +27,12 @@ import androidx.compose.ui.unit.dp
 import at.zimmercarral.mealcalc.R
 import at.zimmercarral.mealcalc.common.ActionButton
 import at.zimmercarral.mealcalc.common.Label
-import at.zimmercarral.mealcalc.item.CurrentItemViewModel
+import at.zimmercarral.mealcalc.item.EditItemDialogViewModel
 
 
 @Composable
 fun MealInfo(
-    currentItemViewModel: CurrentItemViewModel,
+    editItemDialogViewModel: EditItemDialogViewModel,
     mealViewModel: MealViewModel
 ) {
     Column {
@@ -57,7 +57,7 @@ fun MealInfo(
                     mealViewModel.removeAllItems()
                 })
         }
-        MealListView(mealViewModel.mealItems, currentItemViewModel)
+        MealListView(mealViewModel.mealItems, editItemDialogViewModel)
         MealValues(mealViewModel)
     }
 }

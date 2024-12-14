@@ -19,13 +19,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import at.zimmercarral.mealcalc.common.ActionButton
-import at.zimmercarral.mealcalc.item.CurrentItemViewModel
+import at.zimmercarral.mealcalc.item.EditItemDialogViewModel
+import at.zimmercarral.mealcalc.item.Focus
 import at.zimmercarral.mealcalc.meal.MealViewModel
 import at.zimmercarral.mealcalc.search.SearchableItemList
 
 @Composable
 fun TopActionIcons(
-    currentItemViewModel: CurrentItemViewModel,
+    editItemDialogViewModel: EditItemDialogViewModel,
     mealViewModel: MealViewModel
 ) {
     Card(
@@ -48,9 +49,10 @@ fun TopActionIcons(
                     .padding(horizontal = 10.dp, vertical = 0.dp)
                     .size(70.dp),
                 onClick = {
-                    currentItemViewModel.clear()
-                    currentItemViewModel.setInUpdateMode(false)
-                    currentItemViewModel.requestFatFocus()
+                    editItemDialogViewModel.clear()
+                    editItemDialogViewModel.setInUpdateMode(false)
+                    editItemDialogViewModel.setInitialFocus(Focus.AMOUNT)
+                    editItemDialogViewModel.setVisible(true)
                 })
             ActionButton(stringResource(id = R.string.save_item),
                 Icons.Rounded.Save,
@@ -68,8 +70,8 @@ fun TopActionIcons(
             SearchableItemList(
                 availableitems = mealViewModel.mealItems.toList(),
                 onItemSelected = {
-                    currentItemViewModel.setItem(it)
-                    currentItemViewModel.requestAmountFocus()
+                    editItemDialogViewModel.setItem(it)
+                    //editItemDialogViewModel.requestAmountFocus()
                 }
             )
         }

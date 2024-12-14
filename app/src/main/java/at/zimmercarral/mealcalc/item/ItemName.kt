@@ -1,6 +1,8 @@
 package at.zimmercarral.mealcalc.item
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -28,60 +30,63 @@ import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import at.zimmercarral.mealcalc.R
 import at.zimmercarral.mealcalc.common.ActionButton
-import com.example.compose.AppTheme
-import com.example.ui.theme.robotoFamily
+import at.zimmercarral.mealcalc.ui.theme.AppTheme
+import at.zimmercarral.mealcalc.ui.theme.robotoFamily
 
 @Composable
 fun ItemName(name: String, onValueChange: (String) -> Unit) {
     val keyboardController = LocalSoftwareKeyboardController.current
 
-    OutlinedTextField(
-        singleLine = true,
-        modifier = Modifier
-            .background(color = colorScheme.surface)
-            .fillMaxWidth(),
-        shape = RoundedCornerShape(10.dp),
-        textStyle = TextStyle(
-            fontFamily = robotoFamily,
-            fontWeight = FontWeight.Normal,
-            fontSize = TextUnit(19f, TextUnitType.Sp),
-            textAlign = TextAlign.Center,
-            color = colorScheme.onSurface
-        ),
-        colors = TextFieldDefaults.colors(
-            cursorColor = colorScheme.primary,
-            focusedIndicatorColor = colorScheme.primary,
-            unfocusedIndicatorColor = colorScheme.primary,
-            focusedContainerColor = colorScheme.surface,
-            unfocusedContainerColor = colorScheme.surface,
-        ),
-        trailingIcon = {
-            ActionButton("",
-                Icons.Rounded.Clear,
-                modifier = Modifier.size(24.dp),
-                onClick = { onValueChange("") })
-        },
-
-        keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Text,
-            imeAction = ImeAction.Next),
-        keyboardActions = KeyboardActions(
-            onDone = {
-                keyboardController?.hide()
-            }
-        ),
-        label = {
-            Text(text = stringResource(R.string.label_name),
+    Row(modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.Center) {
+        OutlinedTextField(
+            singleLine = true,
+            modifier = Modifier
+                .background(color = colorScheme.surface)
+                .fillMaxWidth(0.95f),
+            shape = RoundedCornerShape(10.dp),
+            textStyle = TextStyle(
                 fontFamily = robotoFamily,
                 fontWeight = FontWeight.Normal,
-                fontSize = TextUnit(11f, TextUnitType.Sp),
+                fontSize = TextUnit(19f, TextUnitType.Sp),
                 textAlign = TextAlign.Center,
                 color = colorScheme.onSurface
-            )
-        },
-        value = name,
-        onValueChange = onValueChange,
-    )
+            ),
+            colors = TextFieldDefaults.colors(
+                cursorColor = colorScheme.primary,
+                focusedIndicatorColor = colorScheme.primary,
+                unfocusedIndicatorColor = colorScheme.primary,
+                focusedContainerColor = colorScheme.surface,
+                unfocusedContainerColor = colorScheme.surface,
+            ),
+            trailingIcon = {
+                ActionButton("",
+                    Icons.Rounded.Clear,
+                    modifier = Modifier.size(24.dp),
+                    onClick = { onValueChange("") })
+            },
+
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Next),
+            keyboardActions = KeyboardActions(
+                onDone = {
+                    keyboardController?.hide()
+                }
+            ),
+            label = {
+                Text(text = stringResource(R.string.label_name),
+                    fontFamily = robotoFamily,
+                    fontWeight = FontWeight.Normal,
+                    fontSize = TextUnit(11f, TextUnitType.Sp),
+                    textAlign = TextAlign.Center,
+                    color = colorScheme.onSurface
+                )
+            },
+            value = name,
+            onValueChange = onValueChange,
+        )
+    }
 }
 
 @Preview
