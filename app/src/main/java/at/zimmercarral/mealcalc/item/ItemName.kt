@@ -16,6 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -34,7 +35,9 @@ import at.zimmercarral.mealcalc.ui.theme.AppTheme
 import at.zimmercarral.mealcalc.ui.theme.robotoFamily
 
 @Composable
-fun ItemName(name: String, onValueChange: (String) -> Unit) {
+fun ItemName(
+    viewModel: EditItemDialogViewModel
+) {
     val keyboardController = LocalSoftwareKeyboardController.current
 
     Row(modifier = Modifier.fillMaxWidth(),
@@ -42,8 +45,9 @@ fun ItemName(name: String, onValueChange: (String) -> Unit) {
         OutlinedTextField(
             singleLine = true,
             modifier = Modifier
-                .background(color = colorScheme.surface)
-                .fillMaxWidth(0.95f),
+                .background(color = colorScheme.primaryContainer)
+                .fillMaxWidth(0.95f)
+                .focusRequester(viewModel.nameFocusRequester.value),
             shape = RoundedCornerShape(10.dp),
             textStyle = TextStyle(
                 fontFamily = robotoFamily,
@@ -56,14 +60,14 @@ fun ItemName(name: String, onValueChange: (String) -> Unit) {
                 cursorColor = colorScheme.primary,
                 focusedIndicatorColor = colorScheme.primary,
                 unfocusedIndicatorColor = colorScheme.primary,
-                focusedContainerColor = colorScheme.surface,
-                unfocusedContainerColor = colorScheme.surface,
+                focusedContainerColor = colorScheme.primaryContainer,
+                unfocusedContainerColor = colorScheme.primaryContainer,
             ),
             trailingIcon = {
                 ActionButton("",
                     Icons.Rounded.Clear,
                     modifier = Modifier.size(24.dp),
-                    onClick = { onValueChange("") })
+                    onClick = { viewModel.setName("") })
             },
 
             keyboardOptions = KeyboardOptions(
@@ -80,11 +84,11 @@ fun ItemName(name: String, onValueChange: (String) -> Unit) {
                     fontWeight = FontWeight.Normal,
                     fontSize = TextUnit(11f, TextUnitType.Sp),
                     textAlign = TextAlign.Center,
-                    color = colorScheme.onSurface
+                    color = colorScheme.primary
                 )
             },
-            value = name,
-            onValueChange = onValueChange,
+            value = viewModel.name.value,
+            onValueChange = viewModel::setName,
         )
     }
 }
@@ -93,7 +97,9 @@ fun ItemName(name: String, onValueChange: (String) -> Unit) {
 @PreviewLightDark
 @Composable
 private fun InputFieldPreview() {
+    val viewModel = EditItemDialogViewModel()
+    viewModel.setName("Apfelstrudel mit Sahne")
     AppTheme() {
-        ItemName(name = "Apfelstrudel mit Sahne", onValueChange = {})
+        ItemName(viewModel)
     }
 }

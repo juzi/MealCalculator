@@ -25,12 +25,14 @@ class EditItemDialogViewModel {
     var inEditMode = mutableStateOf(false)
         private set
 
+    var nameFocusRequester = mutableStateOf(FocusRequester())
     var fatFocusRequester = mutableStateOf(FocusRequester())
     var amountFocusRequester = mutableStateOf(FocusRequester())
     var initialFocus = mutableStateOf(Focus.AMOUNT)
 
     fun requestFocus(focus: Focus) {
         when (focus) {
+            Focus.NAME -> nameFocusRequester.value.requestFocus()
             Focus.FAT -> fatFocusRequester.value.requestFocus()
             Focus.AMOUNT -> amountFocusRequester.value.requestFocus()
             else -> {}

@@ -5,13 +5,14 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import at.zimmercarral.mealcalc.data.db.model.FoodItem
 import at.zimmercarral.mealcalc.item.EditItemDialogViewModel
 import at.zimmercarral.mealcalc.meal.MealViewModel
@@ -42,7 +43,47 @@ class MainActivity : ComponentActivity() {
     val availableItems: List<FoodItem> = listOf(
         FoodItem(
             UUID.randomUUID().toString(),
-            "Pizza",
+            "Apfelpfannkuchen mit Schlagobers",
+            10f,
+            10f,
+            10f,
+            10,
+            java.util.Date(),
+            false
+        ),
+        FoodItem(
+            UUID.randomUUID().toString(),
+            "Pasta",
+            10f,
+            10f,
+            10f,
+            10,
+            java.util.Date(),
+            false
+        ),
+        FoodItem(
+            UUID.randomUUID().toString(),
+            "Apfelpfannkuchen mit Schlagobers",
+            10f,
+            10f,
+            10f,
+            10,
+            java.util.Date(),
+            false
+        ),
+        FoodItem(
+            UUID.randomUUID().toString(),
+            "Pasta",
+            10f,
+            10f,
+            10f,
+            10,
+            java.util.Date(),
+            false
+        ),
+        FoodItem(
+            UUID.randomUUID().toString(),
+            "Apfelpfannkuchen mit Schlagobers",
             10f,
             10f,
             10f,
@@ -60,6 +101,8 @@ class MainActivity : ComponentActivity() {
             java.util.Date(),
             false
         ))
+
+
     private val mealViewModel = MealViewModel(availableItems)
     private val editItemDialogViewModel = EditItemDialogViewModel()
 
@@ -76,8 +119,11 @@ class MainActivity : ComponentActivity() {
         setContent {
             AppTheme {
 //                val state by foodItemViewModel.state.collectAsState()
+                val hostState = remember { SnackbarHostState() }
 
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                Scaffold(modifier = Modifier.fillMaxSize(),
+                    snackbarHost = { SnackbarHost(hostState) }
+                ) { innerPadding ->
 //                    Column(modifier = Modifier
 //                        .padding(innerPadding)
 //                        .background(color = Color.White)
@@ -88,7 +134,6 @@ class MainActivity : ComponentActivity() {
 //                    }
                     Column(modifier = Modifier
                         .padding(innerPadding)
-                        .background(color = Color.White)
                     ) {
                         MainLayout(editItemDialogViewModel, mealViewModel)
                     }

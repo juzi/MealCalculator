@@ -1,23 +1,34 @@
 package at.zimmercarral.mealcalc
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import at.zimmercarral.mealcalc.item.EditItemDialog
 import at.zimmercarral.mealcalc.item.EditItemDialogViewModel
+import at.zimmercarral.mealcalc.item.Focus
 import at.zimmercarral.mealcalc.meal.MealInfo
 import at.zimmercarral.mealcalc.meal.MealViewModel
 
 @Composable
 fun MainLayout(editItemDialogViewModel: EditItemDialogViewModel, mealViewModel: MealViewModel) {
     Column(verticalArrangement = Arrangement.Top,
-        modifier = Modifier.fillMaxSize()) {
-        TopActionIcons(editItemDialogViewModel, mealViewModel)
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = colorScheme.surfaceContainer)) {
+//        TopActionIcons(editItemDialogViewModel, mealViewModel)
         EditItemDialog(editItemDialogViewModel,
             onAddOrUpdateItem = mealViewModel::addOrUpdateItem,
             onDismiss = { editItemDialogViewModel.setVisible(false) })
-        MealInfo(editItemDialogViewModel, mealViewModel)
+        MealInfo(mealViewModel,
+            onEditItem = { item ->
+                editItemDialogViewModel.setItem(item)
+                editItemDialogViewModel.setInUpdateMode(true)
+                editItemDialogViewModel.setInitialFocus(Focus.AMOUNT)
+                editItemDialogViewModel.setVisible(true)
+            })
     }
 }

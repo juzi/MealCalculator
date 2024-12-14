@@ -5,14 +5,14 @@
     <string name="search_item">Search item in database\t</string>
     <string name="add_item_to_meal">Add item to meal</string>
     <string name="clear_menu">Mahlzeit löschen</string>
-    <string name="meal_title">Mahlzeit:</string>
+    <string name="meal_title">Mahlzeit</string>
     <string name="sum">Summe:</string>
     <string name="label_fat">Fett</string>
-    <string name="label_carbs">Kohlenhydrate</string>
+    <string name="label_carbs">Kohlenhydrate:</string>
     <string name="label_protein">Eiweiß</string>
     <string name="label_amount">Menge</string>
     <string name="label_calculated_carbs">grKH:</string>
-    <string name="label_calculated_fpe">grFPE:</string>
+    <string name="label_calculated_fpe">FPEs:</string>
     <string name="edit_name">Edit name</string>
     <string name="label_name">Name</string>
     <string name="carbs_description">Gramm Kohlenhydrate pro 100 Gramm.</string>
@@ -22,4 +22,7 @@
     <string name="clear">löschen</string>
     <string name="add_item">Hinzufügen</string>
     <string name="update_item">Aktualisieren</string>
+    <string name="carbs">Kohlenhydrate</string>
+    <string name="meal_deleted">Mahlzeit wurde gelöscht!</string>
+    <string name="undo">Rückgängig</string>
 </resources>

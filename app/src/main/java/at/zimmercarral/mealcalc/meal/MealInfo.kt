@@ -7,58 +7,88 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.DeleteOutline
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme.colorScheme
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import at.zimmercarral.mealcalc.R
-import at.zimmercarral.mealcalc.common.ActionButton
-import at.zimmercarral.mealcalc.common.Label
-import at.zimmercarral.mealcalc.item.EditItemDialogViewModel
+import at.zimmercarral.mealcalc.data.db.model.FoodItem
+import at.zimmercarral.mealcalc.ui.theme.AppTheme
+import at.zimmercarral.mealcalc.ui.theme.robotoFamily
+import kotlinx.coroutines.launch
 
 
 @Composable
 fun MealInfo(
-    editItemDialogViewModel: EditItemDialogViewModel,
-    mealViewModel: MealViewModel
+    mealViewModel: MealViewModel,
+    onEditItem: (FoodItem) -> Unit,
 ) {
-    Column {
-        HorizontalDivider(modifier = Modifier.padding(top = 10.dp),
-            thickness = 1.dp,
-            color = Color.LightGray)
-        Row(horizontalArrangement = Arrangement.SpaceBetween) {
-            Text(modifier = Modifier
-                .padding(start = 10.dp, end = 230.dp, top = 12.dp, bottom = 0.dp),
-                fontFamily = FontFamily.SansSerif,
-                fontSize = TextUnit(18f, TextUnitType.Sp),
-                fontWeight = FontWeight.Medium,
-                maxLines = 1,
-                text = stringResource(R.string.meal_title))
-
-            ActionButton(description = stringResource(id = R.string.clear_menu),
-                icon = Icons.Rounded.DeleteOutline,
-                modifier = Modifier
-                    .padding(start = 0.dp, end = 10.dp, top = 0.dp, bottom = 0.dp)
-                    .size(50.dp),
-                onClick = {
-                    mealViewModel.removeAllItems()
-                })
-        }
-        MealListView(mealViewModel.mealItems, editItemDialogViewModel)
+    val coroutineScope = rememberCoroutineScope()
+    val mealDeleted =  stringResource(R.string.meal_deleted)
+    val undo = stringResource(R.string.undo)
+    //val scaffoldState = rememberScaffoldState()
+    Column() {
+        MealTitle()
+        MealList(mealViewModel.mealItems, onEditItem)
         MealValues(mealViewModel)
+        Row(horizontalArrangement = Arrangement.Center,
+            modifier = Modifier
+                .fillMaxWidth()
+        ) {
+            Button(
+                modifier = Modifier
+                    .fillMaxWidth(0.6f)
+                    .height(55.dp),
+                onClick = {
+                    val currentItems = mealViewModel.mealItems.toList()
+                    mealViewModel.removeAllItems()
+                    coroutineScope.launch {
+                        val snackbarResult = snackbarHostState.showSnackbar(
+                            message = mealDeleted,
+                            actionLabel =  undo
+                        )
+                        when (snackbarResult) {
+                            SnackbarResult.ActionPerformed -> mealViewModel.addItems(currentItems)
+                            else -> {}
+                        }
+                    }
+            )                    {
+                Text(
+                    text = stringResource(id = R.string.clear_menu),
+                    fontFamily = robotoFamily,
+                    fontWeight = FontWeight.Medium,
+                    fontSize = TextUnit(18f, TextUnitType.Sp),
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun MealTitle() {
+    Row(horizontalArrangement = Arrangement.Center,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 12.dp, bottom = 25.dp)
+    ) {
+        Text(fontFamily = robotoFamily,
+            fontSize = TextUnit(25f, TextUnitType.Sp),
+            fontWeight = FontWeight.Medium,
+            maxLines = 1,
+            text = stringResource(R.string.meal_title))
     }
 }
 
@@ -66,33 +96,30 @@ fun MealInfo(
 private fun MealValues(mealViewModel: MealViewModel) {
     Card(
         modifier = Modifier
-            .background(color = Color.Transparent)
-            .fillMaxWidth()
-            .padding(top = 5.dp, start = 10.dp, end = 10.dp, bottom = 2.dp),
+            .fillMaxWidth(0.95f)
+            .padding(top = 15.dp, start = 18.dp, bottom = 20.dp),
         elevation = CardDefaults.cardElevation(5.dp),
     ) {
         Row(
             modifier = Modifier
-                .background(color = Color.LightGray.copy(alpha = 0.1f))
+                .background(color = colorScheme.surfaceContainerLowest)
                 .fillMaxWidth()
                 .height(45.dp),
             horizontalArrangement = Arrangement.SpaceEvenly,
         ) {
-            Text(modifier = Modifier
-                .padding(start = 5.dp, end = 5.dp, top = 13.dp, bottom = 0.dp),
-                fontFamily = FontFamily.SansSerif,
-                fontWeight = FontWeight.Bold,
-                fontSize = TextUnit(18f, TextUnitType.Sp),
-                maxLines = 1,
-                text = stringResource(R.string.sum))
             Row {
-                Label(stringResource(R.string.label_calculated_carbs),
-                    Modifier
-                        .padding(top = 2.dp, bottom = 0.dp)
+                Text(modifier = Modifier
+                    .padding(end = 10.dp, top = 10.dp),
+                    color = colorScheme.primary,
+                    fontFamily = FontFamily.SansSerif,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = TextUnit(15f, TextUnitType.Sp),
+                    maxLines = 1,
+                    text = stringResource(R.string.label_carbs)
                 )
                 Text(modifier = Modifier
-                    .padding(start = 0.dp, end = 5.dp, top = 13.dp, bottom = 0.dp),
-                    color = Color.Red,
+                    .padding(end = 10.dp, top = 10.dp),
+                    color = colorScheme.error,
                     fontFamily = FontFamily.SansSerif,
                     fontWeight = FontWeight.Bold,
                     fontSize = TextUnit(20f, TextUnitType.Sp),
@@ -101,13 +128,18 @@ private fun MealValues(mealViewModel: MealViewModel) {
                 )
             }
             Row {
-                Label(stringResource(R.string.label_calculated_fpe),
-                    Modifier
-                        .width(110.dp)
-                        .padding(top = 2.dp, bottom = 0.dp))
                 Text(modifier = Modifier
-                    .padding(start = 0.dp, end = 5.dp, top = 13.dp, bottom = 0.dp),
-                    color = Color.Red,
+                    .padding(end = 10.dp, top = 10.dp),
+                    color = colorScheme.primary,
+                    fontFamily = FontFamily.SansSerif,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = TextUnit(15f, TextUnitType.Sp),
+                    maxLines = 1,
+                    text = stringResource(R.string.label_calculated_fpe)
+                )
+                Text(modifier = Modifier
+                    .padding(end = 5.dp, top = 10.dp),
+                    color = colorScheme.error,
                     fontFamily = FontFamily.SansSerif,
                     fontWeight = FontWeight.Bold,
                     fontSize = TextUnit(20f, TextUnitType.Sp),
@@ -118,3 +150,23 @@ private fun MealValues(mealViewModel: MealViewModel) {
     }
 }
 
+@Preview
+@PreviewLightDark
+@Composable
+private fun MealInfoPreview() {
+    val item = FoodItem(
+        uuid = "123",
+        name = "Apfelpfannkuchen mit Schlagobers",
+        fatPer100g = 0f,
+        carbsPer100g = 12f,
+        proteinPer100g = 0f,
+        amount = 100,
+        lastModifiedAt = null,
+        isDeleted = false,
+    )
+    val mealViewModel = MealViewModel(listOf(item))
+
+    AppTheme() {
+        MealInfo(mealViewModel, onEditItem = {})
+    }
+}

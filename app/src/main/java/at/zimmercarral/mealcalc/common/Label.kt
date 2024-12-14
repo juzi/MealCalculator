@@ -7,6 +7,7 @@ import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -20,10 +21,10 @@ import at.zimmercarral.mealcalc.ui.theme.AppTheme
 import at.zimmercarral.mealcalc.ui.theme.robotoFamily
 
 @Composable
-fun Label(text: String, modifier: Modifier = Modifier) {
+fun Label(text: String, modifier: Modifier = Modifier, color: Color = colorScheme.onSurface) {
     Text(modifier = modifier
         .width(60.dp),
-        color = colorScheme.onSurface,
+        color = color,
         fontFamily = robotoFamily,
         fontWeight = FontWeight.Medium,
         fontSize = TextUnit(19f, TextUnitType.Sp),

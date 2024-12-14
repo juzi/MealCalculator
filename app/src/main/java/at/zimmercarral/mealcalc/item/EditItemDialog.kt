@@ -19,11 +19,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import at.zimmercarral.mealcalc.R
 import at.zimmercarral.mealcalc.data.db.model.FoodItem
+import at.zimmercarral.mealcalc.ui.theme.robotoFamily
 
 @Composable
 fun EditItemDialog(
@@ -48,7 +52,7 @@ fun EditItemDialog(
             ) {
                 Column(
                     modifier = Modifier
-                        .background(color = colorScheme.surface)
+                        .background(color = colorScheme.primaryContainer)
                         .pointerInput(Unit) {
                             detectTapGestures(onTap = {
                                 focusManager.clearFocus()
@@ -57,7 +61,7 @@ fun EditItemDialog(
                     verticalArrangement = Arrangement.spacedBy(2.dp),
                 ) {
                     Spacer(modifier = Modifier.height(10.dp))
-                    ItemName(editItemDialogViewModel.name.value, editItemDialogViewModel::setName)
+                    ItemName(editItemDialogViewModel)
                     NutritionalValues(editItemDialogViewModel)
                     CalculatedValues(editItemDialogViewModel)
                     AddOrUpdateButton(editItemDialogViewModel, onAddOrUpdateItem)
@@ -86,12 +90,21 @@ fun AddOrUpdateButton(
             buttonText = stringResource(R.string.update_item)
         }
         Button(
-            modifier = Modifier.fillMaxWidth(0.9f),
+            modifier = Modifier
+                .fillMaxWidth(0.7f)
+                .padding(start = 30.dp)
+                .height(60.dp),
             onClick = {
                 onAddOrUpdateItem(editItemDialogViewModel.getFoodItem())
+                editItemDialogViewModel.setVisible(false)
             },
         ) {
-            Text(text = buttonText)
+            Text(
+                text = buttonText,
+                fontFamily = robotoFamily,
+                fontWeight = FontWeight.Medium,
+                fontSize = TextUnit(18f, TextUnitType.Sp),
+            )
         }
     }
 }
