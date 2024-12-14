@@ -24,10 +24,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
-import at.zimmercarral.mealcalc.item.CurrentItemViewModel
 import at.zimmercarral.mealcalc.R
 import at.zimmercarral.mealcalc.common.ActionButton
 import at.zimmercarral.mealcalc.common.Label
+import at.zimmercarral.mealcalc.item.CurrentItemViewModel
 
 
 @Composable
@@ -49,7 +49,7 @@ fun MealInfo(
                 text = stringResource(R.string.meal_title))
 
             ActionButton(description = stringResource(id = R.string.clear_menu),
-                icon = Icons.Rounded.DeleteOutline, color = Color(120, 0, 0, 0),
+                icon = Icons.Rounded.DeleteOutline,
                 modifier = Modifier
                     .padding(start = 0.dp, end = 10.dp, top = 0.dp, bottom = 0.dp)
                     .size(50.dp),

@@ -16,7 +16,6 @@ import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -67,7 +66,7 @@ fun SearchableItemList(
 
     // Search button to trigger overlay
     ActionButton(stringResource(id = R.string.search_item),
-        Icons.Rounded.Search, color = colorScheme.primary,
+        Icons.Rounded.Search,
         modifier = Modifier
             .padding(horizontal = 10.dp, vertical = 0.dp)
             .size(70.dp),

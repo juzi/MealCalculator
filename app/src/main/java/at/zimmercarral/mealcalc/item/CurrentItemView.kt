@@ -13,7 +13,6 @@ import androidx.compose.material.icons.rounded.ArrowCircleDown
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
@@ -59,7 +58,6 @@ private fun NutrionalValuesDialog(
             }
             ActionButton(stringResource(id = R.string.add_item_to_meal),
                 buttonImage,
-                color = Color(80, 127, 80, 255),
                 modifier = Modifier
                     .padding(horizontal = 10.dp, vertical = 5.dp)
                     .size(60.dp),

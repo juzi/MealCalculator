@@ -4,14 +4,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.AssistChipDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
@@ -20,6 +15,8 @@ import androidx.compose.ui.unit.dp
 import at.zimmercarral.mealcalc.R
 import at.zimmercarral.mealcalc.data.db.model.FoodItem
 import com.example.compose.AppTheme
+
+val validIntPattern = """^\\d*$""".toRegex()
 
 @Composable
 fun NutritionalValues(currentItemViewModel: CurrentItemViewModel) {
@@ -34,7 +31,7 @@ fun NutritionalValues(currentItemViewModel: CurrentItemViewModel) {
                 leadingIconResource = R.drawable.fat,
                 leadingIconDescription = stringResource(R.string.fat_description),
                 onValueChange = {
-                    val input = it.replace(",", ".")
+                    val input = it.replace(",", ".").trim()
                     if (isValidFloat(input)) {
                         currentItemViewModel.setFatPer100g(input)
                     }
@@ -70,12 +67,13 @@ fun NutritionalValues(currentItemViewModel: CurrentItemViewModel) {
             )
         }
         Row() {
-            InputField(label = stringResource(R.string.label_gram),
+            InputField(
+                label = stringResource(R.string.label_gram),
                 value = currentItemViewModel.amount.value,
                 leadingIconResource = R.drawable.weight,
                 leadingIconDescription = stringResource(R.string.amount_description),
                 onValueChange = {
-                    val input = it.replace(",", ".")
+                    val input = it.trim()
                     if (isValidInt(input)) {
                         currentItemViewModel.setAmount(input)
                     }
@@ -87,26 +85,18 @@ fun NutritionalValues(currentItemViewModel: CurrentItemViewModel) {
     }
 }
 
-private fun isValidInt(string: String): Boolean {
-    return numberOfOccurences('.', string) == 0 &&
-            numberOfOccurences(' ', string) == 0 &&
-            numberOfOccurences('-', string) == 0
-}
-
-private fun isValidFloat(string: String): Boolean {
-    return numberOfOccurences('.', string) <= 1 &&
-            numberOfOccurences(' ', string) == 0 &&
-            numberOfOccurences('-', string) == 0
-}
-
-private fun numberOfOccurences(char: Char, string: String): Int {
-    var count = 0
-    for (c in string) {
-        if (c == char) {
-            count++
-        }
+private fun isValidInt(input: String): Boolean {
+    if (input.isEmpty()) {
+        return true
     }
-    return count
+    return input.toIntOrNull() != null
+}
+
+private fun isValidFloat(input: String): Boolean {
+    if (input.isEmpty()) {
+        return true
+    }
+    return input.toDoubleOrNull() != null
 }
 
 @Preview

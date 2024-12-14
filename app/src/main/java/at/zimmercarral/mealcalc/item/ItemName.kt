@@ -57,7 +57,7 @@ fun ItemName(name: String, onValueChange: (String) -> Unit) {
         ),
         trailingIcon = {
             ActionButton("",
-                Icons.Rounded.Clear, color = colorScheme.primary,
+                Icons.Rounded.Clear,
                 modifier = Modifier.size(24.dp),
                 onClick = { onValueChange("") })
         },

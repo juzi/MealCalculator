@@ -1,14 +1,11 @@
 package at.zimmercarral.mealcalc.item
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Clear
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.OutlinedTextField
@@ -49,12 +46,12 @@ fun InputField(
         singleLine = true,
         modifier = modifier
             .background(color = colorScheme.surface)
-            .width(170.dp)
-            .height(55.dp),
+            .width(160.dp)
+            .height(60.dp),
         textStyle = TextStyle(
             fontFamily = robotoFamily,
             fontWeight = FontWeight.Normal,
-            fontSize = TextUnit(16f, TextUnitType.Sp),
+            fontSize = TextUnit(17f, TextUnitType.Sp),
             textAlign = TextAlign.Center,
             color = colorScheme.onSurface,
         ),
@@ -114,7 +111,7 @@ private fun InputFieldPreview2() {
     AppTheme() {
         InputField(
             label = "Eiweiß",
-            value = "",
+            value = "10.5",
             leadingIconResource = R.drawable.protein,
             leadingIconDescription = stringResource(R.string.protein_description),
             onValueChange = {},

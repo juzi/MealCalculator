@@ -24,7 +24,6 @@ import com.example.compose.AppTheme
 fun ActionButton(
     description: String,
     icon: ImageVector,
-    color: Color,
     modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
@@ -47,7 +46,7 @@ fun ActionButton(
 private fun ActionButtonPreview() {
     AppTheme() {
         ActionButton(stringResource(id = R.string.save_item),
-            Icons.Rounded.Save, color = colorScheme.primary,
+            Icons.Rounded.Save,
             modifier = Modifier
                 .padding(horizontal = 10.dp, vertical = 0.dp)
                 .size(70.dp),

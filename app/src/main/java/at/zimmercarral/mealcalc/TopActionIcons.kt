@@ -16,7 +16,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import at.zimmercarral.mealcalc.common.ActionButton
@@ -44,7 +43,7 @@ fun TopActionIcons(
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             ActionButton(stringResource(id = R.string.clear_values),
-                Icons.Rounded.Clear, color = Color(120, 0, 0, 0),
+                Icons.Rounded.Clear,
                 modifier = Modifier
                     .padding(horizontal = 10.dp, vertical = 0.dp)
                     .size(70.dp),
@@ -54,7 +53,7 @@ fun TopActionIcons(
                     currentItemViewModel.requestFatFocus()
                 })
             ActionButton(stringResource(id = R.string.save_item),
-                Icons.Rounded.Save, color = Color(0, 120, 0, 0),
+                Icons.Rounded.Save,
                 modifier = Modifier
                     .padding(horizontal = 10.dp, vertical = 0.dp)
                     .size(70.dp),
