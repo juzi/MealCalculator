@@ -33,7 +33,7 @@ fun CalculatedValues(editItemDialogViewModel: EditItemDialogViewModel) {
     ) {
         Row(
             modifier = Modifier
-                .background(color = colorScheme.primaryContainer)
+                .background(color = colorScheme.surfaceContainer)
                 .fillMaxWidth()
                 .height(45.dp),
             horizontalArrangement = Arrangement.SpaceEvenly,

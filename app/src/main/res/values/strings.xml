@@ -1,11 +1,8 @@
 <resources>
     <string name="app_name">MealCalculator</string>
     <string name="clear_values">Empty all fields</string>
-    <string name="save_item">Save or update item in database</string>
-    <string name="search_item">Search item in database\t</string>
-    <string name="add_item_to_meal">Add item to meal</string>
     <string name="clear_menu">Mahlzeit löschen</string>
-    <string name="meal_title">Mahlzeit</string>
+    <string name="meal_title">Meine Mahlzeit</string>
     <string name="sum">Summe:</string>
     <string name="label_fat">Fett</string>
     <string name="label_carbs">Kohlenhydrate:</string>
@@ -13,9 +10,9 @@
     <string name="label_amount">Menge</string>
     <string name="label_calculated_carbs">grKH:</string>
     <string name="label_calculated_fpe">FPEs:</string>
-    <string name="edit_name">Edit name</string>
+    <string name="edit_name">Name bearbeiten</string>
     <string name="label_name">Name</string>
-    <string name="carbs_description">Gramm Kohlenhydrate pro 100 Gramm.</string>
+    <string name="carbs_description">Gramm Kohlenhydrate pro 100gr.</string>
     <string name="fat_description">Gramm Fett in 100 Gramm.</string>
     <string name="protein_description">Gramm Eiweiß in 100 Gramm.</string>
     <string name="amount_description">Gegessene Gramm.</string>
@@ -25,4 +22,8 @@
     <string name="carbs">Kohlenhydrate</string>
     <string name="meal_deleted">Mahlzeit wurde gelöscht!</string>
     <string name="undo">Rückgängig</string>
+    <string name="add_item_to_meal">Zur Mahlzeit hinzufügen</string>
+    <string name="save_item">Änderungen speichern</string>
+    <string name="search_item">Suchen</string>
+    <string name="item_was_deleted">%s wurde gelöscht!</string>
 </resources>

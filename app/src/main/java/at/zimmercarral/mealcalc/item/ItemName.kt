@@ -45,7 +45,7 @@ fun ItemName(
         OutlinedTextField(
             singleLine = true,
             modifier = Modifier
-                .background(color = colorScheme.primaryContainer)
+                .background(color = colorScheme.surfaceContainer)
                 .fillMaxWidth(0.95f)
                 .focusRequester(viewModel.nameFocusRequester.value),
             shape = RoundedCornerShape(10.dp),
@@ -60,8 +60,8 @@ fun ItemName(
                 cursorColor = colorScheme.primary,
                 focusedIndicatorColor = colorScheme.primary,
                 unfocusedIndicatorColor = colorScheme.primary,
-                focusedContainerColor = colorScheme.primaryContainer,
-                unfocusedContainerColor = colorScheme.primaryContainer,
+                focusedContainerColor = colorScheme.surfaceContainer,
+                unfocusedContainerColor = colorScheme.surfaceContainer,
             ),
             trailingIcon = {
                 ActionButton("",

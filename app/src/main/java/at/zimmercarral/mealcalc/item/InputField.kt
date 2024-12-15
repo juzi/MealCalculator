@@ -47,7 +47,7 @@ fun InputField(
     OutlinedTextField(
         singleLine = true,
         modifier = modifier
-            .background(color = colorScheme.primaryContainer
+            .background(color = colorScheme.surfaceContainer
             )
             .width(160.dp)
             .height(60.dp),

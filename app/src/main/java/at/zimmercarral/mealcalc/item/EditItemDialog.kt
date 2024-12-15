@@ -52,7 +52,7 @@ fun EditItemDialog(
             ) {
                 Column(
                     modifier = Modifier
-                        .background(color = colorScheme.primaryContainer)
+                        .background(color = colorScheme.surfaceContainer)
                         .pointerInput(Unit) {
                             detectTapGestures(onTap = {
                                 focusManager.clearFocus()

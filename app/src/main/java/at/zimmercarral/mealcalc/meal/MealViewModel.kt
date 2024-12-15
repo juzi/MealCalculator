@@ -33,6 +33,10 @@ class MealViewModel(items: List<FoodItem>) : ViewModel() {
         )
     }
 
+    fun addItem(foodItem: FoodItem) {
+        mealItems.add(foodItem)
+    }
+
     fun addItems(items: List<FoodItem>) {
         mealItems.addAll(items)
     }
@@ -52,5 +56,6 @@ class MealViewModel(items: List<FoodItem>) : ViewModel() {
     fun calculateCarbs(): String {
         return "0"
     }
+
 
 }
