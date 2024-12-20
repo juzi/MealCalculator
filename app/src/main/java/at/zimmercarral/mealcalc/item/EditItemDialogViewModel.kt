@@ -3,7 +3,7 @@ package at.zimmercarral.mealcalc.item
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.focus.FocusRequester
 import at.zimmercarral.mealcalc.data.db.model.FoodItem
-import java.util.Date
+import java.time.LocalDateTime
 import java.util.UUID
 
 class EditItemDialogViewModel {
@@ -46,7 +46,7 @@ class EditItemDialogViewModel {
             zeroFloatIfEmpty(carbsPer100g.value),
             zeroFloatIfEmpty(proteinPer100g.value),
             zeroIntIfEmpty(amount.value),
-            Date(),
+            LocalDateTime.now(),
             false)
     }
 

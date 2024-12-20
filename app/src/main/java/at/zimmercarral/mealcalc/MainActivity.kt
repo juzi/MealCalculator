@@ -16,12 +16,11 @@ import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import at.zimmercarral.mealcalc.data.db.model.FoodItem
+import at.zimmercarral.mealcalc.data.http.HttpFoodItemRepository
 import at.zimmercarral.mealcalc.item.EditItemDialogViewModel
 import at.zimmercarral.mealcalc.meal.MealViewModel
 import at.zimmercarral.mealcalc.ui.theme.AppTheme
 import kotlinx.coroutines.launch
-import java.util.UUID
 
 class MainActivity : ComponentActivity() {
 
@@ -44,76 +43,23 @@ class MainActivity : ComponentActivity() {
 //        }
 //    )
 
-    val availableItems: List<FoodItem> = listOf(
-        FoodItem(
-            UUID.randomUUID().toString(),
-            "Apfelpfannkuchen mit Schlagobers",
-            10f,
-            10f,
-            10f,
-            10,
-            java.util.Date(),
-            false
-        ),
-        FoodItem(
-            UUID.randomUUID().toString(),
-            "Pasta",
-            10f,
-            10f,
-            10f,
-            10,
-            java.util.Date(),
-            false
-        ),
-        FoodItem(
-            UUID.randomUUID().toString(),
-            "Apfelpfannkuchen mit Schlagobers",
-            10f,
-            10f,
-            10f,
-            10,
-            java.util.Date(),
-            false
-        ),
-        FoodItem(
-            UUID.randomUUID().toString(),
-            "Pasta",
-            10f,
-            10f,
-            10f,
-            10,
-            java.util.Date(),
-            false
-        ),
-        FoodItem(
-            UUID.randomUUID().toString(),
-            "Apfelpfannkuchen mit Schlagobers",
-            10f,
-            10f,
-            10f,
-            10,
-            java.util.Date(),
-            false
-        ),
-        FoodItem(
-            UUID.randomUUID().toString(),
-            "Pasta",
-            10f,
-            10f,
-            10f,
-            10,
-            java.util.Date(),
-            false
-        ))
-
-
-    private val mealViewModel = MealViewModel(availableItems)
-    private val editItemDialogViewModel = EditItemDialogViewModel()
-
     @SuppressLint("StateFlowValueCalledInComposition")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        lifecycleScope.launch {
+
+        val httpFoodItemRepository = HttpFoodItemRepository()
+        val mealViewModel = MealViewModel(listOf())
+
+        httpFoodItemRepository.getEntries(
+            onSuccess = { items ->
+                items.forEach({ item ->
+                    mealViewModel.addItem(item)
+
+                })
+            })
+        // Use the items here
+        val editItemDialogViewModel = EditItemDialogViewModel()
+
 //            for (foodItem in availableItems) {
 //                db.dao().insert(foodItem)
 //            }

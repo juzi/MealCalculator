@@ -484,6 +484,7 @@ fun AppTheme(
         else -> lightScheme
     }
     val view = LocalView.current
+
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window

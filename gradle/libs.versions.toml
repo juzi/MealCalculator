@@ -16,6 +16,7 @@ roomCompiler = "2.6.1"
 comGoogleDevtoolsKspGradlePlugin = "1.5.30-1.0.0"
 gson = "2.11.0"
 roomKtxVersion = "2.6.1"
+jacksonModuleKotlin = "2.18.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -39,6 +40,7 @@ androidx-room-compiler = { group = "androidx.room", name = "room-compiler", vers
 com-google-devtools-ksp-gradle-plugin = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "comGoogleDevtoolsKspGradlePlugin" }
 gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "roomKtxVersion" }
+jackson-module-kotlin = { group = "com.fasterxml.jackson.module", name = "jackson-module-kotlin", version.ref = "jacksonModuleKotlin" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

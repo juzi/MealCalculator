@@ -9,7 +9,7 @@ import at.zimmercarral.mealcalc.data.db.model.FoodItem
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.util.Date
+import java.time.LocalDateTime
 
 class FoodItemViewModel(
     private val foodItemDao: FoodItemDao
@@ -30,11 +30,13 @@ class FoodItemViewModel(
                 if (name.isBlank()) {
                     return
                 }
-                val item = FoodItem(uuid, name, fat, carbs, protein, amount, Date(), false)
+                val item =
+                    FoodItem(uuid, name, fat, carbs, protein, amount, LocalDateTime.now(), false)
                 viewModelScope.launch {
                     foodItemDao.insert(item)
                 }
             }
+
             is FoodItemEvent.SetUuid -> {
                 _state.update {
                     it.copy(
@@ -42,6 +44,7 @@ class FoodItemViewModel(
                     )
                 }
             }
+
             is FoodItemEvent.SetName -> {
                 _state.update {
                     it.copy(
@@ -49,13 +52,15 @@ class FoodItemViewModel(
                     )
                 }
             }
-           is FoodItemEvent.SetCarbs -> {
+
+            is FoodItemEvent.SetCarbs -> {
                 _state.update {
                     it.copy(
                         carbs = event.carbs
                     )
                 }
             }
+
             is FoodItemEvent.SetFat -> {
                 _state.update {
                     it.copy(
@@ -63,6 +68,7 @@ class FoodItemViewModel(
                     )
                 }
             }
+
             is FoodItemEvent.SetProtein -> {
                 _state.update {
                     it.copy(
@@ -70,6 +76,7 @@ class FoodItemViewModel(
                     )
                 }
             }
+
             is FoodItemEvent.SetAmount -> {
                 _state.update {
                     it.copy(
@@ -77,6 +84,7 @@ class FoodItemViewModel(
                     )
                 }
             }
+
             is FoodItemEvent.SetLastModifiedAt -> {
                 _state.update {
                     it.copy(
@@ -84,6 +92,7 @@ class FoodItemViewModel(
                     )
                 }
             }
+
             is FoodItemEvent.SetDeleted -> {
                 _state.update {
                     it.copy(
