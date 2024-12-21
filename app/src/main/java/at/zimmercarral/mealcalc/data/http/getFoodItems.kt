@@ -60,16 +60,16 @@ fun convertItems(httpItems: List<HttpFoodItem>): List<FoodItem> {
         FoodItem(
             name = item.name ?: "",
             uuid = item.uuid ?: "",
-            fatPer100g = toFloat(item.fat),
-            carbsPer100g = toFloat(item.carbs),
-            proteinPer100g = toFloat(item.proteine),
-            amount = toInt(item.amount),
-            lastModifiedAt = convertDate(item.lastchanged),
-            isDeleted = convertBool(item.deleted ?: "0"))
+            fatPer100g = stringToFloat(item.fat),
+            carbsPer100g = stringToFloat(item.carbs),
+            proteinPer100g = stringToFloat(item.proteine),
+            amount = stringToInt(item.amount),
+            lastModifiedAt = stringToLocalDateTime(item.lastchanged),
+            isDeleted = stringToBoolean(item.deleted))
     })
 }
 
-fun toInt(stringValue: String?): Int {
+fun stringToInt(stringValue: String?): Int {
     var intValue = 0
     if (stringValue != null && stringValue != "" && stringValue != "null") {
         intValue = stringValue.toFloat().roundToInt()
@@ -77,7 +77,7 @@ fun toInt(stringValue: String?): Int {
     return intValue
 }
 
-private fun toFloat(stringValue: String?): Float {
+fun stringToFloat(stringValue: String?): Float {
     var floatValue = 0.0f
     if (stringValue != null && stringValue != "" && stringValue != "null") {
         floatValue = stringValue.toFloat()
@@ -86,7 +86,7 @@ private fun toFloat(stringValue: String?): Float {
 }
 
 // For input string: "2022-06-12T08:19:44.000Z"
-fun convertDate(dateString: String?): LocalDateTime? {
+fun stringToLocalDateTime(dateString: String?): LocalDateTime? {
     if (dateString != null && dateString != "null" && dateString != ""
         && dateString != "0000-00-00 00:00:00"
     ) {
@@ -96,7 +96,7 @@ fun convertDate(dateString: String?): LocalDateTime? {
     return null
 }
 
-fun convertBool(deleted: String): Boolean {
+fun stringToBoolean(deleted: String?): Boolean {
     if (deleted != null && deleted != "null" && deleted != "") {
         return deleted.toInt() == 1
     }

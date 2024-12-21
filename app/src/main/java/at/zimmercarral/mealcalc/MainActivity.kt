@@ -17,13 +17,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import at.zimmercarral.mealcalc.data.http.HttpFoodItemRepository
+import at.zimmercarral.mealcalc.data.sync.NetworkManager
+import at.zimmercarral.mealcalc.data.sync.SynchronizationTask
 import at.zimmercarral.mealcalc.item.EditItemDialogViewModel
 import at.zimmercarral.mealcalc.meal.MealViewModel
 import at.zimmercarral.mealcalc.ui.theme.AppTheme
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
-
+    private val networkManager = NetworkManager(this)
+    private val synchronizationTask = SynchronizationTask(this)
+    //    private val requestQueue by lazy { Volley.newRequestQueue(this) }
 //    private val db by lazy {
 //        Room.databaseBuilder(
 //            applicationContext,
@@ -50,13 +54,9 @@ class MainActivity : ComponentActivity() {
         val httpFoodItemRepository = HttpFoodItemRepository()
         val mealViewModel = MealViewModel(listOf())
 
-        httpFoodItemRepository.getEntries(
-            onSuccess = { items ->
-                items.forEach({ item ->
-                    mealViewModel.addItem(item)
-
-                })
-            })
+        if (networkManager.isInHomeNetwork()) {
+            synchronizationTask.syncDatabases()
+        }
         // Use the items here
         val editItemDialogViewModel = EditItemDialogViewModel()
 
