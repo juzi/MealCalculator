@@ -1,4 +1,4 @@
-package at.zimmercarral.mealcalc.data.db.model
+package at.zimmercarral.mealcalc.data.db
 
 import androidx.room.TypeConverter
 import java.util.Date

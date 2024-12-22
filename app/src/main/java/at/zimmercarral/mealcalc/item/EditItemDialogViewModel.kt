@@ -2,14 +2,18 @@ package at.zimmercarral.mealcalc.item
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.focus.FocusRequester
+import androidx.lifecycle.ViewModel
+import at.zimmercarral.mealcalc.data.db.dao.FoodItemDao
 import at.zimmercarral.mealcalc.data.db.model.FoodItem
 import java.time.LocalDateTime
 import java.util.UUID
 
-class EditItemDialogViewModel {
+class EditItemDialogViewModel(
+    private val dao: FoodItemDao
+) : ViewModel() {
     var uuid = UUID.randomUUID().toString()
         private set
-    var name = mutableStateOf("Unknown")
+    var name = mutableStateOf("")
         private set
     var fatPer100g = mutableStateOf("")
         private set
@@ -50,6 +54,10 @@ class EditItemDialogViewModel {
             false)
     }
 
+    fun saveItem() {
+        dao.updateOrInsert(getFoodItem())
+    }
+
     private fun zeroFloatIfEmpty(value: String): Float {
         if (value.isEmpty()) {
             return 0f
@@ -84,7 +92,7 @@ class EditItemDialogViewModel {
 
     fun clear() {
         uuid = UUID.randomUUID().toString()
-        name.value = "Unknown"
+        name.value = ""
         fatPer100g.value = ""
         carbsPer100g.value = ""
         proteinPer100g.value = ""
@@ -119,9 +127,7 @@ class EditItemDialogViewModel {
         return "0"
     }
 
-    fun setInitialFocus(amount: Focus) {
-
+    fun setInitialFocus(focus: Focus) {
+        initialFocus.value = focus
     }
-
-
 }

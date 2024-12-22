@@ -7,12 +7,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
+import androidx.room.Room
 import at.zimmercarral.mealcalc.R
+import at.zimmercarral.mealcalc.data.db.FoodItemDatabase
 import at.zimmercarral.mealcalc.data.db.model.FoodItem
 import at.zimmercarral.mealcalc.ui.AmountIcon
 import at.zimmercarral.mealcalc.ui.CarbsIcon
@@ -107,7 +110,12 @@ private fun isValidFloat(input: String): Boolean {
 @Composable
 private fun InputFieldPreview() {
     AppTheme() {
-        val viewModel = EditItemDialogViewModel()
+        val context = LocalContext.current
+        val db = Room.inMemoryDatabaseBuilder(
+            context, FoodItemDatabase::class.java
+        ).build()
+        val dao = db.dao()
+        val viewModel = EditItemDialogViewModel(dao)
         viewModel.setItem(FoodItem(
             uuid = "123",
             name = "Apfelpfannkuchen",

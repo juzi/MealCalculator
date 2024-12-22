@@ -96,6 +96,8 @@ fun AddOrUpdateButton(
                 .height(60.dp),
             onClick = {
                 onAddOrUpdateItem(editItemDialogViewModel.getFoodItem())
+                editItemDialogViewModel.saveItem()
+                editItemDialogViewModel.clear()
                 editItemDialogViewModel.setVisible(false)
             },
         ) {

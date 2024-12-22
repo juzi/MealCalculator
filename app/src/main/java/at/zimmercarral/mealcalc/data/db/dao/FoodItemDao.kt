@@ -1,6 +1,5 @@
 package at.zimmercarral.mealcalc.data.db.dao
 
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Query
@@ -11,7 +10,7 @@ import at.zimmercarral.mealcalc.data.db.model.FoodItem
 interface FoodItemDao {
 
     @Upsert
-    fun insert(foodItem: FoodItem)
+    fun updateOrInsert(foodItem: FoodItem)
 
     @Query("SELECT * FROM fooditems WHERE uuid = :uuid")
     fun getItemById(uuid: String): FoodItem
@@ -20,5 +19,5 @@ interface FoodItemDao {
     fun deleteItem(foodItem: FoodItem)
 
     @Query("SELECT * FROM fooditems")
-    fun getAllItems(): LiveData<List<FoodItem>>
+    fun getAllItems(): List<FoodItem>
 }

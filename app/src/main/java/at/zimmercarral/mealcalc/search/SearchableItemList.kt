@@ -5,14 +5,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.rounded.Clear
-import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -22,15 +20,10 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -40,47 +33,29 @@ import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import at.zimmercarral.mealcalc.R
-import at.zimmercarral.mealcalc.common.ActionButton
 import at.zimmercarral.mealcalc.data.db.model.FoodItem
 
 @Composable
 fun SearchableItemList(
-    // Now items are a State<List<String>> to allow dynamic updates
-    availableitems: List<FoodItem>,
+    searchViewModel: SearchViewModel,
     onItemSelected: (FoodItem) -> Unit
 ) {
-    // State to manage search visibility and input
-    var isSearchVisible by remember { mutableStateOf(false) }
-    var searchQuery by remember { mutableStateOf("") }
-    var items by remember { mutableStateOf(availableitems) }
-    val searchFieldFocusRequester = remember { FocusRequester() }
-
-
     // Filtered items based on search query - now uses the state's value
-    val filteredItems = remember(items, searchQuery) {
-        items.filter {
-            it.name.contains(searchQuery, ignoreCase = true)
+    val filteredItems = remember(searchViewModel.items, searchViewModel.searchQuery) {
+        searchViewModel.items.filter {
+            it.name.contains(searchViewModel.searchQuery.value, ignoreCase = true)
         }
     }
 
-    // Search button to trigger overlay
-    ActionButton(stringResource(id = R.string.search_item),
-        Icons.Rounded.Search,
-        modifier = Modifier
-            .padding(horizontal = 10.dp, vertical = 0.dp)
-            .size(70.dp),
-        onClick = { isSearchVisible = true })
-
     // Search overlay dialog
-    if (isSearchVisible) {
+    if (searchViewModel.visible.value) {
         Dialog(
             properties = DialogProperties(
                 dismissOnBackPress = true,
                 dismissOnClickOutside = true,
                 usePlatformDefaultWidth = false
             ),
-            onDismissRequest = { isSearchVisible = false })
+            onDismissRequest = { searchViewModel.setVisibility(false) })
         {
             Surface(
                 shape = MaterialTheme.shapes.medium,
@@ -94,21 +69,21 @@ fun SearchableItemList(
                         .padding(5.dp)
                 ) {
                     LaunchedEffect(Unit) {
-                        searchFieldFocusRequester.requestFocus()
+                        searchViewModel.focusOnQueryField()
                     }
                     // Search input field
                     TextField(
                         shape = RoundedCornerShape(20.dp),
-                        value = searchQuery,
-                        onValueChange = { searchQuery = it },
+                        value = searchViewModel.searchQuery.value,
+                        onValueChange = { searchViewModel.setSearchQuery(it) },
                         maxLines = 1,
                         placeholder = { Text("Search items") },
                         leadingIcon = {
                             Icon(Icons.Default.Search, contentDescription = "Search")
                         },
                         trailingIcon = {
-                            if (searchQuery.isNotEmpty()) {
-                                IconButton(onClick = { searchQuery = "" }) {
+                            if (searchViewModel.searchQuery.value.isNotEmpty()) {
+                                IconButton(onClick = { searchViewModel.setSearchQuery("") }) {
                                     Icon(Icons.Rounded.Clear, contentDescription = "Clear")
                                 }
                             }
@@ -116,7 +91,7 @@ fun SearchableItemList(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(16.dp)
-                            .focusRequester(searchFieldFocusRequester),
+                            .focusRequester(searchViewModel.searchFieldFocusRequester.value),
                         textStyle = TextStyle(
                             fontFamily = FontFamily.SansSerif,
                             fontWeight = FontWeight.Normal,
@@ -144,8 +119,8 @@ fun SearchableItemList(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .clickable {
+                                        searchViewModel.setVisibility(false)
                                         onItemSelected(item)
-                                        isSearchVisible = false
                                     }
                                     .padding(16.dp)
                             )
@@ -153,6 +128,9 @@ fun SearchableItemList(
                     }
                 }
             }
+        }
+        LaunchedEffect(Unit) {
+            searchViewModel.focusOnQueryField()
         }
     }
 }

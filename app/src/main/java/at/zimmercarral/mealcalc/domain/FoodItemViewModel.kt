@@ -33,7 +33,7 @@ class FoodItemViewModel(
                 val item =
                     FoodItem(uuid, name, fat, carbs, protein, amount, LocalDateTime.now(), false)
                 viewModelScope.launch {
-                    foodItemDao.insert(item)
+                    foodItemDao.updateOrInsert(item)
                 }
             }
 

@@ -17,6 +17,7 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -29,8 +30,10 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
+import androidx.room.Room
 import at.zimmercarral.mealcalc.R
 import at.zimmercarral.mealcalc.common.ActionButton
+import at.zimmercarral.mealcalc.data.db.FoodItemDatabase
 import at.zimmercarral.mealcalc.ui.theme.AppTheme
 import at.zimmercarral.mealcalc.ui.theme.robotoFamily
 
@@ -97,7 +100,12 @@ fun ItemName(
 @PreviewLightDark
 @Composable
 private fun InputFieldPreview() {
-    val viewModel = EditItemDialogViewModel()
+    val context = LocalContext.current
+    val db = Room.inMemoryDatabaseBuilder(
+        context, FoodItemDatabase::class.java
+    ).build()
+    val dao = db.dao()
+    val viewModel = EditItemDialogViewModel(dao)
     viewModel.setName("Apfelstrudel mit Sahne")
     AppTheme() {
         ItemName(viewModel)

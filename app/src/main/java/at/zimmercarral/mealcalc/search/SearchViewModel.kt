@@ -1,0 +1,35 @@
+package at.zimmercarral.mealcalc.search
+
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.focus.FocusRequester
+import androidx.lifecycle.ViewModel
+import at.zimmercarral.mealcalc.data.db.model.FoodItem
+
+class SearchViewModel(initialItems: List<FoodItem>) : ViewModel() {
+
+    var visible = mutableStateOf(false)
+    var searchQuery = mutableStateOf("")
+    var items = mutableStateListOf<FoodItem>().apply {
+        addAll(initialItems)
+    }
+    val searchFieldFocusRequester = mutableStateOf(FocusRequester())
+
+
+    fun setVisibility(visible: Boolean) {
+        this.visible.value = visible
+    }
+
+    fun setSearchQuery(query: String) {
+        searchQuery.value = query
+    }
+
+    fun setItems(newItems: List<FoodItem>) {
+        items.clear()
+        items.addAll(newItems)
+    }
+
+    fun focusOnQueryField() {
+        searchFieldFocusRequester.value.requestFocus()
+    }
+}
