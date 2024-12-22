@@ -40,12 +40,12 @@ fun SearchableItemList(
     searchViewModel: SearchViewModel,
     onItemSelected: (FoodItem) -> Unit
 ) {
-    // Filtered items based on search query - now uses the state's value
-    val filteredItems = remember(searchViewModel.items, searchViewModel.searchQuery) {
-        searchViewModel.items.filter {
-            it.name.contains(searchViewModel.searchQuery.value, ignoreCase = true)
+    val filteredItems =
+        remember(searchViewModel.items.toList(), searchViewModel.searchQuery.value) {
+            searchViewModel.items.filter {
+                it.name.contains(searchViewModel.searchQuery.value, ignoreCase = true)
+            }
         }
-    }
 
     // Search overlay dialog
     if (searchViewModel.visible.value) {

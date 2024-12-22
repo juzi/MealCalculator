@@ -61,7 +61,7 @@ fun MealItem(
             if (dismissValue == SwipeToDismissBoxValue.EndToStart) {
                 // When swiped to start (left), trigger a callback to update state
                 isDismissed = true
-                val currentItem = item
+                val deletedItem = item
                 onDeleteItem(item)
                 scope.launch {
                     SnackbarController.sendEvent(
@@ -69,7 +69,10 @@ fun MealItem(
                             message = itemDeleted,
                             action = SnackbarAction(
                                 name = undo,
-                                action = { onAddItem(currentItem) }
+                                action = {
+                                    onAddItem(deletedItem)
+                                    isDismissed = false
+                                }
                             )
                         )
                     )
@@ -86,7 +89,6 @@ fun MealItem(
         backgroundContent = {
             DeleteBackground(dismissState)
         },
-//        modifier = Modifier.padding(vertical = 4.dp)
     ) {
         Card(modifier = Modifier
             .fillMaxWidth(0.95f)

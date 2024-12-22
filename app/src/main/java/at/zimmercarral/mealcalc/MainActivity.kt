@@ -9,11 +9,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
@@ -128,28 +129,13 @@ class MainActivity : ComponentActivity() {
                                 },
                                 modifier = Modifier
                                     .padding(end = 25.dp, top = 15.dp)
-                                    .align(Alignment.TopEnd)
+                                    .align(Alignment.TopEnd),
+                                containerColor = colorScheme.primary,
+                                contentColor = colorScheme.onPrimary,
                             ) {
-                                Icon(
+                                Icon(modifier = Modifier.size(30.dp),
                                     imageVector = Icons.Rounded.Search,
-                                    contentDescription = "Search Item"
-                                )
-                            }
-                            // Floating add-item button
-                            FloatingActionButton(
-                                onClick = {
-                                    editItemDialogViewModel.clear()
-                                    editItemDialogViewModel.setInUpdateMode(false)
-                                    editItemDialogViewModel.setInitialFocus(Focus.NAME)
-                                    editItemDialogViewModel.setVisible(true)
-                                },
-                                modifier = Modifier
-                                    .padding(end = 25.dp, bottom = 50.dp)
-                                    .align(Alignment.BottomEnd)
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Rounded.Add,
-                                    contentDescription = "Add Item"
+                                    contentDescription = "Search item"
                                 )
                             }
                         }

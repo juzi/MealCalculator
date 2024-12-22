@@ -29,6 +29,12 @@ fun MainLayout(editItemDialogViewModel: EditItemDialogViewModel, mealViewModel: 
                 editItemDialogViewModel.setInUpdateMode(true)
                 editItemDialogViewModel.setInitialFocus(Focus.AMOUNT)
                 editItemDialogViewModel.setVisible(true)
+            },
+            onAddNewItem = {
+                editItemDialogViewModel.clear()
+                editItemDialogViewModel.setInUpdateMode(false)
+                editItemDialogViewModel.setInitialFocus(Focus.NAME)
+                editItemDialogViewModel.setVisible(true)
             })
     }
 }

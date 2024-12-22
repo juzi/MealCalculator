@@ -5,12 +5,19 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -31,6 +38,7 @@ import at.zimmercarral.mealcalc.SnackbarEvent
 import at.zimmercarral.mealcalc.data.db.model.FoodItem
 import at.zimmercarral.mealcalc.ui.theme.AppTheme
 import at.zimmercarral.mealcalc.ui.theme.robotoFamily
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 
@@ -38,53 +46,99 @@ import kotlinx.coroutines.launch
 fun MealInfo(
     mealViewModel: MealViewModel,
     onEditItem: (FoodItem) -> Unit,
+    onAddNewItem: () -> Unit = {}
 ) {
     val mealDeleted = stringResource(R.string.meal_deleted)
     val undo = stringResource(R.string.undo)
     val scope = rememberCoroutineScope()
 
-    Column() {
+    Column(modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.SpaceBetween) {
         MealTitle()
         MealList(mealViewModel.mealItems, onEditItem,
             mealViewModel::addItem,
             mealViewModel::removeItem)
+        AddItemButton(onAddNewItem)
         MealValues(mealViewModel)
-        Row(
-            horizontalArrangement = Arrangement.Center,
+        DeleteButton(mealViewModel, scope, mealDeleted, undo)
+    }
+}
+
+@Composable
+private fun DeleteButton(
+    mealViewModel: MealViewModel,
+    scope: CoroutineScope,
+    mealDeleted: String,
+    undo: String
+) {
+    Row(
+        horizontalArrangement = Arrangement.Center,
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(60.dp)
+            .padding(bottom = 15.dp)
+    ) {
+        Button(
             modifier = Modifier
-                .fillMaxWidth(),
-        ) {
-            Button(
-                modifier = Modifier
-                    .fillMaxWidth(0.6f)
-                    .height(55.dp),
-                enabled = mealViewModel.mealItems.isNotEmpty(),
-                onClick = {
-                    val currentItems = mealViewModel.mealItems.toList()
-                    if (currentItems.isNotEmpty()) {
-                        mealViewModel.removeAllItems()
-                        scope.launch {
-                            SnackbarController.sendEvent(
-                                event = SnackbarEvent(
-                                    message = mealDeleted,
-                                    action = SnackbarAction(
-                                        name = undo,
-                                        action = { mealViewModel.addItems(currentItems) }
-                                    )
+                .fillMaxWidth(0.6f)
+                .fillMaxHeight(),
+            enabled = mealViewModel.mealItems.isNotEmpty(),
+            onClick = {
+                val currentItems = mealViewModel.mealItems.toList()
+                if (currentItems.isNotEmpty()) {
+                    mealViewModel.removeAllItems()
+                    scope.launch {
+                        SnackbarController.sendEvent(
+                            event = SnackbarEvent(
+                                message = mealDeleted,
+                                action = SnackbarAction(
+                                    name = undo,
+                                    action = { mealViewModel.addItems(currentItems) }
                                 )
                             )
-                        }
+                        )
                     }
                 }
-            ) {
-                Text(
-                    text = stringResource(id = R.string.clear_menu),
-                    fontFamily = robotoFamily,
-                    fontWeight = FontWeight.Medium,
-                    fontSize = TextUnit(18f, TextUnitType.Sp),
-                )
             }
+        ) {
+            Text(
+                text = stringResource(id = R.string.clear_menu),
+                fontFamily = robotoFamily,
+                fontWeight = FontWeight.Medium,
+                fontSize = TextUnit(18f, TextUnitType.Sp),
+            )
         }
+    }
+}
+
+@Composable
+private fun AddItemButton(onAddNewItem: () -> Unit = {}) {
+    Row(modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.End) {
+        FloatingActionButton(
+            onClick = onAddNewItem,
+            modifier = Modifier
+                .padding(end = 25.dp, bottom = 5.dp),
+            containerColor = colorScheme.primary,
+            contentColor = colorScheme.onPrimary
+        ) {
+            Icon(modifier = Modifier.size(30.dp),
+                imageVector = Icons.Rounded.Add,
+                contentDescription = "Add new item"
+            )
+        }
+//        Button(
+//            modifier = Modifier
+//                .padding(end = 25.dp)
+//                .background(color = colorScheme.primary)
+//                .size(60.dp),
+//            onClick = {}
+//        ) {
+//            Icon(modifier = Modifier.size(60.dp),
+//                imageVector = Icons.Rounded.Add,
+//                contentDescription = "Add new item"
+//            )
+//        }
     }
 }
 
@@ -93,7 +147,7 @@ fun MealTitle() {
     Row(horizontalArrangement = Arrangement.Center,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 12.dp, bottom = 25.dp)
+            .padding(top = 30.dp, bottom = 25.dp)
     ) {
         Text(fontFamily = robotoFamily,
             fontSize = TextUnit(25f, TextUnitType.Sp),
@@ -108,10 +162,10 @@ private fun MealValues(mealViewModel: MealViewModel) {
     Card(
         modifier = Modifier
             .fillMaxWidth(0.95f)
-            .padding(top = 15.dp, start = 18.dp, bottom = 20.dp)
+            .padding(start = 18.dp)
             .border(width = 1.dp, color = colorScheme.primary,
                 shape = CardDefaults.outlinedShape),
-        elevation = CardDefaults.cardElevation(defaultElevation = 10.dp)
+        //elevation = CardDefaults.cardElevation(defaultElevation = 10.dp)
     ) {
         Row(
             modifier = Modifier
