@@ -93,7 +93,6 @@ fun MealItem(
         Card(modifier = Modifier
             .fillMaxWidth(0.95f)
             .height(60.dp)
-            .padding(start = 3.dp)
             .pointerInput(Unit) {
                 detectTapGestures(
                     onLongPress = { onEditItem(item) }

@@ -39,6 +39,7 @@ fun InputField(
     leadingIcon: ImageVector,
     leadingIconDescription: String,
     onValueChange: (String) -> Unit,
+    readOnly: Boolean = false,
     modifier: Modifier = Modifier,
     imeAction: ImeAction = ImeAction.Next,
 ) {
@@ -51,6 +52,7 @@ fun InputField(
             )
             .width(160.dp)
             .height(60.dp),
+        readOnly = readOnly,
         textStyle = TextStyle(
             fontFamily = robotoFamily,
             fontWeight = FontWeight.Normal,

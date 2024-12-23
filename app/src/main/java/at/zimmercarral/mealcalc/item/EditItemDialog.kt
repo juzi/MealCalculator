@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MaterialTheme.colorScheme
@@ -93,7 +94,8 @@ fun AddOrUpdateButton(
             modifier = Modifier
                 .fillMaxWidth(0.7f)
                 .padding(start = 30.dp)
-                .height(60.dp),
+                .height(55.dp),
+            shape = RoundedCornerShape(15.dp),
             onClick = {
                 onAddOrUpdateItem(editItemDialogViewModel.getFoodItem())
                 editItemDialogViewModel.saveItem()

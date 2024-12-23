@@ -26,4 +26,6 @@
     <string name="save_item">Änderungen speichern</string>
     <string name="search_item">Suchen</string>
     <string name="item_was_deleted">%s wurde gelöscht!</string>
+    <string name="gram">gr</string>
+    <string name="plus">together with</string>
 </resources>

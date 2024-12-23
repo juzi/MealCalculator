@@ -5,12 +5,12 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material3.Button
@@ -36,6 +36,9 @@ import at.zimmercarral.mealcalc.SnackbarAction
 import at.zimmercarral.mealcalc.SnackbarController
 import at.zimmercarral.mealcalc.SnackbarEvent
 import at.zimmercarral.mealcalc.data.db.model.FoodItem
+import at.zimmercarral.mealcalc.ui.CarbsIcon
+import at.zimmercarral.mealcalc.ui.FatIcon
+import at.zimmercarral.mealcalc.ui.ProteinIcon
 import at.zimmercarral.mealcalc.ui.theme.AppTheme
 import at.zimmercarral.mealcalc.ui.theme.robotoFamily
 import kotlinx.coroutines.CoroutineScope
@@ -52,15 +55,15 @@ fun MealInfo(
     val undo = stringResource(R.string.undo)
     val scope = rememberCoroutineScope()
 
-    Column(modifier = Modifier.fillMaxSize(),
+    Column(
+        modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.SpaceBetween) {
         MealTitle()
         MealList(mealViewModel.mealItems, onEditItem,
             mealViewModel::addItem,
             mealViewModel::removeItem)
-        AddItemButton(onAddNewItem)
+        ActionButtons(mealViewModel, scope, mealDeleted, undo, onAddNewItem)
         MealValues(mealViewModel)
-        DeleteButton(mealViewModel, scope, mealDeleted, undo)
     }
 }
 
@@ -74,15 +77,14 @@ private fun DeleteButton(
     Row(
         horizontalArrangement = Arrangement.Center,
         modifier = Modifier
-            .fillMaxWidth()
+            .fillMaxWidth(0.7f)
             .height(60.dp)
-            .padding(bottom = 15.dp)
+            .padding(bottom = 5.dp, end = 20.dp)
     ) {
         Button(
-            modifier = Modifier
-                .fillMaxWidth(0.6f)
-                .fillMaxHeight(),
+            modifier = Modifier.fillMaxSize(),
             enabled = mealViewModel.mealItems.isNotEmpty(),
+            shape = RoundedCornerShape(15.dp),
             onClick = {
                 val currentItems = mealViewModel.mealItems.toList()
                 if (currentItems.isNotEmpty()) {
@@ -112,16 +114,26 @@ private fun DeleteButton(
 }
 
 @Composable
-private fun AddItemButton(onAddNewItem: () -> Unit = {}) {
+private fun ActionButtons(
+    mealViewModel: MealViewModel,
+    scope: CoroutineScope = rememberCoroutineScope(),
+    mealDeleted: String = stringResource(R.string.meal_deleted),
+    undo: String = stringResource(R.string.undo),
+    onAddNewItem: () -> Unit = {}
+) {
     Row(modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.End) {
+        horizontalArrangement = Arrangement.End
+    ) {
+        DeleteButton(mealViewModel, scope, mealDeleted, undo)
+
         FloatingActionButton(
             onClick = onAddNewItem,
             modifier = Modifier
-                .padding(end = 25.dp, bottom = 5.dp),
+                .padding(end = 25.dp),
             containerColor = colorScheme.primary,
-            contentColor = colorScheme.onPrimary
-        ) {
+            contentColor = colorScheme.onPrimary,
+
+            ) {
             Icon(modifier = Modifier.size(30.dp),
                 imageVector = Icons.Rounded.Add,
                 contentDescription = "Add new item"
@@ -162,56 +174,83 @@ private fun MealValues(mealViewModel: MealViewModel) {
     Card(
         modifier = Modifier
             .fillMaxWidth(0.95f)
-            .padding(start = 18.dp)
+            .padding(start = 18.dp, bottom = 40.dp)
             .border(width = 1.dp, color = colorScheme.primary,
                 shape = CardDefaults.outlinedShape),
         //elevation = CardDefaults.cardElevation(defaultElevation = 10.dp)
     ) {
         Row(
             modifier = Modifier
-                .background(color = colorScheme.surfaceContainerLowest)
+                .background(color = colorScheme.surfaceContainer)
                 .fillMaxWidth()
-                .height(45.dp),
-            horizontalArrangement = Arrangement.SpaceEvenly,
+                .height(60.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
         ) {
-            Row {
-                Text(modifier = Modifier
-                    .padding(end = 10.dp, top = 10.dp),
-                    color = colorScheme.primary,
-                    fontFamily = FontFamily.SansSerif,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = TextUnit(15f, TextUnitType.Sp),
-                    maxLines = 1,
-                    text = stringResource(R.string.label_carbs)
+            Row(
+                modifier = Modifier
+                    .padding(start = 20.dp, end = 10.dp, top = 10.dp, bottom = 10.dp),
+            ) {
+//                Text(modifier = Modifier
+//                    .padding(end = 10.dp, top = 10.dp),
+//                    color = colorScheme.primary,
+//                    fontFamily = FontFamily.SansSerif,
+//                    fontWeight = FontWeight.Bold,
+//                    fontSize = TextUnit(15f, TextUnitType.Sp),
+//                    maxLines = 1,
+//                    text = stringResource(R.string.label_carbs)
+//                )
+                Icon(
+                    imageVector = CarbsIcon,
+                    contentDescription = stringResource(R.string.label_carbs),
+                    modifier = Modifier.size(40.dp),
+                    tint = colorScheme.primary,
                 )
                 Text(modifier = Modifier
-                    .padding(end = 10.dp, top = 10.dp),
-                    color = colorScheme.error,
+                    .padding(start = 10.dp, end = 10.dp, top = 10.dp),
+                    color = colorScheme.onBackground,
                     fontFamily = FontFamily.SansSerif,
                     fontWeight = FontWeight.Bold,
                     fontSize = TextUnit(20f, TextUnitType.Sp),
                     maxLines = 1,
-                    text = mealViewModel.calculateCarbs()
+                    text = mealViewModel.calculateCarbs() + " gr"
                 )
             }
-            Row {
-                Text(modifier = Modifier
-                    .padding(end = 10.dp, top = 10.dp),
-                    color = colorScheme.primary,
-                    fontFamily = FontFamily.SansSerif,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = TextUnit(15f, TextUnitType.Sp),
-                    maxLines = 1,
-                    text = stringResource(R.string.label_calculated_fpe)
+            Row(
+                modifier = Modifier
+                    .padding(start = 20.dp, end = 20.dp, top = 10.dp, bottom = 10.dp),
+            ) {
+                Icon(
+                    modifier = Modifier
+                        .padding(top = 5.dp)
+                        .size(27.dp),
+                    imageVector = FatIcon,
+                    contentDescription = stringResource(R.string.label_fat),
+                    tint = colorScheme.primary,
+                )
+                Icon(
+                    modifier = Modifier
+                        .padding(start = 4.dp, top = 10.dp)
+                        .size(25.dp),
+                    imageVector = Icons.Rounded.Add,
+                    contentDescription = stringResource(R.string.plus),
+                    tint = colorScheme.primary,
+                )
+                Icon(
+                    modifier = Modifier
+                        .size(38.dp),
+                    imageVector = ProteinIcon,
+                    contentDescription = stringResource(R.string.label_protein),
+                    tint = colorScheme.primary,
                 )
                 Text(modifier = Modifier
-                    .padding(end = 5.dp, top = 10.dp),
-                    color = colorScheme.error,
+                    .padding(start = 10.dp, end = 5.dp, top = 10.dp),
+                    color = colorScheme.onBackground,
                     fontFamily = FontFamily.SansSerif,
                     fontWeight = FontWeight.Bold,
                     fontSize = TextUnit(20f, TextUnitType.Sp),
                     maxLines = 1,
-                    text = mealViewModel.calculateFPE())
+                    text = mealViewModel.calculateFPE() + " " + stringResource(R.string.gram)
+                )
             }
         }
     }
