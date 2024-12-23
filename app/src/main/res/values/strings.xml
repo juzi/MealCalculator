@@ -28,4 +28,6 @@
     <string name="item_was_deleted">%s wurde gelöscht!</string>
     <string name="gram">gr</string>
     <string name="plus">together with</string>
+    <string name="edit_item_before_adding">Edit item before adding</string>
+    <string name="add_without_editing">add to meal</string>
 </resources>

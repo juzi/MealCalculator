@@ -1,19 +1,27 @@
 package at.zimmercarral.mealcalc.search
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Clear
+import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -24,6 +32,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -33,12 +42,14 @@ import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import at.zimmercarral.mealcalc.R
 import at.zimmercarral.mealcalc.data.db.model.FoodItem
 
 @Composable
-fun SearchableItemList(
+fun SearchItemDialog(
     searchViewModel: SearchViewModel,
-    onItemSelected: (FoodItem) -> Unit
+    onEditItem: (FoodItem) -> Unit,
+    onAddItem: (FoodItem) -> Unit
 ) {
     val filteredItems =
         remember(searchViewModel.items.toList(), searchViewModel.searchQuery.value) {
@@ -112,18 +123,55 @@ fun SearchableItemList(
                     )
 
                     // Filtered items list
-                    LazyColumn {
+                    LazyColumn(
+                        verticalArrangement = Arrangement.spacedBy(4.dp),
+                        contentPadding = PaddingValues(5.dp),
+                    ) {
                         items(filteredItems) { item ->
-                            Text(
-                                text = item.name,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clickable {
-                                        searchViewModel.setVisibility(false)
-                                        onItemSelected(item)
-                                    }
-                                    .padding(16.dp)
-                            )
+                            Row(modifier = Modifier
+                                .fillMaxWidth()
+                                .border(width = 1.dp,
+                                    color = colorScheme.outlineVariant.copy(alpha = 0.2f),
+                                    shape = RoundedCornerShape(10.dp)
+                                ),
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Text(
+                                    text = item.name,
+                                    maxLines = 1,
+                                    modifier = Modifier
+                                        .fillMaxWidth(0.75f)
+                                        .clickable {
+                                            searchViewModel.setVisibility(false)
+                                            onEditItem(item)
+                                        }
+                                        .padding(16.dp)
+                                )
+                                Icon(
+                                    modifier = Modifier
+                                        .size(40.dp)
+                                        .padding(top = 15.dp, end = 5.dp)
+                                        .clickable {
+                                            searchViewModel.setVisibility(false)
+                                            onEditItem(item)
+                                        },
+                                    imageVector = Icons.Rounded.Edit,
+                                    contentDescription = stringResource(R.string.edit_item_before_adding),
+                                    tint = colorScheme.primary,
+                                )
+                                Icon(
+                                    modifier = Modifier
+                                        .size(48.dp)
+                                        .padding(top = 12.dp)
+                                        .clickable {
+                                            searchViewModel.setVisibility(false)
+                                            onAddItem(item)
+                                        },
+                                    imageVector = Icons.Rounded.Add,
+                                    contentDescription = stringResource(R.string.add_without_editing),
+                                    tint = colorScheme.primary,
+                                )
+                            }
                         }
                     }
                 }

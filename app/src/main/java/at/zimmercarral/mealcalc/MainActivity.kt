@@ -32,8 +32,8 @@ import at.zimmercarral.mealcalc.data.sync.SynchronizationTask
 import at.zimmercarral.mealcalc.item.EditItemDialogViewModel
 import at.zimmercarral.mealcalc.item.Focus
 import at.zimmercarral.mealcalc.meal.MealViewModel
+import at.zimmercarral.mealcalc.search.SearchItemDialog
 import at.zimmercarral.mealcalc.search.SearchViewModel
-import at.zimmercarral.mealcalc.search.SearchableItemList
 import at.zimmercarral.mealcalc.ui.theme.AppTheme
 import kotlinx.coroutines.launch
 
@@ -66,19 +66,15 @@ class MainActivity : ComponentActivity() {
                 "food-items.db"
             ).allowMainThreadQueries().build()
         }
+
         val editItemDialogViewModel = EditItemDialogViewModel(db.dao())
         val mealViewModel = MealViewModel(listOf())
+        val searchViewModel = SearchViewModel(db.dao().getAllItems())
 
         if (networkManager.isInHomeNetwork()) {
-            synchronizationTask.syncDatabases(mealViewModel)
+            synchronizationTask.syncDatabases(db.dao(),
+                onSyncCompleted = { searchViewModel.setItems(db.dao().getAllItems()) })
         }
-        val availableItems = db.dao().getAllItems()
-        val searchViewModel = SearchViewModel(db.dao().getAllItems())
-        // Use the items here
-//            for (foodItem in availableItems) {
-//                db.dao().insert(foodItem)
-//            }
-//        }
 
         enableEdgeToEdge()
         setContent {
@@ -114,14 +110,18 @@ class MainActivity : ComponentActivity() {
                         .padding(innerPadding)
                     ) {
                         Box(modifier = Modifier.fillMaxSize()) {
-                            MainLayout(editItemDialogViewModel, mealViewModel)
-                            SearchableItemList(searchViewModel,
-                                onItemSelected = {
+                            SearchItemDialog(searchViewModel,
+                                onEditItem = {
                                     editItemDialogViewModel.setItem(it)
                                     editItemDialogViewModel.setInUpdateMode(false)
                                     editItemDialogViewModel.setInitialFocus(Focus.AMOUNT)
                                     editItemDialogViewModel.setVisible(true)
-                                })
+                                },
+                                onAddItem = {
+                                    mealViewModel.addItem(it)
+                                }
+                            )
+                            MainLayout(editItemDialogViewModel, mealViewModel)
                             // Floatinsg search button
                             FloatingActionButton(
                                 onClick = {

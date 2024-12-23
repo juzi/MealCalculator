@@ -25,7 +25,7 @@ fun MealList(
         contentPadding = PaddingValues(10.dp),
         modifier = Modifier
             .fillMaxHeight(0.6f)
-            .padding(start = 20.dp)
+            .padding(start = 15.dp)
     ) {
         items(foods, key = { it.uuid }) { foodItem ->
             MealItem(

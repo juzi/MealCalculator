@@ -2,9 +2,9 @@ package at.zimmercarral.mealcalc.data.sync
 
 import android.os.Handler
 import android.os.Looper
+import at.zimmercarral.mealcalc.data.db.dao.FoodItemDao
 import at.zimmercarral.mealcalc.data.db.model.FoodItem
 import at.zimmercarral.mealcalc.data.http.HttpFoodItemRepository
-import at.zimmercarral.mealcalc.meal.MealViewModel
 import java.util.concurrent.Executors
 
 class SynchronizationTask() {
@@ -12,50 +12,55 @@ class SynchronizationTask() {
     private val httpFoodItemRepository = HttpFoodItemRepository()
 
 
-    fun syncDatabases(mealViewModel: MealViewModel) {
+    fun syncDatabases(
+        dao: FoodItemDao,
+        onSyncCompleted: () -> Unit
+    ) {
         val executor = Executors.newSingleThreadExecutor()
         val handler = Handler(Looper.getMainLooper())
+        val localItemsMap = dao.getAllItems().associateBy { it.uuid }
         executor.execute {
             handler.post {
                 httpFoodItemRepository.getEntries(
-                    onSuccess = { items ->
-                        synchronizeFoodItems(items)
+                    onSuccess = { remoteIcons ->
+                        val remoteItemsMap = remoteIcons.associateBy { it.uuid }
+                        synchronizeFoodItems(dao, remoteItemsMap, localItemsMap)
                     })
             }
         }
     }
 
-    fun synchronizeFoodItems(remoteItems: List<FoodItem>) {
-        return
-    }
-//        val localItems = sqliteDataRepository.getAllNutritionalData()
-//
-//        // Process remote entries
-//        remoteItems.forEach { (remoteUuid, remoteItem) ->
-//            when {
-//                !localItems.containsKey(remoteUuid) -> {
-//                    if (!remoteItem.deleted) {
-//                        sqliteDataRepository.saveNutritionalData(remoteItem)
-//                    }
-//                }
-//
-//                else -> {
-//                    if (remoteItem.deleted) {
-//                        sqliteDataRepository.deleteNutritionalData(remoteItem)
-//                    } else {
-//                        val localEntry = localItems[remoteUuid]
-//                        if (remoteItem.differentValues(localEntry) &&
-//                            localEntry != null &&
-//                            DateUtil.isAfter(remoteItem.lastchanged, localEntry.lastchanged)
-//                        ) {
-//                            sqliteDataRepository.updateNutritionalData(remoteItem)
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//
-//        // Process local entries
+    fun synchronizeFoodItems(
+        dao: FoodItemDao,
+        remoteItems: Map<String, FoodItem>,
+        localItems: Map<String, FoodItem>
+    ) {
+        // Process remote entries
+        remoteItems.forEach { (remoteUuid, remoteItem) ->
+            when {
+                !localItems.containsKey(remoteUuid) -> {
+                    if (!remoteItem.isDeleted) {
+                        dao.updateOrInsert(remoteItem)
+                    }
+                }
+
+                else -> {
+                    if (remoteItem.isDeleted) {
+                        dao.deleteItem(remoteItem)
+                    } else {
+                        val localEntry = localItems[remoteUuid]
+                        if (remoteItem != localEntry && localEntry != null &&
+                            remoteItem.lastModifiedAt != null &&
+                            remoteItem.lastModifiedAt.isAfter(localEntry.lastModifiedAt)
+                        ) {
+                            dao.updateOrInsert(remoteItem)
+                        }
+                    }
+                }
+            }
+        }
+
+        // Process local entries
 //        localItems.forEach { (localUuid, localValues) ->
 //            when {
 //                !remoteItems.containsKey(localUuid) -> {
@@ -73,4 +78,5 @@ class SynchronizationTask() {
 //                }
 //            }
 //        }
+    }
 }
