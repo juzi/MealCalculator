@@ -202,7 +202,7 @@ private fun MealValues(mealViewModel: MealViewModel) {
                 Icon(
                     imageVector = CarbsIcon,
                     contentDescription = stringResource(R.string.label_carbs),
-                    modifier = Modifier.size(40.dp),
+                    modifier = Modifier.size(34.dp),
                     tint = colorScheme.primary,
                 )
                 Text(modifier = Modifier
@@ -229,7 +229,7 @@ private fun MealValues(mealViewModel: MealViewModel) {
                 )
                 Icon(
                     modifier = Modifier
-                        .padding(start = 4.dp, top = 10.dp)
+                        .padding(start = 5.dp, top = 8.dp)
                         .size(25.dp),
                     imageVector = Icons.Rounded.Add,
                     contentDescription = stringResource(R.string.plus),

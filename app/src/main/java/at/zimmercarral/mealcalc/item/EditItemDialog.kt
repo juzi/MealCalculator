@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -36,8 +35,9 @@ fun EditItemDialog(
     onDismiss: () -> Unit,
     onAddOrUpdateItem: (FoodItem) -> Unit,
 ) {
+    val focusManager = LocalFocusManager.current
+
     if (editItemDialogViewModel.isVisible.value) {
-        val focusManager = LocalFocusManager.current
         Dialog(
             properties = DialogProperties(
                 dismissOnBackPress = true,
@@ -61,15 +61,14 @@ fun EditItemDialog(
                         },
                     verticalArrangement = Arrangement.spacedBy(2.dp),
                 ) {
-                    Spacer(modifier = Modifier.height(10.dp))
                     ItemName(editItemDialogViewModel)
                     NutritionalValues(editItemDialogViewModel)
-                    CalculatedValues(editItemDialogViewModel)
                     AddOrUpdateButton(editItemDialogViewModel, onAddOrUpdateItem)
-                    Spacer(modifier = Modifier.height(10.dp))
+                    CalculatedValues(editItemDialogViewModel)
                 }
             }
         }
+
         LaunchedEffect(Unit) {
             editItemDialogViewModel.requestFocus(editItemDialogViewModel.initialFocus.value)
         }

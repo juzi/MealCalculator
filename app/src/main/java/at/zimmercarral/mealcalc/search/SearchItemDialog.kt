@@ -1,5 +1,6 @@
 package at.zimmercarral.mealcalc.search
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -59,7 +60,7 @@ fun SearchItemDialog(
         }
 
     // Search overlay dialog
-    if (searchViewModel.visible.value) {
+    AnimatedVisibility(visible = searchViewModel.visible.value) {
         Dialog(
             properties = DialogProperties(
                 dismissOnBackPress = true,
