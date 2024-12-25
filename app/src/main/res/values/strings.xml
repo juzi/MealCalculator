@@ -30,4 +30,5 @@
     <string name="plus">together with</string>
     <string name="edit_item_before_adding">Edit item before adding</string>
     <string name="add_without_editing">add to meal</string>
+    <string name="search_in_database">Suche...</string>
 </resources>

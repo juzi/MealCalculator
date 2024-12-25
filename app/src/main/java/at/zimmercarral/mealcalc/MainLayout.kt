@@ -12,14 +12,31 @@ import at.zimmercarral.mealcalc.item.EditItemDialogViewModel
 import at.zimmercarral.mealcalc.item.Focus
 import at.zimmercarral.mealcalc.meal.MealInfo
 import at.zimmercarral.mealcalc.meal.MealViewModel
+import at.zimmercarral.mealcalc.search.FoodItemSearchBar
+import at.zimmercarral.mealcalc.search.SearchViewModel
 
 @Composable
-fun MainLayout(editItemDialogViewModel: EditItemDialogViewModel, mealViewModel: MealViewModel) {
+fun MainLayout(
+    editItemDialogViewModel: EditItemDialogViewModel,
+    mealViewModel: MealViewModel,
+    searchViewModel: SearchViewModel
+) {
     Column(verticalArrangement = Arrangement.Top,
         modifier = Modifier
             .fillMaxSize()
-            .background(color = colorScheme.surfaceContainer)) {
-//        TopActionIcons(editItemDialogViewModel, mealViewModel)
+            .background(color = colorScheme.surfaceContainer)
+    ) {
+        FoodItemSearchBar(searchViewModel,
+            onEditItem = {
+                editItemDialogViewModel.setItem(it)
+                editItemDialogViewModel.setInUpdateMode(false)
+                editItemDialogViewModel.setInitialFocus(Focus.AMOUNT)
+                editItemDialogViewModel.setVisible(true)
+            },
+            onAddItem = {
+                mealViewModel.addItem(it)
+            }
+        )
         EditItemDialog(editItemDialogViewModel,
             onAddOrUpdateItem = mealViewModel::addOrUpdateItem,
             onDismiss = { editItemDialogViewModel.setVisible(false) })

@@ -5,16 +5,9 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Search
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
@@ -22,17 +15,13 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.room.Room
 import at.zimmercarral.mealcalc.data.db.FoodItemDatabase
 import at.zimmercarral.mealcalc.data.sync.NetworkManager
 import at.zimmercarral.mealcalc.data.sync.SynchronizationTask
 import at.zimmercarral.mealcalc.item.EditItemDialogViewModel
-import at.zimmercarral.mealcalc.item.Focus
 import at.zimmercarral.mealcalc.meal.MealViewModel
-import at.zimmercarral.mealcalc.search.SearchItemDialog
 import at.zimmercarral.mealcalc.search.SearchViewModel
 import at.zimmercarral.mealcalc.ui.theme.AppTheme
 import kotlinx.coroutines.launch
@@ -98,51 +87,15 @@ class MainActivity : ComponentActivity() {
                 Scaffold(modifier = Modifier.fillMaxSize(),
                     snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
                 ) { innerPadding ->
-//                    Column(modifier = Modifier
-//                        .padding(innerPadding)
-//                        .background(color = Color.White)
-//                    ) {
-//                        state.items.forEach {
-//                            Text(text = it.name)
-//                        }
-//                    }
                     Column(modifier = Modifier
                         .padding(innerPadding)
                     ) {
-                        Box(modifier = Modifier.fillMaxSize()) {
-                            SearchItemDialog(searchViewModel,
-                                onEditItem = {
-                                    editItemDialogViewModel.setItem(it)
-                                    editItemDialogViewModel.setInUpdateMode(false)
-                                    editItemDialogViewModel.setInitialFocus(Focus.AMOUNT)
-                                    editItemDialogViewModel.setVisible(true)
-                                },
-                                onAddItem = {
-                                    mealViewModel.addItem(it)
-                                }
-                            )
-                            MainLayout(editItemDialogViewModel, mealViewModel)
-                            // Floatinsg search button
-                            FloatingActionButton(
-                                onClick = {
-                                    searchViewModel.setVisibility(true)
-                                },
-                                modifier = Modifier
-                                    .padding(end = 25.dp, top = 15.dp)
-                                    .align(Alignment.TopEnd),
-                                containerColor = colorScheme.primary,
-                                contentColor = colorScheme.onPrimary,
-                            ) {
-                                Icon(modifier = Modifier.size(30.dp),
-                                    imageVector = Icons.Rounded.Search,
-                                    contentDescription = "Search item"
-                                )
-                            }
-                        }
+                        MainLayout(editItemDialogViewModel, mealViewModel, searchViewModel)
                     }
                 }
             }
         }
     }
 }
+
 

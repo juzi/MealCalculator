@@ -56,7 +56,8 @@ fun MealInfo(
     val scope = rememberCoroutineScope()
 
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize(),
         verticalArrangement = Arrangement.SpaceBetween) {
         MealTitle()
         MealList(mealViewModel.mealItems, onEditItem,
@@ -156,10 +157,9 @@ private fun ActionButtons(
 
 @Composable
 fun MealTitle() {
-    Row(horizontalArrangement = Arrangement.Center,
+    Row(horizontalArrangement = Arrangement.Start,
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 30.dp, bottom = 25.dp)
+            .padding(start = 10.dp, top = 20.dp)
     ) {
         Text(fontFamily = robotoFamily,
             fontSize = TextUnit(25f, TextUnitType.Sp),
