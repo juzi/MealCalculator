@@ -21,6 +21,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -36,6 +37,8 @@ import at.zimmercarral.mealcalc.SnackbarAction
 import at.zimmercarral.mealcalc.SnackbarController
 import at.zimmercarral.mealcalc.SnackbarEvent
 import at.zimmercarral.mealcalc.data.db.model.FoodItem
+import at.zimmercarral.mealcalc.item.CalculatedValues
+import at.zimmercarral.mealcalc.item.itemCalculator
 import at.zimmercarral.mealcalc.ui.CarbsIcon
 import at.zimmercarral.mealcalc.ui.FatIcon
 import at.zimmercarral.mealcalc.ui.ProteinIcon
@@ -55,6 +58,21 @@ fun MealInfo(
     val undo = stringResource(R.string.undo)
     val scope = rememberCoroutineScope()
 
+    val calculatedValues = remember(mealViewModel.mealItems.toList()) {
+        if (!mealViewModel.mealItems.isEmpty()) {
+            mealViewModel.mealItems
+                .map {
+                    itemCalculator.calculateValues(it.fatPer100g, it.carbsPer100g,
+                        it.proteinPer100g, it.amount)
+                }
+                .reduce { acc, calculatedValues ->
+                    acc.add(calculatedValues)
+                }
+        } else {
+            CalculatedValues(0f, 0f, 0f, 0f)
+        }
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize(),
@@ -64,7 +82,7 @@ fun MealInfo(
             mealViewModel::addItem,
             mealViewModel::removeItem)
         ActionButtons(mealViewModel, scope, mealDeleted, undo, onAddNewItem)
-        MealValues(mealViewModel)
+        MealValues(calculatedValues)
     }
 }
 
@@ -140,18 +158,6 @@ private fun ActionButtons(
                 contentDescription = "Add new item"
             )
         }
-//        Button(
-//            modifier = Modifier
-//                .padding(end = 25.dp)
-//                .background(color = colorScheme.primary)
-//                .size(60.dp),
-//            onClick = {}
-//        ) {
-//            Icon(modifier = Modifier.size(60.dp),
-//                imageVector = Icons.Rounded.Add,
-//                contentDescription = "Add new item"
-//            )
-//        }
     }
 }
 
@@ -170,14 +176,13 @@ fun MealTitle() {
 }
 
 @Composable
-private fun MealValues(mealViewModel: MealViewModel) {
+private fun MealValues(calculatedValues: CalculatedValues) {
     Card(
         modifier = Modifier
             .fillMaxWidth(0.95f)
             .padding(start = 18.dp, bottom = 40.dp)
             .border(width = 1.dp, color = colorScheme.primary,
                 shape = CardDefaults.outlinedShape),
-        //elevation = CardDefaults.cardElevation(defaultElevation = 10.dp)
     ) {
         Row(
             modifier = Modifier
@@ -190,15 +195,6 @@ private fun MealValues(mealViewModel: MealViewModel) {
                 modifier = Modifier
                     .padding(start = 20.dp, end = 10.dp, top = 10.dp, bottom = 10.dp),
             ) {
-//                Text(modifier = Modifier
-//                    .padding(end = 10.dp, top = 10.dp),
-//                    color = colorScheme.primary,
-//                    fontFamily = FontFamily.SansSerif,
-//                    fontWeight = FontWeight.Bold,
-//                    fontSize = TextUnit(15f, TextUnitType.Sp),
-//                    maxLines = 1,
-//                    text = stringResource(R.string.label_carbs)
-//                )
                 Icon(
                     imageVector = CarbsIcon,
                     contentDescription = stringResource(R.string.label_carbs),
@@ -212,7 +208,7 @@ private fun MealValues(mealViewModel: MealViewModel) {
                     fontWeight = FontWeight.Bold,
                     fontSize = TextUnit(20f, TextUnitType.Sp),
                     maxLines = 1,
-                    text = mealViewModel.calculateCarbs() + " gr"
+                    text = "%.0f ".format(calculatedValues.calculatedBEGrams) + stringResource(R.string.gram)
                 )
             }
             Row(
@@ -249,7 +245,7 @@ private fun MealValues(mealViewModel: MealViewModel) {
                     fontWeight = FontWeight.Bold,
                     fontSize = TextUnit(20f, TextUnitType.Sp),
                     maxLines = 1,
-                    text = mealViewModel.calculateFPE() + " " + stringResource(R.string.gram)
+                    text = "%.0f ".format(calculatedValues.calculatedFPEGrams) + stringResource(R.string.gram)
                 )
             }
         }

@@ -36,7 +36,6 @@ fun EditItemDialog(
     onAddOrUpdateItem: (FoodItem) -> Unit,
 ) {
     val focusManager = LocalFocusManager.current
-
     if (editItemDialogViewModel.isVisible.value) {
         Dialog(
             properties = DialogProperties(
@@ -64,7 +63,7 @@ fun EditItemDialog(
                     ItemName(editItemDialogViewModel)
                     NutritionalValues(editItemDialogViewModel)
                     AddOrUpdateButton(editItemDialogViewModel, onAddOrUpdateItem)
-                    CalculatedValues(editItemDialogViewModel)
+                    CalculatedValuesView(editItemDialogViewModel)
                 }
             }
         }
