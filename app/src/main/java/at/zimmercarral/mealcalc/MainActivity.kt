@@ -29,21 +29,7 @@ import kotlinx.coroutines.launch
 class MainActivity : ComponentActivity() {
     private val networkManager = NetworkManager(this)
     private val synchronizationTask = SynchronizationTask()
-
-    //    private val requestQueue by lazy { Volley.newRequestQueue(this) }
-
-//    @Suppress("UNCHECKED_CAST")
-//    private val editItemDialogViewModel by viewModels<FoodItemViewModel>(
-//        factoryProducer = {
-//            object : ViewModelProvider.Factory {
-//                override fun <T : ViewModel> create(modelClass: Class<T>): T {
-//                    return FoodItemViewModel(db.dao()) as T
-//                }
-//            }
-//        }
-//    )
-
-
+    
     @SuppressLint("StateFlowValueCalledInComposition")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

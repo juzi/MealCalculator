@@ -34,7 +34,7 @@ fun MainLayout(
                 editItemDialogViewModel.setVisible(true)
             },
             onAddItem = {
-                mealViewModel.addItem(it)
+                mealViewModel.addOrUpdateItem(it)
             }
         )
         EditItemDialog(editItemDialogViewModel,

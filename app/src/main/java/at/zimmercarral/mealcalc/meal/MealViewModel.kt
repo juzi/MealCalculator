@@ -33,12 +33,8 @@ class MealViewModel(items: List<FoodItem>) : ViewModel() {
         )
     }
 
-    fun addItem(foodItem: FoodItem) {
-        mealItems.add(foodItem)
-    }
-
     fun addItems(items: List<FoodItem>) {
-        mealItems.addAll(items)
+        items.forEach(this::addOrUpdateItem)
     }
 
     fun removeItem(item: FoodItem) {
@@ -48,14 +44,4 @@ class MealViewModel(items: List<FoodItem>) : ViewModel() {
     fun removeAllItems() {
         mealItems.removeAll(mealItems)
     }
-
-    fun calculateFPE(): String {
-        return "0"
-    }
-
-    fun calculateCarbs(): String {
-        return "0"
-    }
-
-
 }

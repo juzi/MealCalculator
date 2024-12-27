@@ -28,6 +28,7 @@ import androidx.compose.ui.window.DialogProperties
 import at.zimmercarral.mealcalc.R
 import at.zimmercarral.mealcalc.data.db.model.FoodItem
 import at.zimmercarral.mealcalc.ui.theme.robotoFamily
+import kotlinx.coroutines.android.awaitFrame
 
 @Composable
 fun EditItemDialog(
@@ -69,6 +70,7 @@ fun EditItemDialog(
         }
 
         LaunchedEffect(Unit) {
+            awaitFrame()
             editItemDialogViewModel.requestFocus(editItemDialogViewModel.initialFocus.value)
         }
     }

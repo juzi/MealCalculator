@@ -14,7 +14,7 @@ import at.zimmercarral.mealcalc.data.db.model.FoodItem
 
 @Composable
 fun MealList(
-    foods: SnapshotStateList<FoodItem>,
+    foodItems: SnapshotStateList<FoodItem>,
     onEditItem: (FoodItem) -> Unit,
     onAddItem: (FoodItem) -> Unit,
     onDeleteItem: (FoodItem) -> Unit
@@ -28,7 +28,7 @@ fun MealList(
             .fillMaxHeight(0.6f)
             .padding(start = 15.dp)
     ) {
-        items(foods, key = { it.uuid }) { foodItem ->
+        items(foodItems, key = { it.uuid }) { foodItem ->
             MealItem(
                 item = foodItem,
                 onEditItem = onEditItem,

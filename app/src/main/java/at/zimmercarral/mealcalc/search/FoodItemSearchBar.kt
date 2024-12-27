@@ -1,5 +1,6 @@
 package at.zimmercarral.mealcalc.search
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -9,7 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
@@ -46,8 +47,7 @@ fun FoodItemSearchBar(
 
     DockedSearchBar(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(all = 10.dp),
+            .fillMaxWidth(),
         query = searchViewModel.searchQuery.value,
         onQueryChange = { searchViewModel.setSearchQuery(it) },
         onSearch = { searchViewModel.setVisibility(true) },
@@ -81,9 +81,15 @@ fun FoodItemSearchBar(
             verticalArrangement = Arrangement.spacedBy(4.dp),
             contentPadding = PaddingValues(5.dp),
         ) {
-            items(filteredItems) { item ->
+            itemsIndexed(filteredItems) { index, item ->
+                val backgroundColor = if (index % 2 == 0) {
+                    colorScheme.surfaceContainerLow
+                } else {
+                    colorScheme.surfaceContainerHighest
+                }
                 Row(modifier = Modifier
                     .fillMaxWidth()
+                    .background(color = backgroundColor)
                     .border(width = 1.dp,
                         color = colorScheme.outlineVariant.copy(alpha = 0.2f),
                         shape = RoundedCornerShape(10.dp)
@@ -93,31 +99,35 @@ fun FoodItemSearchBar(
                     Row(modifier = Modifier.fillMaxWidth(0.8f),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
+                        var itemName = item.name.substring(0, Math.min(item.name.length, 25)).trim()
+                        if (item.name.length > 25) {
+                            itemName += "..."
+                        }
                         Text(
-                            text = item.name,
+                            text = itemName,
                             maxLines = 1,
                             modifier = Modifier
                                 .clickable {
                                     searchViewModel.setVisibility(false)
                                     onEditItem(item)
                                 }
-                                .padding(16.dp)
-                        )
+                                .padding(top = 12.dp, start = 5.dp, end = 5.dp))
                         Text(
-                            text = item.amount.toString() + " gr",
+                            text = item.amount.toString() + "gr",
                             maxLines = 1,
                             modifier = Modifier
                                 .clickable {
+                                    searchViewModel.setSearchQuery("")
                                     searchViewModel.setVisibility(false)
                                     onEditItem(item)
                                 }
-                                .padding(16.dp)
+                                .padding(top = 12.dp)
                         )
                     }
                     Icon(
                         modifier = Modifier
-                            .size(40.dp)
-                            .padding(top = 15.dp, end = 5.dp)
+                            .size(35.dp)
+                            .padding(top = 12.dp, end = 5.dp)
                             .clickable {
                                 searchViewModel.setVisibility(false)
                                 onEditItem(item)
@@ -129,7 +139,7 @@ fun FoodItemSearchBar(
                     Icon(
                         modifier = Modifier
                             .size(48.dp)
-                            .padding(top = 12.dp)
+                            .padding(top = 5.dp, end = 5.dp)
                             .clickable {
                                 searchViewModel.setVisibility(false)
                                 onAddItem(item)
