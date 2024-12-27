@@ -71,8 +71,8 @@ fun CalculatedValuesView(editItemDialogViewModel: EditItemDialogViewModel) {
                     fontWeight = FontWeight.Bold,
                     fontSize = TextUnit(20f, TextUnitType.Sp),
                     maxLines = 1,
-                    text = "%.0f".format(calculatedValues.calculatedBEGrams) + " " + stringResource(
-                        R.string.gram)
+                    text = "%.0f ".format(calculatedValues.calculatedBEGrams)
+                            + stringResource(R.string.gram)
                 )
             }
             Row(
@@ -109,8 +109,8 @@ fun CalculatedValuesView(editItemDialogViewModel: EditItemDialogViewModel) {
                     fontWeight = FontWeight.Bold,
                     fontSize = TextUnit(20f, TextUnitType.Sp),
                     maxLines = 1,
-                    text = "%.0f".format(calculatedValues.calculatedFPEGrams) + " " + stringResource(
-                        R.string.gram)
+                    text = "%.0f ".format(calculatedValues.calculatedFPEGrams)
+                            + stringResource(R.string.gram)
                 )
             }
         }
