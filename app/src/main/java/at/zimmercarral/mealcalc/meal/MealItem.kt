@@ -14,6 +14,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme.colorScheme
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SwipeToDismissBox
 import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
@@ -112,8 +113,9 @@ fun MealItem(
                         name = undo,
                         action = {
                             onAddItem(item)
-                        }
-                    )
+                        },
+                    ),
+                    duration = SnackbarDuration.Short
                 )
             )
         }

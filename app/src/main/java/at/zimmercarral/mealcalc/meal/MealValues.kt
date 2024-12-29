@@ -61,7 +61,7 @@ fun MealValues(calculatedValues: CalculatedValues) {
                     tint = colorScheme.primary,
                 )
                 Text(modifier = Modifier
-                    .padding(start = 10.dp, end = 8.dp, top = 10.dp),
+                    .padding(start = 10.dp, end = 8.dp, top = 8.dp),
                     color = colorScheme.onBackground,
                     fontFamily = FontFamily.SansSerif,
                     fontWeight = FontWeight.Bold,
