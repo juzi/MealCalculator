@@ -1,8 +1,9 @@
-package at.zimmercarral.mealcalc.item
+package at.zimmercarral.mealcalc.edit
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -11,6 +12,8 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Clear
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -33,7 +36,6 @@ import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.room.Room
 import at.zimmercarral.mealcalc.R
-import at.zimmercarral.mealcalc.common.ActionButton
 import at.zimmercarral.mealcalc.data.db.FoodItemDatabase
 import at.zimmercarral.mealcalc.ui.theme.AppTheme
 import at.zimmercarral.mealcalc.ui.theme.robotoFamily
@@ -70,10 +72,16 @@ fun ItemName(
                 unfocusedContainerColor = colorScheme.surfaceContainer,
             ),
             trailingIcon = {
-                ActionButton("",
-                    Icons.Rounded.Clear,
+                IconButton(
                     modifier = Modifier.size(24.dp),
-                    onClick = { viewModel.setName("") })
+                    onClick = { viewModel.setName("") }
+                ) {
+                    Icon(Icons.Rounded.Clear,
+                        contentDescription = stringResource(R.string.clear_item_name),
+                        modifier = Modifier
+                            .fillMaxSize(),
+                        tint = colorScheme.primary)
+                }
             },
 
             keyboardOptions = KeyboardOptions(

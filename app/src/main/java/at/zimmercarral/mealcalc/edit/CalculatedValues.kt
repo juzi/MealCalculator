@@ -1,4 +1,4 @@
-package at.zimmercarral.mealcalc.item
+package at.zimmercarral.mealcalc.edit
 
 data class CalculatedValues(
     var calculatedBEs: Float,

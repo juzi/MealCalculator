@@ -31,5 +31,5 @@ data class FoodItem(
 
     @ColumnInfo("isDeleted")
     val isDeleted: Boolean
-    
+
 )

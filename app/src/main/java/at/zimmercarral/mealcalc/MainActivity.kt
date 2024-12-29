@@ -1,13 +1,12 @@
 package at.zimmercarral.mealcalc
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
@@ -20,16 +19,19 @@ import androidx.room.Room
 import at.zimmercarral.mealcalc.data.db.FoodItemDatabase
 import at.zimmercarral.mealcalc.data.sync.NetworkManager
 import at.zimmercarral.mealcalc.data.sync.SynchronizationTask
-import at.zimmercarral.mealcalc.item.EditItemDialogViewModel
+import at.zimmercarral.mealcalc.edit.EditItemDialogViewModel
 import at.zimmercarral.mealcalc.meal.MealViewModel
 import at.zimmercarral.mealcalc.search.SearchViewModel
 import at.zimmercarral.mealcalc.ui.theme.AppTheme
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
+    private val prefName = "prefs"
+    private val stateKeyMealItems = "key_meal_items";
     private val networkManager = NetworkManager(this)
     private val synchronizationTask = SynchronizationTask()
-    
+    private var mealViewModel = MealViewModel(listOf())
+
     @SuppressLint("StateFlowValueCalledInComposition")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,8 +44,18 @@ class MainActivity : ComponentActivity() {
             ).allowMainThreadQueries().build()
         }
 
+        var savedMealItems = savedInstanceState?.getString(stateKeyMealItems)
+        if (savedMealItems?.isNotBlank() == true) {
+            mealViewModel.setItemsFromJson(savedMealItems)
+        } else {
+            val sharedPrefs = getSharedPreferences(prefName, Context.MODE_PRIVATE)
+            savedMealItems = sharedPrefs.getString(stateKeyMealItems, null)
+            if (savedMealItems?.isNotBlank() == true) {
+                mealViewModel.setItemsFromJson(savedMealItems)
+            }
+        }
+
         val editItemDialogViewModel = EditItemDialogViewModel(db.dao())
-        val mealViewModel = MealViewModel(listOf())
         val searchViewModel = SearchViewModel(db.dao().getAllItems())
 
         if (networkManager.isInHomeNetwork()) {
@@ -73,14 +85,29 @@ class MainActivity : ComponentActivity() {
                 Scaffold(modifier = Modifier.fillMaxSize(),
                     snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
                 ) { innerPadding ->
-                    Column(modifier = Modifier
-                        .padding(innerPadding)
-                    ) {
-                        MainLayout(editItemDialogViewModel, mealViewModel, searchViewModel)
-                    }
+                    MainLayout(innerPadding,
+                        editItemDialogViewModel,
+                        mealViewModel,
+                        searchViewModel)
                 }
             }
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        val json = mealViewModel.getItemsAsJson()
+        outState.putString(stateKeyMealItems, json)
+        super.onSaveInstanceState(outState)
+    }
+
+    override fun onPause() {
+        super.onPause();
+
+        val sharedPrefs = getSharedPreferences(prefName, Context.MODE_PRIVATE)
+        val editor = sharedPrefs?.edit()
+        val json = mealViewModel.getItemsAsJson()
+        editor?.putString(stateKeyMealItems, json)
+        editor?.apply()
     }
 }
 

@@ -1,4 +1,4 @@
-package at.zimmercarral.mealcalc.item
+package at.zimmercarral.mealcalc.edit
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

@@ -27,17 +27,7 @@ fun ActionButton(
     modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
-    IconButton(
-        onClick = onClick,
-        modifier = modifier
-    ) {
-        Icon(icon,
-            contentDescription = description,
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color.Transparent),
-            tint = colorScheme.primary)
-    }
+
 }
 
 @Preview
