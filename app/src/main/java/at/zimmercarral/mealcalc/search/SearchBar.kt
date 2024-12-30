@@ -3,11 +3,14 @@ package at.zimmercarral.mealcalc.search
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Clear
 import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material.icons.rounded.Search
@@ -15,6 +18,7 @@ import androidx.compose.material3.DockedSearchBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme.colorScheme
+import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -38,39 +42,63 @@ fun SearchBar(
             }
         }
     val itemListState = rememberLazyListState()
+    val colors = SearchBarDefaults.colors(
+        containerColor = colorScheme.surfaceContainerHighest
+    )
+
     DockedSearchBar(
+        inputField = {
+            SearchBarDefaults.InputField(
+                modifier = Modifier.fillMaxWidth(),
+                query = searchViewModel.searchQuery.value,
+                onQueryChange = { searchViewModel.setSearchQuery(it) },
+                onSearch = { searchViewModel.setVisibility(true) },
+                expanded = searchViewModel.visible.value,
+                onExpandedChange = {
+                    searchViewModel.setVisibility(it)
+                },
+                enabled = true,
+                placeholder = { Text(stringResource(R.string.search_in_database)) },
+                leadingIcon = {
+                    if (searchViewModel.visible.value) {
+                        Icon(imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
+                            contentDescription = "Back",
+                            modifier = Modifier
+                                .clickable { searchViewModel.visible.value = false }
+                        )
+                    } else {
+                        Icon(imageVector = Icons.Rounded.Menu,
+                            contentDescription = "Menu")
+                    }
+                },
+                trailingIcon = {
+                    if (searchViewModel.visible.value) {
+                        Icon(
+                            modifier = Modifier.clickable { searchViewModel.setSearchQuery("") },
+                            imageVector = Icons.Rounded.Clear,
+                            contentDescription = "Clear",
+                        )
+                    } else {
+                        Icon(imageVector = Icons.Rounded.Search,
+                            contentDescription = "Search")
+                    }
+                },
+                colors = SearchBarDefaults.inputFieldColors(),
+                interactionSource = null,
+            )
+        },
+        expanded = searchViewModel.visible.value,
+        onExpandedChange = { searchViewModel.setVisibility(it) },
         modifier = Modifier
+            .padding(start = 5.dp, end = 5.dp, top = 5.dp)
             .fillMaxWidth(),
-        query = searchViewModel.searchQuery.value,
-        onQueryChange = { searchViewModel.setSearchQuery(it) },
-        onSearch = { searchViewModel.setVisibility(true) },
-        active = searchViewModel.visible.value,
-        onActiveChange = { searchViewModel.setVisibility(it) },
-        leadingIcon = {
-            Icon(imageVector = Icons.Rounded.Menu,
-                contentDescription = "Menu")
-        },
-        trailingIcon = {
-            if (searchViewModel.visible.value) {
-                Icon(
-                    modifier = Modifier.clickable {
-                        if (searchViewModel.searchQuery.value == "") {
-                            searchViewModel.setVisibility(false)
-                        } else {
-                            searchViewModel.setSearchQuery("")
-                        }
-                    },
-                    imageVector = Icons.Rounded.Clear,
-                    contentDescription = "Clear",
-                )
-            } else {
-                Icon(imageVector = Icons.Rounded.Search,
-                    contentDescription = "Search")
-            }
-        },
-        placeholder = { Text(stringResource(R.string.search_in_database)) },
+        shape = SearchBarDefaults.dockedShape,
+        colors = colors,
+        tonalElevation = SearchBarDefaults.TonalElevation,
+        shadowElevation = SearchBarDefaults.ShadowElevation
     ) {
         LazyColumn(
+            modifier = Modifier.fillMaxHeight(),
             state = itemListState,
             verticalArrangement = Arrangement.spacedBy(4.dp),
             contentPadding = PaddingValues(5.dp),

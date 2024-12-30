@@ -1,14 +1,12 @@
 package at.zimmercarral.mealcalc.search
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Edit
@@ -33,11 +31,7 @@ fun SearchListItem(
 ) {
     Row(modifier = Modifier
         .fillMaxWidth()
-        .background(color = backgroundColor)
-        .border(width = 1.dp,
-            color = colorScheme.outlineVariant.copy(alpha = 0.2f),
-            shape = RoundedCornerShape(10.dp)
-        ),
+        .background(color = backgroundColor),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Row(modifier = Modifier.fillMaxWidth(0.8f),
