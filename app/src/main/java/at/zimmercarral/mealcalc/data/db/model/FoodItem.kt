@@ -32,4 +32,8 @@ data class FoodItem(
     @ColumnInfo("isDeleted")
     val isDeleted: Boolean
 
-)
+) {
+    override fun toString(): String {
+        return "FoodItem($name, $fatPer100g, $carbsPer100g, $proteinPer100g, $amount, $lastModifiedAt, $isDeleted)"
+    }
+}

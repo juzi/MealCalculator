@@ -6,6 +6,7 @@ import at.zimmercarral.mealcalc.data.db.model.FoodItem
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
 import com.google.gson.reflect.TypeToken
+import java.time.LocalDateTime
 
 class MealViewModel(items: List<FoodItem>) : ViewModel() {
     private val GSON = Gson()
@@ -28,12 +29,15 @@ class MealViewModel(items: List<FoodItem>) : ViewModel() {
     }
 
     private fun updateItem(index: Int, item: FoodItem) {
-        mealItems[index] = mealItems[index].copy(
+        mealItems[index] = FoodItem(
+            uuid = item.uuid,
             name = item.name,
             fatPer100g = item.fatPer100g,
             carbsPer100g = item.carbsPer100g,
             proteinPer100g = item.proteinPer100g,
-            amount = item.amount
+            amount = item.amount,
+            lastModifiedAt = LocalDateTime.now(),
+            isDeleted = false
         )
     }
 

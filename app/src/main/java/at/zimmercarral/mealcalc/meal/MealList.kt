@@ -23,9 +23,8 @@ fun MealList(
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(10.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-//        contentPadding = PaddingValues(start = 10.dp, end = 10.dp),
         modifier = Modifier
-            .fillMaxHeight(0.6f)
+            .fillMaxHeight(0.7f)
             .padding(start = 15.dp)
     ) {
         items(foodItems, key = { it.uuid }) { foodItem ->

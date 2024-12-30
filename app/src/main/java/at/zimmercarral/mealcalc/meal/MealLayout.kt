@@ -4,7 +4,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -65,15 +67,26 @@ fun MealLayout(
 
 @Composable
 fun MealTitle() {
-    Row(horizontalArrangement = Arrangement.Start,
-        modifier = Modifier
-            .padding(start = 10.dp, top = 20.dp)
-    ) {
-        Text(fontFamily = robotoFamily,
-            fontSize = TextUnit(25f, TextUnitType.Sp),
-            fontWeight = FontWeight.Medium,
-            maxLines = 1,
-            text = stringResource(R.string.meal_title))
+    Column() {
+        Row(horizontalArrangement = Arrangement.Center,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 15.dp, bottom = 10.dp)
+        ) {
+            Text(fontFamily = robotoFamily,
+                fontSize = TextUnit(19f, TextUnitType.Sp),
+                fontWeight = FontWeight.Normal,
+                maxLines = 1,
+                text = stringResource(R.string.meal_title))
+        }
+        Row(horizontalArrangement = Arrangement.Center,
+            modifier = Modifier
+                .fillMaxWidth()
+        ) {
+            HorizontalDivider(modifier = Modifier
+                .fillMaxWidth(0.45f)
+            )
+        }
     }
 }
 

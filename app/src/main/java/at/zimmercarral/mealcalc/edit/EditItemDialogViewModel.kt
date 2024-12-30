@@ -81,7 +81,7 @@ class EditItemDialogViewModel(
     }
 
     fun setItem(item: FoodItem) {
-        println("setting item " + item.name)
+        println("setting item $item")
         uuid = item.uuid
         name.value = item.name
         fatPer100g.value = item.fatPer100g.toString()

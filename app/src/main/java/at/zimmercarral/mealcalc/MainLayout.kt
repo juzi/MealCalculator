@@ -42,7 +42,9 @@ fun MainLayout(
             }
         )
         EditItemDialog(editItemDialogViewModel,
-            onAddOrUpdateItem = mealViewModel::addOrUpdateItem,
+            onAddOrUpdateItem = {
+                mealViewModel.addOrUpdateItem(it)
+            },
             onDismiss = { editItemDialogViewModel.setVisible(false) })
         MealLayout(mealViewModel,
             onEditItem = { item ->

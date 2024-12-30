@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,42 +34,48 @@ fun MealDeleteButton(
     mealDeleted: String,
     undo: String
 ) {
-    Row(
-        horizontalArrangement = Arrangement.Center,
+    Card(
         modifier = Modifier
             .fillMaxWidth(0.7f)
             .height(60.dp)
-            .padding(bottom = 5.dp, end = 20.dp)
+            .padding(bottom = 5.dp, end = 20.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 5.dp),
     ) {
-        Button(
-            modifier = Modifier.fillMaxSize(),
-            enabled = mealViewModel.mealItems.isNotEmpty(),
-            shape = RoundedCornerShape(15.dp),
-            onClick = {
-                val currentItems = mealViewModel.mealItems.toList()
-                if (currentItems.isNotEmpty()) {
-                    mealViewModel.removeAllItems()
-                    scope.launch {
-                        SnackbarController.sendEvent(
-                            event = SnackbarEvent(
-                                message = mealDeleted,
-                                action = SnackbarAction(
-                                    name = undo,
-                                    action = { mealViewModel.addItems(currentItems) }
-                                ),
-                                duration = SnackbarDuration.Long
+        Row(
+            modifier = Modifier
+                .fillMaxSize(),
+            horizontalArrangement = Arrangement.Center,
+        ) {
+            Button(
+                modifier = Modifier.fillMaxSize(),
+                enabled = mealViewModel.mealItems.isNotEmpty(),
+                shape = RoundedCornerShape(10.dp),
+                onClick = {
+                    val currentItems = mealViewModel.mealItems.toList()
+                    if (currentItems.isNotEmpty()) {
+                        mealViewModel.removeAllItems()
+                        scope.launch {
+                            SnackbarController.sendEvent(
+                                event = SnackbarEvent(
+                                    message = mealDeleted,
+                                    action = SnackbarAction(
+                                        name = undo,
+                                        action = { mealViewModel.addItems(currentItems) }
+                                    ),
+                                    duration = SnackbarDuration.Long
+                                )
                             )
-                        )
+                        }
                     }
                 }
+            ) {
+                Text(
+                    text = stringResource(id = R.string.clear_menu),
+                    fontFamily = robotoFamily,
+                    fontWeight = FontWeight.Medium,
+                    fontSize = TextUnit(18f, TextUnitType.Sp),
+                )
             }
-        ) {
-            Text(
-                text = stringResource(id = R.string.clear_menu),
-                fontFamily = robotoFamily,
-                fontWeight = FontWeight.Medium,
-                fontSize = TextUnit(18f, TextUnitType.Sp),
-            )
         }
     }
 }
