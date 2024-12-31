@@ -29,7 +29,7 @@ import at.zimmercarral.mealcalc.ui.theme.robotoFamily
 @Composable
 fun MealLayout(
     mealViewModel: MealViewModel,
-    onEditItem: (FoodItem) -> Unit,
+    onEditItem: (Int) -> Unit,
     onAddNewItem: () -> Unit = {}
 ) {
     val mealDeleted = stringResource(R.string.meal_deleted)
@@ -57,8 +57,9 @@ fun MealLayout(
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         MealTitle()
-        MealList(mealViewModel.mealItems, onEditItem,
-            mealViewModel::addOrUpdateItem,
+        MealList(foodItems = mealViewModel.mealItems,
+            onEditItem = onEditItem,
+            onAddItem = mealViewModel::addOrUpdateItem,
             mealViewModel::removeItem)
         MealActionButtons(mealViewModel, scope, mealDeleted, undo, onAddNewItem)
         MealValues(calculatedValues)

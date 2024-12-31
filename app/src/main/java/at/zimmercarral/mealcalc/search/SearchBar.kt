@@ -49,22 +49,23 @@ fun SearchBar(
     DockedSearchBar(
         inputField = {
             SearchBarDefaults.InputField(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth(),
                 query = searchViewModel.searchQuery.value,
                 onQueryChange = { searchViewModel.setSearchQuery(it) },
-                onSearch = { searchViewModel.setVisibility(true) },
-                expanded = searchViewModel.visible.value,
+                onSearch = { },
+                expanded = searchViewModel.expanded.value,
                 onExpandedChange = {
-                    searchViewModel.setVisibility(it)
+                    searchViewModel.setExpanded(it)
                 },
                 enabled = true,
                 placeholder = { Text(stringResource(R.string.search_in_database)) },
                 leadingIcon = {
-                    if (searchViewModel.visible.value) {
+                    if (searchViewModel.expanded.value) {
                         Icon(imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
                             contentDescription = "Back",
                             modifier = Modifier
-                                .clickable { searchViewModel.visible.value = false }
+                                .clickable { searchViewModel.expanded.value = false }
                         )
                     } else {
                         Icon(imageVector = Icons.Rounded.Menu,
@@ -72,7 +73,7 @@ fun SearchBar(
                     }
                 },
                 trailingIcon = {
-                    if (searchViewModel.visible.value) {
+                    if (searchViewModel.expanded.value) {
                         Icon(
                             modifier = Modifier.clickable { searchViewModel.setSearchQuery("") },
                             imageVector = Icons.Rounded.Clear,
@@ -87,10 +88,12 @@ fun SearchBar(
                 interactionSource = null,
             )
         },
-        expanded = searchViewModel.visible.value,
-        onExpandedChange = { searchViewModel.setVisibility(it) },
+        expanded = searchViewModel.expanded.value,
+        onExpandedChange = {
+            searchViewModel.setExpanded(it)
+        },
         modifier = Modifier
-            .padding(start = 5.dp, end = 5.dp, top = 5.dp)
+            .padding(start = 5.dp, end = 5.dp, top = 7.dp)
             .fillMaxWidth(),
         shape = SearchBarDefaults.dockedShape,
         colors = colors,

@@ -15,34 +15,37 @@ class MealViewModel(items: List<FoodItem>) : ViewModel() {
         addAll(items)
     }
 
+    fun addItems(items: List<FoodItem>) {
+        items.forEach(this::addOrUpdateItem)
+    }
+
     fun addOrUpdateItem(item: FoodItem) {
         val index = indexOfItem(item)
         if (index >= 0) {
-            updateItem(index, item)
+            updateItemAt(index, item)
         } else {
             mealItems.add(item)
         }
     }
 
+    private fun updateItemAt(index: Int, newItem: FoodItem) {
+        if (index >= 0) {
+            val oldItem = mealItems[index]
+            mealItems[index] = oldItem.copy(
+                uuid = newItem.uuid,
+                name = newItem.name,
+                fatPer100g = newItem.fatPer100g,
+                carbsPer100g = newItem.carbsPer100g,
+                proteinPer100g = newItem.proteinPer100g,
+                amount = newItem.amount,
+                lastModifiedAt = LocalDateTime.now(),
+                isDeleted = false
+            )
+        }
+    }
+
     private fun indexOfItem(item: FoodItem): Int {
         return mealItems.indexOfFirst { it.uuid == item.uuid }
-    }
-
-    private fun updateItem(index: Int, item: FoodItem) {
-        mealItems[index] = FoodItem(
-            uuid = item.uuid,
-            name = item.name,
-            fatPer100g = item.fatPer100g,
-            carbsPer100g = item.carbsPer100g,
-            proteinPer100g = item.proteinPer100g,
-            amount = item.amount,
-            lastModifiedAt = LocalDateTime.now(),
-            isDeleted = false
-        )
-    }
-
-    fun addItems(items: List<FoodItem>) {
-        items.forEach(this::addOrUpdateItem)
     }
 
     fun removeItem(item: FoodItem) {

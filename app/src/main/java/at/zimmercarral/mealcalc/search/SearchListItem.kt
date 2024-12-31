@@ -46,7 +46,8 @@ fun SearchListItem(
                 maxLines = 1,
                 modifier = Modifier
                     .clickable {
-                        searchViewModel.setVisibility(false)
+                        searchViewModel.setSearchQuery("")
+                        searchViewModel.setExpanded(false)
                         onEditItem(item)
                     }
                     .padding(top = 12.dp, start = 5.dp, end = 5.dp))
@@ -56,7 +57,7 @@ fun SearchListItem(
                 modifier = Modifier
                     .clickable {
                         searchViewModel.setSearchQuery("")
-                        searchViewModel.setVisibility(false)
+                        searchViewModel.setExpanded(false)
                         onEditItem(item)
                     }
                     .padding(top = 12.dp)
@@ -67,7 +68,8 @@ fun SearchListItem(
                 .size(35.dp)
                 .padding(top = 12.dp, end = 5.dp)
                 .clickable {
-                    searchViewModel.setVisibility(false)
+                    searchViewModel.setSearchQuery("")
+                    searchViewModel.setExpanded(false)
                     onEditItem(item)
                 },
             imageVector = Icons.Rounded.Edit,
@@ -79,7 +81,8 @@ fun SearchListItem(
                 .size(48.dp)
                 .padding(top = 5.dp, end = 5.dp)
                 .clickable {
-                    searchViewModel.setVisibility(false)
+                    searchViewModel.setSearchQuery("")
+                    searchViewModel.setExpanded(false)
                     onAddItem(item)
                 },
             imageVector = Icons.Rounded.Add,

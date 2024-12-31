@@ -5,6 +5,7 @@ import android.os.Looper
 import at.zimmercarral.mealcalc.data.db.dao.FoodItemDao
 import at.zimmercarral.mealcalc.data.db.model.FoodItem
 import at.zimmercarral.mealcalc.data.http.HttpFoodItemRepository
+import java.time.LocalDateTime
 import java.util.concurrent.Executors
 
 class SynchronizationTask() {
@@ -22,8 +23,13 @@ class SynchronizationTask() {
         executor.execute {
             handler.post {
                 httpFoodItemRepository.getEntries(
-                    onSuccess = { remoteIcons ->
-                        val remoteItemsMap = remoteIcons.associateBy { it.uuid }
+                    onSuccess = { remoteItems ->
+                        remoteItems.forEach { item ->
+                            if (item.lastModifiedAt == null) {
+                                item.lastModifiedAt = LocalDateTime.now()
+                            }
+                        }
+                        val remoteItemsMap = remoteItems.associateBy { it.uuid }
                         synchronizeFoodItems(dao, remoteItemsMap, localItemsMap)
                     })
             }
@@ -51,7 +57,7 @@ class SynchronizationTask() {
                         val localEntry = localItems[remoteUuid]
                         if (remoteItem != localEntry && localEntry != null &&
                             remoteItem.lastModifiedAt != null &&
-                            remoteItem.lastModifiedAt.isAfter(localEntry.lastModifiedAt)
+                            remoteItem.lastModifiedAt!!.isAfter(localEntry.lastModifiedAt)
                         ) {
                             dao.updateOrInsert(remoteItem)
                         }

@@ -27,13 +27,25 @@ data class FoodItem(
     val amount: Int,
 
     @ColumnInfo("lastModifiedAt")
-    val lastModifiedAt: LocalDateTime?,
+    var lastModifiedAt: LocalDateTime?,
 
     @ColumnInfo("isDeleted")
     val isDeleted: Boolean
 
 ) {
     override fun toString(): String {
-        return "FoodItem($name, $fatPer100g, $carbsPer100g, $proteinPer100g, $amount, $lastModifiedAt, $isDeleted)"
+        val dateTime = if (lastModifiedAt != null) {
+            lastModifiedAt
+        } else {
+            LocalDateTime.now()
+        }
+        
+        return "FoodItem(%s, %.1f, %.1f, %.1f, %d, %s, %b)".format(name,
+            fatPer100g,
+            carbsPer100g,
+            proteinPer100g,
+            amount,
+            dateTime,
+            isDeleted)
     }
 }

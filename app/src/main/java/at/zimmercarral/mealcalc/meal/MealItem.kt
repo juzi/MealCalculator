@@ -39,18 +39,17 @@ import at.zimmercarral.mealcalc.ui.theme.robotoFamily
 
 @Composable
 fun MealItem(
+    index: Int,
     item: FoodItem,
-    onEditItem: (FoodItem) -> Unit,
+    onEditItem: (Int) -> Unit,
     onAddItem: (FoodItem) -> Unit,
     onDeleteItem: (FoodItem) -> Unit
 ) {
-    val itemDeleted = stringResource(R.string.item_was_deleted, item.name)
-    val undo = stringResource(R.string.undo)
-
     // Swipe-to-dismiss configuration
     val dismissState = rememberSwipeToDismissBoxState(
         positionalThreshold = { distance: Float -> distance * 0.5f },
     )
+
     SwipeToDismissBox(
         state = dismissState,
         enableDismissFromStartToEnd = false,
@@ -63,7 +62,10 @@ fun MealItem(
             .height(60.dp)
             .pointerInput(Unit) {
                 detectTapGestures(
-                    onLongPress = { onEditItem(item) }
+                    onLongPress = {
+                        println("*** onLongPress on $index")
+                        onEditItem(index)
+                    }
                 )
             },
             shape = RoundedCornerShape(7.dp),
@@ -75,7 +77,8 @@ fun MealItem(
                     .fillMaxSize(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                var name = item.name.substring(0, Math.min(item.name.length, 27))
+                var name =
+                    item.name.substring(0, Math.min(item.name.length, 27))
                 if (item.name.length > 27) {
                     name += "..."
                 }
@@ -102,6 +105,8 @@ fun MealItem(
         }
     }
     if (dismissState.currentValue == SwipeToDismissBoxValue.EndToStart) {
+        val itemDeleted = stringResource(R.string.item_was_deleted, item.name)
+        val undo = stringResource(R.string.undo)
         // When swiped to start (left), trigger a callback to update state
         LaunchedEffect(dismissState.currentValue) {
             onDeleteItem(item)
@@ -138,6 +143,7 @@ private fun MealItemPreview() {
     )
     AppTheme() {
         MealItem(
+            index = 0,
             item = item,
             onEditItem = {},
             onAddItem = {},

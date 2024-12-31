@@ -16,6 +16,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.room.Room
 import at.zimmercarral.mealcalc.data.db.FoodItemDatabase
+import at.zimmercarral.mealcalc.data.db.dao.FoodItemDao
+import at.zimmercarral.mealcalc.data.db.model.FoodItem
 import at.zimmercarral.mealcalc.data.sync.NetworkManager
 import at.zimmercarral.mealcalc.data.sync.SynchronizationTask
 import at.zimmercarral.mealcalc.edit.EditItemDialogViewModel
@@ -23,6 +25,7 @@ import at.zimmercarral.mealcalc.meal.MealViewModel
 import at.zimmercarral.mealcalc.search.SearchViewModel
 import at.zimmercarral.mealcalc.ui.theme.AppTheme
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
 
 class MainActivity : ComponentActivity() {
     private val prefName = "prefs"
@@ -55,11 +58,17 @@ class MainActivity : ComponentActivity() {
         }
 
         val editItemDialogViewModel = EditItemDialogViewModel(db.dao())
-        val searchViewModel = SearchViewModel(db.dao().getAllItems())
+        val availableItems = db.dao().getAllItems()
+        fixModificationDate(availableItems, db.dao())
+        val searchViewModel = SearchViewModel(availableItems)
 
         if (networkManager.isInHomeNetwork()) {
             synchronizationTask.syncDatabases(db.dao(),
-                onSyncCompleted = { searchViewModel.setItems(db.dao().getAllItems()) })
+                onSyncCompleted = {
+                    val syncedItems = db.dao().getAllItems()
+                    fixModificationDate(syncedItems, db.dao())
+                    searchViewModel.setItems(syncedItems)
+                })
         }
 
         enableEdgeToEdge()
@@ -81,14 +90,27 @@ class MainActivity : ComponentActivity() {
                     }
                 }
 
-                Scaffold(modifier = Modifier.fillMaxSize(),
-                    snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
+                Scaffold(
+                    modifier = Modifier.fillMaxSize(),
+                    snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
                 ) { innerPadding ->
                     MainLayout(innerPadding,
                         editItemDialogViewModel,
                         mealViewModel,
                         searchViewModel)
                 }
+            }
+        }
+    }
+
+    private fun fixModificationDate(
+        items: List<FoodItem>,
+        dao: FoodItemDao
+    ) {
+        items.forEach {
+            if (it.lastModifiedAt == null) {
+                it.lastModifiedAt = LocalDateTime.now()
+                dao.updateOrInsert(it)
             }
         }
     }

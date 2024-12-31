@@ -11,6 +11,8 @@ import java.util.UUID
 class EditItemDialogViewModel(
     private val dao: FoodItemDao
 ) : ViewModel() {
+    var index = mutableStateOf(0)
+
     var uuid = UUID.randomUUID().toString()
         private set
     var name = mutableStateOf("")
@@ -80,8 +82,11 @@ class EditItemDialogViewModel(
         isVisible.value = visible
     }
 
+    fun setIndex(index: Int) {
+        this.index.value = index
+    }
+
     fun setItem(item: FoodItem) {
-        println("setting item $item")
         uuid = item.uuid
         name.value = item.name
         fatPer100g.value = item.fatPer100g.toString()

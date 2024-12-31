@@ -8,7 +8,7 @@ import at.zimmercarral.mealcalc.data.db.model.FoodItem
 
 class SearchViewModel(initialItems: List<FoodItem>) : ViewModel() {
 
-    var visible = mutableStateOf(false)
+    var expanded = mutableStateOf(false)
     val searchFieldFocusRequester = mutableStateOf(FocusRequester())
     var searchQuery = mutableStateOf("")
     var items = mutableStateListOf<FoodItem>().apply {
@@ -16,8 +16,8 @@ class SearchViewModel(initialItems: List<FoodItem>) : ViewModel() {
     }
 
 
-    fun setVisibility(visible: Boolean) {
-        this.visible.value = visible
+    fun setExpanded(visible: Boolean) {
+        this.expanded.value = visible
     }
 
     fun setSearchQuery(query: String) {

@@ -47,7 +47,10 @@ fun MainLayout(
             },
             onDismiss = { editItemDialogViewModel.setVisible(false) })
         MealLayout(mealViewModel,
-            onEditItem = { item ->
+            onEditItem = { index ->
+                val item = mealViewModel.mealItems[index]
+                editItemDialogViewModel.clear()
+                editItemDialogViewModel.setIndex(index)
                 editItemDialogViewModel.setItem(item)
                 editItemDialogViewModel.setInUpdateMode(true)
                 editItemDialogViewModel.setInitialFocus(Focus.AMOUNT)
