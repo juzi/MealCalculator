@@ -29,4 +29,5 @@
     <string name="search_item">Search item in database</string>
     <string name="item_was_deleted">%s was deleted!</string>
     <string name="clear_item_name">Clear name</string>
+    <string name="back">Back</string>
 </resources>

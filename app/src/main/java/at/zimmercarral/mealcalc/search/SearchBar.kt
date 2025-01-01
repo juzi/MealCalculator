@@ -63,7 +63,7 @@ fun SearchBar(
                 leadingIcon = {
                     if (searchViewModel.expanded.value) {
                         Icon(imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
-                            contentDescription = "Back",
+                            contentDescription = stringResource(R.string.back),
                             modifier = Modifier
                                 .clickable { searchViewModel.expanded.value = false }
                         )

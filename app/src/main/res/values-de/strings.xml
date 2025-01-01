@@ -29,4 +29,5 @@
     <string name="add_without_editing">Zur Mahlzeit hinzufügen</string>
     <string name="search_in_database">Suche in Datenbank...</string>
     <string name="clear_item_name">Name löschen</string>
+    <string name="back">Zurück</string>
 </resources>

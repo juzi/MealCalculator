@@ -3,6 +3,7 @@ package at.zimmercarral.mealcalc.edit
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -11,6 +12,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Clear
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -42,20 +44,21 @@ import at.zimmercarral.mealcalc.ui.theme.robotoFamily
 
 @Composable
 fun ItemName(
-    viewModel: EditItemDialogViewModel
+    editItemDialogViewModel: EditItemDialogViewModel
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
 
     Row(modifier = Modifier
         .fillMaxWidth()
         .padding(top = 10.dp),
-        horizontalArrangement = Arrangement.Center) {
+        horizontalArrangement = Arrangement.Center
+    ) {
         OutlinedTextField(
             singleLine = true,
             modifier = Modifier
                 .background(color = colorScheme.surfaceContainer)
                 .fillMaxWidth(0.95f)
-                .focusRequester(viewModel.nameFocusRequester.value),
+                .focusRequester(editItemDialogViewModel.nameFocusRequester.value),
             shape = RoundedCornerShape(10.dp),
             textStyle = TextStyle(
                 fontFamily = robotoFamily,
@@ -71,10 +74,24 @@ fun ItemName(
                 focusedContainerColor = colorScheme.surfaceContainer,
                 unfocusedContainerColor = colorScheme.surfaceContainer,
             ),
+            leadingIcon = {
+                IconButton(
+                    modifier = Modifier.size(24.dp),
+                    onClick = {
+                        editItemDialogViewModel.clear()
+                        editItemDialogViewModel.setVisible(false)
+                    }
+                ) {
+                    Icon(Icons.AutoMirrored.Rounded.ArrowBack,
+                        contentDescription = stringResource(R.string.back),
+                        modifier = Modifier.fillMaxHeight(),
+                        tint = colorScheme.primary)
+                }
+            },
             trailingIcon = {
                 IconButton(
                     modifier = Modifier.size(24.dp),
-                    onClick = { viewModel.setName("") }
+                    onClick = { editItemDialogViewModel.setName("") }
                 ) {
                     Icon(Icons.Rounded.Clear,
                         contentDescription = stringResource(R.string.clear_item_name),
@@ -101,8 +118,8 @@ fun ItemName(
                     color = colorScheme.primary
                 )
             },
-            value = viewModel.name.value,
-            onValueChange = viewModel::setName,
+            value = editItemDialogViewModel.name.value,
+            onValueChange = editItemDialogViewModel::setName,
         )
     }
 }
