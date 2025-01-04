@@ -55,6 +55,8 @@ dependencies {
     implementation(libs.gson)
     implementation(libs.androidx.room.ktx)
     implementation(libs.jackson.module.kotlin)
+    implementation(libs.androidx.navigation.compose)
+
 ///    implementation(libs.androidx.hilt.common)
 //    implementation(libs.androidx.hilt.compiler)
 

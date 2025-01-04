@@ -7,6 +7,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -14,6 +15,9 @@ import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import androidx.room.Room
 import at.zimmercarral.mealcalc.data.db.FoodItemDatabase
 import at.zimmercarral.mealcalc.data.db.dao.FoodItemDao
@@ -21,7 +25,11 @@ import at.zimmercarral.mealcalc.data.db.model.FoodItem
 import at.zimmercarral.mealcalc.data.sync.NetworkManager
 import at.zimmercarral.mealcalc.data.sync.SynchronizationTask
 import at.zimmercarral.mealcalc.edit.EditItemDialogViewModel
+import at.zimmercarral.mealcalc.edit.EditItemLayout
+import at.zimmercarral.mealcalc.edit.Focus
+import at.zimmercarral.mealcalc.meal.MealLayout
 import at.zimmercarral.mealcalc.meal.MealViewModel
+import at.zimmercarral.mealcalc.search.SearchBar
 import at.zimmercarral.mealcalc.search.SearchViewModel
 import at.zimmercarral.mealcalc.ui.theme.AppTheme
 import kotlinx.coroutines.launch
@@ -94,10 +102,50 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
                 ) { innerPadding ->
-                    MainLayout(innerPadding,
-                        editItemDialogViewModel,
-                        mealViewModel,
-                        searchViewModel)
+                    val navController = rememberNavController()
+                    NavHost(modifier = Modifier.padding(innerPadding),
+                        navController = navController,
+                        startDestination = "meal") {
+                        composable("meal") {
+                            MealLayout(navController, mealViewModel,
+                                onEditItem = { index ->
+                                    val item = mealViewModel.mealItems[index]
+                                    editItemDialogViewModel.clear()
+                                    editItemDialogViewModel.setIndex(index)
+                                    editItemDialogViewModel.setItem(item)
+                                    editItemDialogViewModel.setInUpdateMode(true)
+                                    editItemDialogViewModel.setInitialFocus(Focus.AMOUNT)
+                                    navController.navigate("edit")
+                                },
+                                onAddNewItem = {
+                                    editItemDialogViewModel.clear()
+                                    editItemDialogViewModel.setInUpdateMode(false)
+                                    editItemDialogViewModel.setInitialFocus(Focus.NAME)
+                                    editItemDialogViewModel.setVisible(true)
+                                    navController.navigate("edit")
+                                })
+                        }
+                        composable("edit") {
+                            EditItemLayout(navController, editItemDialogViewModel,
+                                onAddOrUpdateItem = {
+                                    mealViewModel.addOrUpdateItem(it)
+                                },
+                                onDismiss = { navController.navigate("meal") })
+                        }
+                        composable("search") {
+                            SearchBar(searchViewModel,
+                                onEditItem = {
+                                    editItemDialogViewModel.setItem(it)
+                                    editItemDialogViewModel.setInUpdateMode(false)
+                                    editItemDialogViewModel.setInitialFocus(Focus.AMOUNT)
+                                    editItemDialogViewModel.setVisible(true)
+                                },
+                                onAddItem = {
+                                    mealViewModel.addOrUpdateItem(it)
+                                }
+                            )
+                        }
+                    }
                 }
             }
         }

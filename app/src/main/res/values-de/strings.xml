@@ -30,4 +30,6 @@
     <string name="search_in_database">Suche in Datenbank...</string>
     <string name="clear_item_name">Name löschen</string>
     <string name="back">Zurück</string>
+    <string name="edit_item_title">Eintrag bearbeiten</string>
+    <string name="add_item_title">Neuer Eintrag</string>
 </resources>

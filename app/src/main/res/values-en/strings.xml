@@ -31,4 +31,6 @@
     <string name="search_in_database">Search item in database...</string>
     <string name="clear_item_name">Clear name</string>
     <string name="back">Back</string>
+    <string name="edit_item_title">Edit Item</string>
+    <string name="add_item_title">Add New Item</string>
 </resources>

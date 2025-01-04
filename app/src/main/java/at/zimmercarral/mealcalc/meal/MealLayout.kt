@@ -19,6 +19,8 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import at.zimmercarral.mealcalc.R
 import at.zimmercarral.mealcalc.data.db.model.FoodItem
 import at.zimmercarral.mealcalc.edit.CalculatedValues
@@ -28,6 +30,7 @@ import at.zimmercarral.mealcalc.ui.theme.robotoFamily
 
 @Composable
 fun MealLayout(
+    navController: NavHostController,
     mealViewModel: MealViewModel,
     onEditItem: (Int) -> Unit,
     onAddNewItem: () -> Unit = {}
@@ -106,8 +109,8 @@ private fun MealInfoPreview() {
         isDeleted = false,
     )
     val mealViewModel = MealViewModel(listOf(item))
-
+    val navController = rememberNavController()
     AppTheme() {
-        MealLayout(mealViewModel, onEditItem = {})
+        MealLayout(navController, mealViewModel, onEditItem = {})
     }
 }
