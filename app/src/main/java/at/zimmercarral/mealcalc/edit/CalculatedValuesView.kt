@@ -43,20 +43,21 @@ fun CalculatedValuesView(editItemDialogViewModel: EditItemDialogViewModel) {
     Card(
         modifier = Modifier
             .fillMaxWidth(0.95f)
-            .padding(start = 18.dp, top = 10.dp, bottom = 30.dp)
+            .padding(start = 18.dp, top = 15.dp, bottom = 30.dp)
             .border(width = 1.dp, color = colorScheme.primary,
                 shape = CardDefaults.outlinedShape),
     ) {
         Row(
             modifier = Modifier
-                .background(color = colorScheme.surfaceContainer)
                 .fillMaxWidth()
-                .height(60.dp),
+                .height(60.dp)
+                .background(color = colorScheme.surfaceContainerHighest),
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Row(
                 modifier = Modifier
-                    .padding(start = 15.dp, end = 10.dp, top = 10.dp, bottom = 10.dp),
+                    .padding(start = 15.dp, end = 10.dp, top = 10.dp, bottom = 10.dp)
+                    .background(color = colorScheme.surfaceContainerHighest),
             ) {
                 Icon(
                     imageVector = CarbsIcon,
@@ -77,7 +78,8 @@ fun CalculatedValuesView(editItemDialogViewModel: EditItemDialogViewModel) {
             }
             Row(
                 modifier = Modifier
-                    .padding(start = 15.dp, end = 10.dp, top = 10.dp, bottom = 10.dp),
+                    .padding(start = 15.dp, end = 10.dp, top = 10.dp, bottom = 10.dp)
+                    .background(color = colorScheme.surfaceContainerHighest),
             ) {
                 Icon(
                     modifier = Modifier

@@ -6,6 +6,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -29,10 +31,11 @@ import at.zimmercarral.mealcalc.edit.EditItemLayout
 import at.zimmercarral.mealcalc.edit.Focus
 import at.zimmercarral.mealcalc.meal.MealLayout
 import at.zimmercarral.mealcalc.meal.MealViewModel
-import at.zimmercarral.mealcalc.search.SearchBar
+import at.zimmercarral.mealcalc.search.SearchLayout
 import at.zimmercarral.mealcalc.search.SearchViewModel
 import at.zimmercarral.mealcalc.ui.theme.AppTheme
 import kotlinx.coroutines.launch
+import kotlinx.serialization.Serializable
 import java.time.LocalDateTime
 
 class MainActivity : ComponentActivity() {
@@ -105,8 +108,15 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberNavController()
                     NavHost(modifier = Modifier.padding(innerPadding),
                         navController = navController,
-                        startDestination = "meal") {
-                        composable("meal") {
+                        startDestination = MealScreen(null)) {
+                        composable<MealScreen>(
+                            enterTransition = {
+                                slideIntoContainer(
+                                    AnimatedContentTransitionScope.SlideDirection.Right,
+                                    animationSpec = tween(600)
+                                )
+                            }
+                        ) {
                             MealLayout(navController, mealViewModel,
                                 onEditItem = { index ->
                                     val item = mealViewModel.mealItems[index]
@@ -115,33 +125,62 @@ class MainActivity : ComponentActivity() {
                                     editItemDialogViewModel.setItem(item)
                                     editItemDialogViewModel.setInUpdateMode(true)
                                     editItemDialogViewModel.setInitialFocus(Focus.AMOUNT)
-                                    navController.navigate("edit")
+                                    navController.navigate(EditScreen(
+                                        inUpdateMode = true,
+                                        initialFocus = Focus.AMOUNT
+
+                                    ))
                                 },
                                 onAddNewItem = {
                                     editItemDialogViewModel.clear()
                                     editItemDialogViewModel.setInUpdateMode(false)
                                     editItemDialogViewModel.setInitialFocus(Focus.NAME)
-                                    editItemDialogViewModel.setVisible(true)
-                                    navController.navigate("edit")
+                                    navController.navigate(EditScreen(
+                                        inUpdateMode = false,
+                                        initialFocus = Focus.NAME
+                                    ))
                                 })
                         }
-                        composable("edit") {
+                        composable<EditScreen>(
+                            enterTransition = {
+                                slideIntoContainer(
+                                    AnimatedContentTransitionScope.SlideDirection.Left,
+                                    animationSpec = tween(600)
+                                )
+                            }
+                        ) {
                             EditItemLayout(navController, editItemDialogViewModel,
                                 onAddOrUpdateItem = {
                                     mealViewModel.addOrUpdateItem(it)
+                                    navController.navigate(MealScreen(it.uuid))
                                 },
-                                onDismiss = { navController.navigate("meal") })
+                                onDismiss = { navController.navigate(MealScreen(null)) })
                         }
-                        composable("search") {
-                            SearchBar(searchViewModel,
+                        composable<SearchScreen>(
+                            enterTransition = {
+                                slideIntoContainer(
+                                    AnimatedContentTransitionScope.SlideDirection.Start,
+                                    animationSpec = tween(400)
+                                )
+                            }
+                        ) {
+                            searchViewModel.setExpanded(true)
+                            searchViewModel.setSearchQuery("")
+                            SearchLayout(modifier = Modifier,
+                                navController,
+                                searchViewModel,
                                 onEditItem = {
                                     editItemDialogViewModel.setItem(it)
                                     editItemDialogViewModel.setInUpdateMode(false)
                                     editItemDialogViewModel.setInitialFocus(Focus.AMOUNT)
-                                    editItemDialogViewModel.setVisible(true)
+                                    navController.navigate(EditScreen(
+                                        inUpdateMode = false,
+                                        initialFocus = Focus.AMOUNT
+                                    ))
                                 },
                                 onAddItem = {
                                     mealViewModel.addOrUpdateItem(it)
+                                    navController.navigate(MealScreen(it.uuid))
                                 }
                             )
                         }
@@ -179,5 +218,19 @@ class MainActivity : ComponentActivity() {
         editor?.apply()
     }
 }
+
+@Serializable
+data class MealScreen(
+    val addOrUpdateUuid: String?
+)
+
+@Serializable
+data class EditScreen(
+    val inUpdateMode: Boolean,
+    val initialFocus: Focus
+)
+
+@Serializable
+object SearchScreen
 
 

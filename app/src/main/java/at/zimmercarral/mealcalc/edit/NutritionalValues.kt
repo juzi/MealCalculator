@@ -26,7 +26,7 @@ import at.zimmercarral.mealcalc.ui.theme.AppTheme
 @Composable
 fun NutritionalValues(editItemDialogViewModel: EditItemDialogViewModel) {
     Column(modifier = Modifier
-        .padding(start = 40.dp, top = 10.dp, end = 20.dp, bottom = 10.dp),
+        .padding(start = 10.dp, top = 10.dp, end = 20.dp, bottom = 10.dp),
         verticalArrangement = Arrangement.spacedBy(15.dp)
     ) {
         Row() {
@@ -102,7 +102,11 @@ private fun isValidFloat(input: String): Boolean {
     if (input.isEmpty()) {
         return true
     }
-    return input.toDoubleOrNull() != null
+    val doubleValue = input.toDoubleOrNull()
+    if (doubleValue == null || doubleValue > 100.0) {
+        return false
+    }
+    return true
 }
 
 @Preview

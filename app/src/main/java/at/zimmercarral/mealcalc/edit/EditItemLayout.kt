@@ -51,7 +51,10 @@ fun EditItemLayout(
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
     val title =
-        if (updateMode) stringResource(R.string.edit_item_title) else stringResource(R.string.add_item_title)
+        if (editItemDialogViewModel.inEditMode.value)
+            stringResource(R.string.edit_item_title)
+        else stringResource(
+            R.string.add_item_title)
     Surface(
         shape = MaterialTheme.shapes.medium,
         modifier = Modifier
@@ -64,13 +67,12 @@ fun EditItemLayout(
                     detectTapGestures(onTap = {
                         focusManager.clearFocus()
                     })
-                }
-                .padding(top = 10.dp),
+                },
             verticalArrangement = Arrangement.spacedBy(2.dp),
         ) {
             Row(modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 10.dp, bottom = 5.dp),
+                .padding(top = 20.dp, start = 10.dp, bottom = 5.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 // Back button in the top left corner

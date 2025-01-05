@@ -1,12 +1,19 @@
 package at.zimmercarral.mealcalc.meal
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -22,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import at.zimmercarral.mealcalc.R
+import at.zimmercarral.mealcalc.SearchScreen
 import at.zimmercarral.mealcalc.data.db.model.FoodItem
 import at.zimmercarral.mealcalc.edit.CalculatedValues
 import at.zimmercarral.mealcalc.edit.itemCalculator
@@ -59,7 +67,7 @@ fun MealLayout(
             .fillMaxSize(),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        MealTitle()
+        MealTitle(navController)
         MealList(foodItems = mealViewModel.mealItems,
             onEditItem = onEditItem,
             onAddItem = mealViewModel::addOrUpdateItem,
@@ -70,22 +78,32 @@ fun MealLayout(
 }
 
 @Composable
-fun MealTitle() {
+fun MealTitle(navController: NavHostController) {
     Column() {
-        Row(horizontalArrangement = Arrangement.Center,
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 15.dp, bottom = 10.dp)
+                .padding(start = 20.dp, top = 20.dp, bottom = 5.dp, end = 20.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
         ) {
-            Text(fontFamily = robotoFamily,
+            Spacer(Modifier
+                .width(30.dp))
+            Text(
+                fontFamily = robotoFamily,
                 fontSize = TextUnit(19f, TextUnitType.Sp),
                 fontWeight = FontWeight.Normal,
                 maxLines = 1,
                 text = stringResource(R.string.meal_title))
+            Icon(imageVector = Icons.Rounded.Search,
+                modifier = Modifier
+                    .size(30.dp)
+                    .clickable { navController.navigate(SearchScreen) },
+                contentDescription = "Search")
         }
         Row(horizontalArrangement = Arrangement.Center,
             modifier = Modifier
                 .fillMaxWidth()
+                .padding(bottom = 10.dp)
         ) {
             HorizontalDivider(modifier = Modifier
                 .fillMaxWidth(0.45f)
