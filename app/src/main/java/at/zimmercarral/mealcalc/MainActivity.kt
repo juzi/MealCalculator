@@ -59,8 +59,9 @@ class MainActivity : ComponentActivity() {
 
         val editItemDialogViewModel = EditItemDialogViewModel(db.dao())
         val availableItems = db.dao().getAllItems()
+        val sortedItems = availableItems.sortedBy { item -> item.name }
         fixModificationDate(availableItems, db.dao())
-        val searchViewModel = SearchViewModel(availableItems)
+        val searchViewModel = SearchViewModel(sortedItems)
 
         if (networkManager.isInHomeNetwork()) {
             synchronizationTask.syncDatabases(db.dao(),

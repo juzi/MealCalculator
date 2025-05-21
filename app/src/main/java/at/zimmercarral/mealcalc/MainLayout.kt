@@ -32,10 +32,10 @@ fun MainLayout(
     ) {
         SearchBar(searchViewModel,
             onEditItem = {
+                editItemDialogViewModel.setVisible(true)
                 editItemDialogViewModel.setItem(it)
                 editItemDialogViewModel.setInUpdateMode(false)
                 editItemDialogViewModel.setInitialFocus(Focus.AMOUNT)
-                editItemDialogViewModel.setVisible(true)
             },
             onAddItem = {
                 mealViewModel.addOrUpdateItem(it)

@@ -73,16 +73,13 @@ fun NutritionalValues(editItemDialogViewModel: EditItemDialogViewModel) {
             )
         }
         Row() {
-            InputField(
+            AmountInputField(
                 label = stringResource(R.string.label_amount),
                 value = editItemDialogViewModel.amount.value,
                 leadingIcon = AmountIcon,
                 leadingIconDescription = stringResource(R.string.amount_description),
-                onValueChange = {
-                    val input = it.trim()
-                    if (isValidInt(input)) {
-                        editItemDialogViewModel.setAmount(input)
-                    }
+                onValueChange = { newTextFieldValue ->
+                    editItemDialogViewModel.setAmount(newTextFieldValue)
                 },
                 modifier = Modifier.focusRequester(editItemDialogViewModel.amountFocusRequester.value),
                 imeAction = ImeAction.Done,

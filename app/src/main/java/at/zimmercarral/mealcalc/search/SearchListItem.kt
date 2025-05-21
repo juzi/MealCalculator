@@ -4,15 +4,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
-import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
@@ -38,13 +35,13 @@ fun SearchListItem(
         .fillMaxWidth()
         .clip(RoundedCornerShape(8.dp))
         .background(color = backgroundColor)
-        .padding(bottom = 6.dp, start = 10.dp, end = 10.dp), // Added some overall padding
+        .padding(bottom = 6.dp, start = 10.dp, end = 5.dp), // Added some overall padding
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically // Align items vertically
     ) {
         Row(
             modifier = Modifier
-                .fillMaxWidth(0.7f)
+                .fillMaxWidth(0.8f)
                 .clickable { // Make the entire item name and amount clickable for editing
                     searchViewModel.setSearchQuery("")
                     searchViewModel.setExpanded(false)
@@ -72,21 +69,21 @@ fun SearchListItem(
         }
 
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(
-                modifier = Modifier
-                    .weight(0.2f)
-                    .size(37.dp)
-                    .padding(top = 8.dp, end = 5.dp)
-                    .clickable {
-                        searchViewModel.setSearchQuery("")
-                        searchViewModel.setExpanded(false)
-                        onEditItem(item)
-                    },
-                imageVector = Icons.Rounded.Edit,
-                contentDescription = stringResource(R.string.edit_item_before_adding),
-                tint = colorScheme.primary,
-            )
-            Spacer(modifier = Modifier.width(4.dp))
+//            Icon(
+//                modifier = Modifier
+//                    .weight(0.2f)
+//                    .size(37.dp)
+//                    .padding(top = 8.dp, end = 5.dp)
+//                    .clickable {
+//                        searchViewModel.setSearchQuery("")
+//                        searchViewModel.setExpanded(false)
+//                        onEditItem(item)
+//                    },
+//                imageVector = Icons.Rounded.Edit,
+//                contentDescription = stringResource(R.string.edit_item_before_adding),
+//                tint = colorScheme.primary,
+//            )
+//            Spacer(modifier = Modifier.width(4.dp))
             Icon(
                 modifier = Modifier
                     .size(48.dp)

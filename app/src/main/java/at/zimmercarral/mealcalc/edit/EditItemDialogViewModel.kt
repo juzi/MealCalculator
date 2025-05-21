@@ -1,7 +1,10 @@
 package at.zimmercarral.mealcalc.edit
 
+import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import at.zimmercarral.mealcalc.data.db.dao.FoodItemDao
 import at.zimmercarral.mealcalc.data.db.model.FoodItem
@@ -23,7 +26,7 @@ class EditItemDialogViewModel(
         private set
     var proteinPer100g = mutableStateOf("")
         private set
-    var amount = mutableStateOf("")
+    var amount = mutableStateOf(TextFieldValue(""))
         private set
 
     var isVisible = mutableStateOf(false)
@@ -40,8 +43,27 @@ class EditItemDialogViewModel(
         when (focus) {
             Focus.NAME -> nameFocusRequester.value.requestFocus()
             Focus.FAT -> fatFocusRequester.value.requestFocus()
-            Focus.AMOUNT -> amountFocusRequester.value.requestFocus()
+            Focus.AMOUNT -> {
+                amountFocusRequester.value.requestFocus()
+            }
+
             else -> {}
+        }
+    }
+
+    fun selectAllAmountText() {
+        Log.d("ViewModelLog",
+            "selectAllAmountText called. Current amount TextFieldValue: ${amount.value}") // Log the whole TextFieldValue
+        val currentText = amount.value.text
+        if (currentText.isNotEmpty()) {
+            val newSelection = TextRange(0, currentText.length)
+            amount.value = amount.value.copy(
+                selection = newSelection
+            )
+            // Log AFTER attempting to update
+            Log.d("ViewModelLog", "New amount TextFieldValue after selection: ${amount.value}")
+        } else {
+            Log.d("ViewModelLog", "Amount text is empty, not attempting selection.")
         }
     }
 
@@ -51,7 +73,7 @@ class EditItemDialogViewModel(
             zeroFloatIfEmpty(fatPer100g.value),
             zeroFloatIfEmpty(carbsPer100g.value),
             zeroFloatIfEmpty(proteinPer100g.value),
-            zeroIntIfEmpty(amount.value),
+            zeroIntIfEmpty(amount.value.text),
             LocalDateTime.now(),
             false)
     }
@@ -92,7 +114,7 @@ class EditItemDialogViewModel(
         fatPer100g.value = item.fatPer100g.toString()
         carbsPer100g.value = item.carbsPer100g.toString()
         proteinPer100g.value = item.proteinPer100g.toString()
-        amount.value = item.amount.toString()
+        amount.value = TextFieldValue(item.amount.toString())
     }
 
     fun clear() {
@@ -101,7 +123,7 @@ class EditItemDialogViewModel(
         fatPer100g.value = ""
         carbsPer100g.value = ""
         proteinPer100g.value = ""
-        amount.value = ""
+        amount.value = TextFieldValue("")
     }
 
     fun setName(name: String) {
@@ -120,8 +142,13 @@ class EditItemDialogViewModel(
         proteinPer100g.value = proteinStr
     }
 
-    fun setAmount(amountStr: String) {
-        this.amount.value = amountStr
+    fun setAmount(amount: TextFieldValue) {
+        this.amount.value = amount
+    }
+
+    // If you still need to set amount from a String elsewhere:
+    fun setAmountFromString(amountStr: String) {
+        this.amount.value = TextFieldValue(amountStr)
     }
 
     fun calculateCarbs(): String {

@@ -18,6 +18,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.TextUnit
@@ -37,6 +38,8 @@ fun EditItemDialog(
     onAddOrUpdateItem: (FoodItem) -> Unit,
 ) {
     val focusManager = LocalFocusManager.current
+    val keyboardController = LocalSoftwareKeyboardController.current
+
     if (editItemDialogViewModel.isVisible.value) {
         Dialog(
             properties = DialogProperties(
@@ -69,9 +72,27 @@ fun EditItemDialog(
             }
         }
 
-        LaunchedEffect(Unit) {
-            awaitFrame()
-            editItemDialogViewModel.requestFocus(editItemDialogViewModel.initialFocus.value)
+        LaunchedEffect(editItemDialogViewModel.isVisible.value,
+            editItemDialogViewModel.initialFocus.value) {
+            if (editItemDialogViewModel.isVisible.value) {
+                val focusToRequest = editItemDialogViewModel.initialFocus.value
+                if (focusToRequest == Focus.AMOUNT) {
+                    editItemDialogViewModel.amountFocusRequester.value.requestFocus()
+                    awaitFrame() // Or repeat(2) { awaitFrame() }
+                    editItemDialogViewModel.selectAllAmountText()
+                    awaitFrame() // Wait a frame after selection
+                    editItemDialogViewModel.amountFocusRequester.value.requestFocus() // Re-request focus
+                    keyboardController?.show()
+                } else {
+                    awaitFrame() // Wait for UI to be ready
+                    when (focusToRequest) {
+                        Focus.NAME -> editItemDialogViewModel.nameFocusRequester.value.requestFocus()
+                        Focus.FAT -> editItemDialogViewModel.fatFocusRequester.value.requestFocus()
+                        else -> { /* Handle other cases */
+                        }
+                    }
+                }
+            }
         }
     }
 }
