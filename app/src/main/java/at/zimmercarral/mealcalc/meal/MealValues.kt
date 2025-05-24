@@ -38,7 +38,7 @@ fun MealValues(calculatedValues: CalculatedValues) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 5.dp, end = 5.dp, bottom = 40.dp)
+            .padding(start = 5.dp, end = 5.dp, bottom = 10.dp)
             .border(width = 1.dp, color = colorScheme.primary,
                 shape = CardDefaults.outlinedShape),
     ) {

@@ -3,9 +3,9 @@ package at.zimmercarral.mealcalc.search
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -14,7 +14,6 @@ import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Clear
 import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material.icons.rounded.Search
-import androidx.compose.material3.DockedSearchBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme.colorScheme
@@ -46,11 +45,10 @@ fun SearchBar(
         containerColor = colorScheme.surfaceContainerHighest
     )
 
-    DockedSearchBar(
+    androidx.compose.material3.SearchBar(
         inputField = {
             SearchBarDefaults.InputField(
-                modifier = Modifier
-                    .fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
                 query = searchViewModel.searchQuery.value,
                 onQueryChange = { searchViewModel.setSearchQuery(it) },
                 onSearch = { },
@@ -93,12 +91,13 @@ fun SearchBar(
             searchViewModel.setExpanded(it)
         },
         modifier = Modifier
-            .padding(start = 5.dp, end = 5.dp, top = 7.dp)
+//            .padding(start = 5.dp, end = 5.dp)
             .fillMaxWidth(),
         shape = SearchBarDefaults.dockedShape,
         colors = colors,
         tonalElevation = SearchBarDefaults.TonalElevation,
-        shadowElevation = SearchBarDefaults.ShadowElevation
+        shadowElevation = SearchBarDefaults.ShadowElevation,
+        windowInsets = WindowInsets(0.dp)
     ) {
         LazyColumn(
             modifier = Modifier.fillMaxHeight(),

@@ -1,5 +1,6 @@
 package at.zimmercarral.mealcalc.meal
 
+import android.R.attr.text
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.horizontalScroll
@@ -22,6 +23,7 @@ import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
@@ -90,7 +92,7 @@ fun MealItem(
                     fontFamily = robotoFamily,
                     fontStyle = FontStyle.Italic,
                     fontWeight = FontWeight.Normal,
-                    color = colorScheme.primary,
+                    color = colorScheme.onSecondaryContainer,
                     text = name
                 )
                 Text(modifier = Modifier
@@ -98,7 +100,7 @@ fun MealItem(
                     maxLines = 1,
                     fontFamily = robotoFamily,
                     fontWeight = FontWeight.W600,
-                    color = colorScheme.primary,
+                    color = colorScheme.onSecondaryContainer,
                     text = " " + item.amount + " gr"
                 )
             }

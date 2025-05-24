@@ -26,7 +26,9 @@ fun MealActionButtons(
     undo: String = stringResource(R.string.undo),
     onAddNewItem: () -> Unit = {}
 ) {
-    Row(modifier = Modifier.fillMaxWidth(),
+    Row(modifier = Modifier
+        .fillMaxWidth()
+        .padding(bottom = 20.dp),
         horizontalArrangement = Arrangement.End
     ) {
         MealDeleteButton(mealViewModel, scope, mealDeleted, undo)

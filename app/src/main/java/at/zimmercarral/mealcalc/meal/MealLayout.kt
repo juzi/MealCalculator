@@ -61,8 +61,8 @@ fun MealLayout(
             onEditItem = onEditItem,
             onAddItem = mealViewModel::addOrUpdateItem,
             mealViewModel::removeItem)
-        MealActionButtons(mealViewModel, scope, mealDeleted, undo, onAddNewItem)
         MealValues(calculatedValues)
+        MealActionButtons(mealViewModel, scope, mealDeleted, undo, onAddNewItem)
     }
 }
 
@@ -86,6 +86,7 @@ fun MealTitle() {
         ) {
             HorizontalDivider(modifier = Modifier
                 .fillMaxWidth(0.45f)
+                .padding(bottom = 2.dp)
             )
         }
     }
