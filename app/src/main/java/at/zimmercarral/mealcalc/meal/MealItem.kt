@@ -71,12 +71,13 @@ fun MealItem(
                 )
             },
             shape = RoundedCornerShape(7.dp),
-            elevation = CardDefaults.cardElevation(defaultElevation = 5.dp)
+            elevation = CardDefaults.cardElevation(defaultElevation = 5.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = colorScheme.primaryContainer
+            )
         ) {
             Row(
-                modifier = Modifier
-                    .background(color = colorScheme.primaryContainer)
-                    .fillMaxSize(),
+                modifier = Modifier.fillMaxSize(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 var name =
@@ -92,7 +93,7 @@ fun MealItem(
                     fontFamily = robotoFamily,
                     fontStyle = FontStyle.Italic,
                     fontWeight = FontWeight.Normal,
-                    color = colorScheme.onSecondaryContainer,
+                    color = colorScheme.onPrimaryContainer,
                     text = name
                 )
                 Text(modifier = Modifier
@@ -100,7 +101,7 @@ fun MealItem(
                     maxLines = 1,
                     fontFamily = robotoFamily,
                     fontWeight = FontWeight.W600,
-                    color = colorScheme.onSecondaryContainer,
+                    color = colorScheme.onPrimaryContainer,
                     text = " " + item.amount + " gr"
                 )
             }
