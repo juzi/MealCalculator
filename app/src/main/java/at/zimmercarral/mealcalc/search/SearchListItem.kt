@@ -69,21 +69,6 @@ fun SearchListItem(
         }
 
         Row(verticalAlignment = Alignment.CenterVertically) {
-//            Icon(
-//                modifier = Modifier
-//                    .weight(0.2f)
-//                    .size(37.dp)
-//                    .padding(top = 8.dp, end = 5.dp)
-//                    .clickable {
-//                        searchViewModel.setSearchQuery("")
-//                        searchViewModel.setExpanded(false)
-//                        onEditItem(item)
-//                    },
-//                imageVector = Icons.Rounded.Edit,
-//                contentDescription = stringResource(R.string.edit_item_before_adding),
-//                tint = colorScheme.primary,
-//            )
-//            Spacer(modifier = Modifier.width(4.dp))
             Icon(
                 modifier = Modifier
                     .size(48.dp)

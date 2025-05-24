@@ -39,7 +39,7 @@ data class FoodItem(
         } else {
             LocalDateTime.now()
         }
-        
+
         return "FoodItem(%s, %.1f, %.1f, %.1f, %d, %s, %b)".format(name,
             fatPer100g,
             carbsPer100g,
@@ -47,5 +47,22 @@ data class FoodItem(
             amount,
             dateTime,
             isDeleted)
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as FoodItem
+
+        if (uuid != other.uuid) return false
+        if (name != other.name) return false
+        if (fatPer100g != other.fatPer100g) return false
+        if (carbsPer100g != other.carbsPer100g) return false
+        if (proteinPer100g != other.proteinPer100g) return false
+        if (amount != other.amount) return false
+        if (isDeleted != other.isDeleted) return false
+
+        return true
     }
 }

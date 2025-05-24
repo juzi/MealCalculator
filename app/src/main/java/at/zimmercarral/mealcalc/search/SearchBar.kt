@@ -42,7 +42,7 @@ fun SearchBar(
         }
     val itemListState = rememberLazyListState()
     val colors = SearchBarDefaults.colors(
-        containerColor = colorScheme.surfaceContainerHighest
+        containerColor = colorScheme.surfaceContainerLow
     )
 
     androidx.compose.material3.SearchBar(
@@ -90,9 +90,7 @@ fun SearchBar(
         onExpandedChange = {
             searchViewModel.setExpanded(it)
         },
-        modifier = Modifier
-//            .padding(start = 5.dp, end = 5.dp)
-            .fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth(),
         shape = SearchBarDefaults.dockedShape,
         colors = colors,
         tonalElevation = SearchBarDefaults.TonalElevation,
@@ -107,9 +105,9 @@ fun SearchBar(
         ) {
             itemsIndexed(filteredItems) { index, item ->
                 val backgroundColor = if (index % 2 == 0) {
-                    colorScheme.surfaceContainerLow
+                    colorScheme.surfaceContainerHigh
                 } else {
-                    colorScheme.surfaceContainerHighest
+                    colorScheme.surfaceContainerLow
                 }
                 SearchListItem(item,
                     searchViewModel,
