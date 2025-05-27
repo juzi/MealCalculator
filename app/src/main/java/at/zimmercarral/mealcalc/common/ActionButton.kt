@@ -1,4 +1,4 @@
-package at.zimmercarral.mealcalc
+package at.zimmercarral.mealcalc.common
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,27 +17,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
-import com.example.compose.AppTheme
+import at.zimmercarral.mealcalc.R
+import at.zimmercarral.mealcalc.ui.theme.AppTheme
 
 @Composable
 fun ActionButton(
-    text: String,
+    description: String,
     icon: ImageVector,
-    color: Color,
     modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
-    IconButton(
-        onClick = onClick,
-        modifier = modifier
-    ) {
-        Icon(icon,
-            contentDescription = text,
-            modifier = Modifier
-                .fillMaxSize()
-                .background(colorScheme.background),
-            tint = colorScheme.primary)
-    }
+
 }
 
 @Preview
@@ -46,7 +36,7 @@ fun ActionButton(
 private fun ActionButtonPreview() {
     AppTheme() {
         ActionButton(stringResource(id = R.string.save_item),
-            Icons.Rounded.Save, color = colorScheme.primary,
+            Icons.Rounded.Save,
             modifier = Modifier
                 .padding(horizontal = 10.dp, vertical = 0.dp)
                 .size(70.dp),
