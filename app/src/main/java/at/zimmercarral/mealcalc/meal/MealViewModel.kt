@@ -1,5 +1,6 @@
 package at.zimmercarral.mealcalc.meal
 
+import InsulinReminderManager
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import at.zimmercarral.mealcalc.data.db.model.FoodItem
@@ -10,9 +11,14 @@ import java.time.LocalDateTime
 
 class MealViewModel(items: List<FoodItem>) : ViewModel() {
     private val GSON = Gson()
+    private var insulinReminderManager: InsulinReminderManager? = null
 
     var mealItems = mutableStateListOf<FoodItem>().apply {
         addAll(items)
+    }
+
+    fun setInsulinReminderManager(insulinReminderManager: InsulinReminderManager) {
+        this.insulinReminderManager = insulinReminderManager
     }
 
     fun addItems(items: List<FoodItem>) {
@@ -26,6 +32,7 @@ class MealViewModel(items: List<FoodItem>) : ViewModel() {
         } else {
             mealItems.add(item)
         }
+        insulinReminderManager?.startOrResetTimer()
     }
 
     private fun updateItemAt(index: Int, newItem: FoodItem) {
@@ -50,10 +57,14 @@ class MealViewModel(items: List<FoodItem>) : ViewModel() {
 
     fun removeItem(item: FoodItem) {
         mealItems.remove(item)
+        if (mealItems.isEmpty()) {
+            insulinReminderManager?.cancelTimer()
+        }
     }
 
     fun removeAllItems() {
         mealItems.removeAll(mealItems)
+        insulinReminderManager?.cancelTimer()
     }
 
     fun getItemsAsJson(): String {

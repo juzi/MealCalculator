@@ -1,5 +1,6 @@
 package at.zimmercarral.mealcalc
 
+import InsulinReminderManager
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
@@ -45,6 +46,8 @@ class MainActivity : ComponentActivity() {
                 "food-items.db"
             ).allowMainThreadQueries().build()
         }
+        val insulinReminderManager = InsulinReminderManager(this.applicationContext)
+        mealViewModel.setInsulinReminderManager(insulinReminderManager)
 
         var savedMealItems = savedInstanceState?.getString(stateKeyMealItems)
         if (savedMealItems?.isNotBlank() == true) {
