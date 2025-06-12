@@ -109,6 +109,9 @@ private fun MealInfoPreview() {
     val mealViewModel = MealViewModel(listOf(item))
 
     AppTheme() {
-        MealLayout(mealViewModel, onEditItem = {})
+        MealLayout(
+            mealViewModel,
+            onEditItem = {},
+        )
     }
 }
