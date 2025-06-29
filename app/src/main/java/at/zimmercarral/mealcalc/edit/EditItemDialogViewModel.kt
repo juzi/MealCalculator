@@ -90,10 +90,11 @@ class EditItemDialogViewModel(
     }
 
     private fun zeroIntIfEmpty(value: String): Int {
-        if (value.isEmpty()) {
+        val numberValue = value.replace(Regex("[^0-9]"), "")
+        if (numberValue.isEmpty()) {
             return 0
         }
-        return value.toInt()
+        return numberValue.toInt()
     }
 
     fun setInUpdateMode(updating: Boolean) {
@@ -143,20 +144,21 @@ class EditItemDialogViewModel(
     }
 
     fun setAmount(amount: TextFieldValue) {
-        this.amount.value = amount
-    }
-
-    // If you still need to set amount from a String elsewhere:
-    fun setAmountFromString(amountStr: String) {
-        this.amount.value = TextFieldValue(amountStr)
-    }
-
-    fun calculateCarbs(): String {
-        return "0"
-    }
-
-    fun calculateFPE(): String {
-        return "0"
+        var digitsOnly = amount.text.replace(Regex("[^0-9]"), "")
+        if (digitsOnly.length > 5) {
+            digitsOnly = digitsOnly.substring(0, 5)
+        }
+        // Only update if the filtered text is different from current text
+        // This prevents unnecessary recomposition
+        if (digitsOnly != this.amount.value.text) {
+            this.amount.value = TextFieldValue(
+                text = digitsOnly,
+                selection = TextRange(digitsOnly.length) // Place cursor at end
+            )
+        } else {
+            // If text hasn't changed, preserve the original selection/cursor position
+            this.amount.value = amount.copy(text = digitsOnly)
+        }
     }
 
     fun setInitialFocus(focus: Focus) {
