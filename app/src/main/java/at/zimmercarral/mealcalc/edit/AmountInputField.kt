@@ -28,8 +28,6 @@ import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import at.zimmercarral.mealcalc.R
 import at.zimmercarral.mealcalc.ui.AmountIcon
-import at.zimmercarral.mealcalc.ui.CarbsIcon
-import at.zimmercarral.mealcalc.ui.ProteinIcon
 import at.zimmercarral.mealcalc.ui.theme.AppTheme
 import at.zimmercarral.mealcalc.ui.theme.robotoFamily
 
@@ -63,7 +61,7 @@ fun AmountInputField(
             color = colorScheme.onSurface,
         ),
         keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Decimal,
+            keyboardType = KeyboardType.Number,
             imeAction = imeAction,
         ),
         keyboardActions = KeyboardActions(
