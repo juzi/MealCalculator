@@ -1,5 +1,6 @@
 package at.zimmercarral.mealcalc.search
 
+import android.view.KeyEvent
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -51,7 +52,11 @@ fun SearchBar(
                 modifier = Modifier.fillMaxWidth(),
                 query = searchViewModel.searchQuery.value,
                 onQueryChange = { searchViewModel.setSearchQuery(it) },
-                onSearch = { },
+                onSearch = {
+                    if (filteredItems.isNotEmpty()) {
+                        onEditItem(filteredItems.first())
+                    }
+                },
                 expanded = searchViewModel.expanded.value,
                 onExpandedChange = {
                     searchViewModel.setExpanded(it)
