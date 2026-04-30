@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.google.services)
     id("com.google.devtools.ksp")
 }
 
@@ -54,9 +55,14 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     implementation(libs.gson)
     implementation(libs.androidx.room.ktx)
-    implementation(libs.jackson.module.kotlin)
-///    implementation(libs.androidx.hilt.common)
-//    implementation(libs.androidx.hilt.compiler)
+
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.firestore.ktx)
+    implementation(libs.firebase.auth.ktx)
+    implementation(libs.androidx.credentials)
+    implementation(libs.androidx.credentials.play.services.auth)
+    implementation(libs.googleid)
+    implementation(libs.kotlinx.coroutines.play.services)
 
     ksp(libs.androidx.room.compiler)
 // ksp(libs.androidx.hilt.compiler)

@@ -6,13 +6,13 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
-import at.zimmercarral.mealcalc.data.db.dao.FoodItemDao
 import at.zimmercarral.mealcalc.data.db.model.FoodItem
+import at.zimmercarral.mealcalc.data.repo.FoodItemRepository
 import java.time.LocalDateTime
 import java.util.UUID
 
 class EditItemDialogViewModel(
-    private val dao: FoodItemDao
+    private val repository: FoodItemRepository
 ) : ViewModel() {
     var index = mutableStateOf(0)
 
@@ -79,7 +79,7 @@ class EditItemDialogViewModel(
     }
 
     fun saveItem() {
-        dao.updateOrInsert(getFoodItem())
+        repository.upsert(getFoodItem())
     }
 
     private fun zeroFloatIfEmpty(value: String): Float {

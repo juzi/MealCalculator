@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.room.Room
 import at.zimmercarral.mealcalc.R
 import at.zimmercarral.mealcalc.data.db.FoodItemDatabase
+import at.zimmercarral.mealcalc.data.repo.FoodItemRepository
 import at.zimmercarral.mealcalc.ui.theme.AppTheme
 import at.zimmercarral.mealcalc.ui.theme.robotoFamily
 
@@ -133,7 +134,7 @@ private fun InputFieldPreview() {
         context, FoodItemDatabase::class.java
     ).build()
     val dao = db.dao()
-    val viewModel = EditItemDialogViewModel(dao)
+    val viewModel = EditItemDialogViewModel(FoodItemRepository(dao, null))
     viewModel.setName("Apfelstrudel mit Sahne")
     AppTheme() {
         ItemName(viewModel)

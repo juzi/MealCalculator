@@ -13,7 +13,6 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Clear
-import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -31,6 +30,7 @@ import at.zimmercarral.mealcalc.data.db.model.FoodItem
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchBar(
+    modifier: Modifier = Modifier,
     searchViewModel: SearchViewModel,
     onEditItem: (FoodItem) -> Unit,
     onAddItem: (FoodItem) -> Unit
@@ -71,22 +71,19 @@ fun SearchBar(
                                 .clickable { searchViewModel.expanded.value = false }
                         )
                     } else {
-                        Icon(imageVector = Icons.Rounded.Menu,
-                            contentDescription = "Menu")
+                        Icon(imageVector = Icons.Rounded.Search,
+                            contentDescription = stringResource(R.string.search_item))
                     }
                 },
-                trailingIcon = {
-                    if (searchViewModel.expanded.value) {
+                trailingIcon = if (searchViewModel.expanded.value) {
+                    {
                         Icon(
                             modifier = Modifier.clickable { searchViewModel.setSearchQuery("") },
                             imageVector = Icons.Rounded.Clear,
                             contentDescription = "Clear",
                         )
-                    } else {
-                        Icon(imageVector = Icons.Rounded.Search,
-                            contentDescription = "Search")
                     }
-                },
+                } else null,
                 colors = SearchBarDefaults.inputFieldColors(),
                 interactionSource = null,
             )
@@ -95,7 +92,7 @@ fun SearchBar(
         onExpandedChange = {
             searchViewModel.setExpanded(it)
         },
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier,
         shape = SearchBarDefaults.dockedShape,
         colors = colors,
         tonalElevation = SearchBarDefaults.TonalElevation,

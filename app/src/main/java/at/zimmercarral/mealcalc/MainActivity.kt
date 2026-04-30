@@ -12,40 +12,50 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.room.Room
+import at.zimmercarral.mealcalc.data.auth.AuthManager
+import at.zimmercarral.mealcalc.data.cloud.FirestoreFoodItemRepository
+import at.zimmercarral.mealcalc.data.cloud.FirestoreSyncService
 import at.zimmercarral.mealcalc.data.db.FoodItemDatabase
 import at.zimmercarral.mealcalc.data.db.dao.FoodItemDao
 import at.zimmercarral.mealcalc.data.db.model.FoodItem
-import at.zimmercarral.mealcalc.data.sync.NetworkManager
-import at.zimmercarral.mealcalc.data.sync.SynchronizationTask
+import at.zimmercarral.mealcalc.data.repo.FoodItemRepository
 import at.zimmercarral.mealcalc.edit.EditItemDialogViewModel
 import at.zimmercarral.mealcalc.meal.MealViewModel
 import at.zimmercarral.mealcalc.search.SearchViewModel
 import at.zimmercarral.mealcalc.ui.theme.AppTheme
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 
 class MainActivity : ComponentActivity() {
     private val prefName = "prefs"
-    private val stateKeyMealItems = "key_meal_items";
-    private val networkManager = NetworkManager(this)
-    private val synchronizationTask = SynchronizationTask()
+    private val stateKeyMealItems = "key_meal_items"
     private var mealViewModel = MealViewModel(listOf())
 
     @SuppressLint("StateFlowValueCalledInComposition")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val db by lazy {
-            Room.databaseBuilder(
-                this.applicationContext,
-                FoodItemDatabase::class.java,
-                "food-items.db"
-            ).allowMainThreadQueries().build()
-        }
+        val db = Room.databaseBuilder(
+            this.applicationContext,
+            FoodItemDatabase::class.java,
+            "food-items.db"
+        ).allowMainThreadQueries().build()
+
+        val webClientId = getString(R.string.default_web_client_id)
+        val authManager = AuthManager(FirebaseAuth.getInstance(), webClientId)
+
         val insulinReminderManager = InsulinReminderManager(this.applicationContext)
         mealViewModel.setInsulinReminderManager(insulinReminderManager)
 
@@ -60,20 +70,13 @@ class MainActivity : ComponentActivity() {
             }
         }
 
-        val editItemDialogViewModel = EditItemDialogViewModel(db.dao())
-        val availableItems = db.dao().getAllItems()
-        val sortedItems = availableItems.sortedBy { item -> item.name }
-        fixModificationDate(availableItems, db.dao())
-        val searchViewModel = SearchViewModel(sortedItems)
-
-        if (networkManager.isInHomeNetwork()) {
-            synchronizationTask.syncDatabases(db.dao(),
-                onSyncCompleted = {
-                    val syncedItems = db.dao().getAllItems()
-                    fixModificationDate(syncedItems, db.dao())
-                    searchViewModel.setItems(syncedItems)
-                })
-        }
+        val dao = db.dao()
+        val repository = FoodItemRepository(dao)
+        val initialItems = fixModificationDate(dao.getAllItems(), dao)
+            .filter { !it.isDeleted }
+            .sortedBy { it.name }
+        val searchViewModel = SearchViewModel(initialItems)
+        val editItemDialogViewModel = EditItemDialogViewModel(repository)
 
         enableEdgeToEdge()
         setContent {
@@ -94,14 +97,60 @@ class MainActivity : ComponentActivity() {
                     }
                 }
 
+                var user by remember { mutableStateOf<FirebaseUser?>(authManager.currentUser) }
+                DisposableEffect(authManager) {
+                    val listener = authManager.addAuthStateListener { user = it }
+                    onDispose { authManager.removeAuthStateListener(listener) }
+                }
+
+                val cloud = remember(user?.uid) {
+                    user?.uid?.let {
+                        FirestoreFoodItemRepository(FirebaseFirestore.getInstance(), it)
+                    }
+                }
+                LaunchedEffect(cloud) { repository.setCloud(cloud) }
+
+                DisposableEffect(cloud) {
+                    val current = cloud
+                    if (current == null) {
+                        onDispose { }
+                    } else {
+                        val service = FirestoreSyncService(dao, current)
+                        service.start { items ->
+                            val visible = items.filter { !it.isDeleted }.sortedBy { it.name }
+                            searchViewModel.setItems(visible)
+                        }
+                        onDispose { service.stop() }
+                    }
+                }
+
+                val onSignIn: () -> Unit = {
+                    scope.launch {
+                        try {
+                            authManager.signInWithGoogle(this@MainActivity)
+                        } catch (e: Exception) {
+                            val msg = e.localizedMessage ?: e.javaClass.simpleName
+                            snackbarHostState.showSnackbar(
+                                getString(R.string.sign_in_failed, msg)
+                            )
+                        }
+                    }
+                }
+                val onSignOut: () -> Unit = { authManager.signOut() }
+
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
                     snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
                 ) { innerPadding ->
-                    MainLayout(innerPadding,
-                        editItemDialogViewModel,
-                        mealViewModel,
-                        searchViewModel)
+                    MainLayout(
+                        innerPadding = innerPadding,
+                        editItemDialogViewModel = editItemDialogViewModel,
+                        mealViewModel = mealViewModel,
+                        searchViewModel = searchViewModel,
+                        isSignedIn = user != null,
+                        onSignIn = onSignIn,
+                        onSignOut = onSignOut,
+                    )
                 }
             }
         }
@@ -109,14 +158,15 @@ class MainActivity : ComponentActivity() {
 
     private fun fixModificationDate(
         items: List<FoodItem>,
-        dao: FoodItemDao
-    ) {
+        dao: FoodItemDao,
+    ): List<FoodItem> {
         items.forEach {
             if (it.lastModifiedAt == null) {
                 it.lastModifiedAt = LocalDateTime.now()
                 dao.updateOrInsert(it)
             }
         }
+        return items
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -126,7 +176,7 @@ class MainActivity : ComponentActivity() {
     }
 
     override fun onPause() {
-        super.onPause();
+        super.onPause()
 
         val sharedPrefs = getSharedPreferences(prefName, Context.MODE_PRIVATE)
         val editor = sharedPrefs?.edit()
@@ -135,5 +185,3 @@ class MainActivity : ComponentActivity() {
         editor?.apply()
     }
 }
-
-

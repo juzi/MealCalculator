@@ -30,4 +30,8 @@
     <string name="item_was_deleted">%s was deleted!</string>
     <string name="clear_item_name">Clear name</string>
     <string name="back">Back</string>
+    <string name="sync_disabled">Not syncing — tap to sign in</string>
+    <string name="sync_enabled">Syncing with Google</string>
+    <string name="sign_out">Sign out</string>
+    <string name="sign_in_failed">Sign-in failed: %s</string>
 </resources>
