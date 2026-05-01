@@ -8,7 +8,7 @@
     <string name="edit_name">Edit name</string>
     <string name="label_name">Name</string>
     <string name="carbs_description">Grams of carbs in 100gr</string>
-    <string name="fat_description">Gramm Fett in 100 Gramm.</string>
+    <string name="fat_description">Grams of fat in 100gr</string>
     <string name="gram">gr</string>
     <string name="plus">together with</string>
     <string name="edit_item_before_adding">Edit item before adding</string>
@@ -34,4 +34,8 @@
     <string name="sync_enabled">Syncing with Google</string>
     <string name="sign_out">Sign out</string>
     <string name="sign_in_failed">Sign-in failed: %s</string>
+    <string name="insulin_reminder_title">Don\'t forget!</string>
+    <string name="insulin_reminder_text">Pump insulin for the meal, then delete it from the list.</string>
+    <string name="insulin_notification_channel_name">Insulin reminders</string>
+    <string name="insulin_notification_channel_description">Reminders to pump insulin after a meal.</string>
 </resources>

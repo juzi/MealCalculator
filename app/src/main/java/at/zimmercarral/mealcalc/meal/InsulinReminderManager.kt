@@ -51,9 +51,8 @@ class InsulinReminderManager(private val context: Context) {
             .setAutoCancel(false)
             .setWhen(System.currentTimeMillis())
             .setSmallIcon(R.mipmap.ic_launcher)
-            .setTicker("Hearty365")
-            .setContentTitle("Nicht vergessen!")
-            .setContentText("Insulin für Mahlzeit pumpen! Danach Mahlzeit löschen.")
+            .setContentTitle(context.getString(R.string.insulin_reminder_title))
+            .setContentText(context.getString(R.string.insulin_reminder_text))
             .setPriority(NotificationManager.IMPORTANCE_HIGH)
             .build()
 
@@ -64,10 +63,10 @@ class InsulinReminderManager(private val context: Context) {
     private fun createNotificationChannel() {
         val notificationChannel = NotificationChannel(
             NOTIFICATION_CHANNEL_ID,
-            "My Notifications",
+            context.getString(R.string.insulin_notification_channel_name),
             NotificationManager.IMPORTANCE_HIGH
         ).apply {
-            description = "Insulin pumpen!"
+            description = context.getString(R.string.insulin_notification_channel_description)
             enableLights(true)
             lightColor = Color.RED
             vibrationPattern = longArrayOf(0, 1000, 500, 1000)

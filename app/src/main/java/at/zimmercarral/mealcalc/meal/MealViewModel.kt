@@ -1,9 +1,9 @@
 package at.zimmercarral.mealcalc.meal
 
+import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import at.zimmercarral.mealcalc.data.db.model.FoodItem
-import at.zimmercarral.mealcalc.meal.InsulinReminderManager
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
 import com.google.gson.reflect.TypeToken
@@ -72,11 +72,14 @@ class MealViewModel : ViewModel() {
     fun setItemsFromJson(json: String) {
         try {
             val typeToken = object : TypeToken<List<FoodItem>>() {}.type
-            val items = GSON.fromJson<List<FoodItem>>(json, typeToken);
+            val items = GSON.fromJson<List<FoodItem>>(json, typeToken)
             addItems(items)
         } catch (e: JsonSyntaxException) {
-            e.printStackTrace()
+            Log.e(TAG, "ignoring corrupt saved meal items", e)
         }
     }
 
+    companion object {
+        private const val TAG = "MealViewModel"
+    }
 }

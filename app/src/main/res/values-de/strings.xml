@@ -35,4 +35,8 @@
     <string name="sync_enabled">Synchronisation mit Google</string>
     <string name="sign_out">Abmelden</string>
     <string name="sign_in_failed">Anmelden fehlgeschlagen: %s</string>
+    <string name="insulin_reminder_title">Nicht vergessen!</string>
+    <string name="insulin_reminder_text">Insulin für die Mahlzeit pumpen und sie dann aus der Liste löschen.</string>
+    <string name="insulin_notification_channel_name">Insulin-Erinnerungen</string>
+    <string name="insulin_notification_channel_description">Erinnerung, nach einer Mahlzeit Insulin zu pumpen.</string>
 </resources>
