@@ -1,7 +1,5 @@
 package at.zimmercarral.mealcalc.search
 
-import android.view.KeyEvent
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
@@ -24,9 +22,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.zimmercarral.mealcalc.R
 import at.zimmercarral.mealcalc.data.db.model.FoodItem
+import at.zimmercarral.mealcalc.ui.theme.AppTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -36,10 +36,39 @@ fun SearchBar(
     onEditItem: (FoodItem) -> Unit,
     onAddItem: (FoodItem) -> Unit
 ) {
+    SearchBar(
+        modifier = modifier,
+        query = searchViewModel.searchQuery.value,
+        onQueryChange = { searchViewModel.setSearchQuery(it) },
+        expanded = searchViewModel.expanded.value,
+        onExpandedChange = { searchViewModel.setExpanded(it) },
+        items = searchViewModel.items,
+        onEditItem = onEditItem,
+        onAddItem = onAddItem,
+        onAction = {
+            searchViewModel.setSearchQuery("")
+            searchViewModel.setExpanded(false)
+        }
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun SearchBar(
+    modifier: Modifier = Modifier,
+    query: String,
+    onQueryChange: (String) -> Unit,
+    expanded: Boolean,
+    onExpandedChange: (Boolean) -> Unit,
+    items: List<FoodItem>,
+    onEditItem: (FoodItem) -> Unit,
+    onAddItem: (FoodItem) -> Unit,
+    onAction: () -> Unit
+) {
     val filteredItems =
-        remember(searchViewModel.items.toList(), searchViewModel.searchQuery.value) {
-            searchViewModel.items.filter {
-                it.name.contains(searchViewModel.searchQuery.value, ignoreCase = true)
+        remember(items.toList(), query) {
+            items.filter {
+                it.name.contains(query, ignoreCase = true)
             }
         }
     val itemListState = rememberLazyListState()
@@ -51,35 +80,35 @@ fun SearchBar(
         inputField = {
             SearchBarDefaults.InputField(
                 modifier = Modifier.fillMaxWidth(),
-                query = searchViewModel.searchQuery.value,
-                onQueryChange = { searchViewModel.setSearchQuery(it) },
+                query = query,
+                onQueryChange = onQueryChange,
                 onSearch = {
                     if (filteredItems.isNotEmpty()) {
                         onEditItem(filteredItems.first())
                     }
                 },
-                expanded = searchViewModel.expanded.value,
-                onExpandedChange = {
-                    searchViewModel.setExpanded(it)
-                },
+                expanded = expanded,
+                onExpandedChange = onExpandedChange,
                 enabled = true,
                 placeholder = { Text(stringResource(R.string.search_in_database)) },
                 leadingIcon = {
-                    if (searchViewModel.expanded.value) {
-                        IconButton(onClick = { searchViewModel.expanded.value = false }) {
+                    if (expanded) {
+                        IconButton(onClick = { onExpandedChange(false) }) {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
                                 contentDescription = stringResource(R.string.back),
                             )
                         }
                     } else {
-                        Icon(imageVector = Icons.Rounded.Search,
-                            contentDescription = stringResource(R.string.search_item))
+                        Icon(
+                            imageVector = Icons.Rounded.Search,
+                            contentDescription = stringResource(R.string.search_item)
+                        )
                     }
                 },
-                trailingIcon = if (searchViewModel.expanded.value) {
+                trailingIcon = if (expanded) {
                     {
-                        IconButton(onClick = { searchViewModel.setSearchQuery("") }) {
+                        IconButton(onClick = { onQueryChange("") }) {
                             Icon(
                                 imageVector = Icons.Rounded.Clear,
                                 contentDescription = stringResource(R.string.clear),
@@ -91,11 +120,9 @@ fun SearchBar(
                 interactionSource = null,
             )
         },
-        expanded = searchViewModel.expanded.value,
-        onExpandedChange = {
-            searchViewModel.setExpanded(it)
-        },
-        modifier = modifier,
+        expanded = expanded,
+        onExpandedChange = onExpandedChange,
+        modifier = if (expanded) Modifier.fillMaxWidth() else modifier,
         shape = SearchBarDefaults.dockedShape,
         colors = colors,
         tonalElevation = SearchBarDefaults.TonalElevation,
@@ -106,21 +133,46 @@ fun SearchBar(
             modifier = Modifier.fillMaxHeight(),
             state = itemListState,
             verticalArrangement = Arrangement.spacedBy(4.dp),
-            contentPadding = PaddingValues(5.dp),
+            contentPadding = PaddingValues(top = 5.dp, bottom = 5.dp, end = 5.dp),
         ) {
             itemsIndexed(filteredItems) { index, item ->
-                val backgroundColor = if (index % 2 == 0) {
+                val backgroundColor = if (index % 2 == 1) {
                     colorScheme.surfaceContainerHigh
                 } else {
                     colorScheme.surfaceContainerLow
                 }
-                SearchListItem(item,
-                    searchViewModel,
-                    backgroundColor,
-                    onEditItem,
-                    onAddItem)
+                SearchListItem(
+                    item = item,
+                    backgroundColor = backgroundColor,
+                    onEditItem = onEditItem,
+                    onAddItem = onAddItem,
+                    onAction = onAction
+                )
             }
         }
+    }
+}
+
+@Preview(name = "Light Mode")
+@Preview(name = "Dark Mode", uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun SearchBarPreview() {
+    val items = listOf(
+        FoodItem("1", "Apple", 0.3f, 14f, 0.3f, 100, null, false),
+        FoodItem("2", "Banana", 0.3f, 23f, 1.1f, 100, null, false),
+        FoodItem("3", "Cherry", 0.3f, 12f, 1f, 100, null, false)
+    )
+    AppTheme {
+        SearchBar(
+            query = "a",
+            onQueryChange = {},
+            expanded = true,
+            onExpandedChange = {},
+            items = items,
+            onEditItem = {},
+            onAddItem = {},
+            onAction = {}
+        )
     }
 }
 
