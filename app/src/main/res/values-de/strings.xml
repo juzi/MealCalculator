@@ -11,6 +11,7 @@
     <string name="edit_name">Name bearbeiten</string>
     <string name="label_name">Name</string>
     <string name="carbs_description">Gramm Kohlenhydrate pro 100gr.</string>
+    <string name="fat_description">Gramm Fett pro 100gr</string>
     <string name="protein_description">Gramm Eiweiß in 100 Gramm.</string>
     <string name="amount_description">Gegessene Gramm.</string>
     <string name="clear">löschen</string>
@@ -30,4 +31,8 @@
     <string name="search_in_database">Suche in Datenbank...</string>
     <string name="clear_item_name">Name löschen</string>
     <string name="back">Zurück</string>
+    <string name="sync_disabled">Keine Synchronisation - Tippen zum Anmelden</string>
+    <string name="sync_enabled">Synchronisation mit Google</string>
+    <string name="sign_out">Abmelden</string>
+    <string name="sign_in_failed">Anmelden fehlgeschlagen: %s</string>
 </resources>
