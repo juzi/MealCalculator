@@ -8,12 +8,12 @@ plugins {
 
 android {
     namespace = "at.zimmercarral.mealcalc"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "at.zimmercarral.mealcalc"
         minSdk = 31
-        targetSdk = 34
+        targetSdk = 36
         versionCode = 1
         versionName = "0.8.3"
 
@@ -22,7 +22,8 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"

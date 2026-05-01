@@ -16,7 +16,7 @@
     <string name="search_in_database">Search item in database...</string>
     <string name="clear_menu">Delete meal</string>
     <string name="meal_title">My Meal</string>
-    <string name="protein_description">"Grams of protein in "</string>
+    <string name="protein_description">Grams of protein in 100gr</string>
     <string name="amount_description">grams eaten</string>
     <string name="clear">clear</string>
     <string name="add_item">Add</string>

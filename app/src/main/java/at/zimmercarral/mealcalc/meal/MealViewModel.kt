@@ -1,6 +1,5 @@
 package at.zimmercarral.mealcalc.meal
 
-import InsulinReminderManager
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import at.zimmercarral.mealcalc.data.db.model.FoodItem
