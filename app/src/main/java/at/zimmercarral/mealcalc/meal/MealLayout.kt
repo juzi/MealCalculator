@@ -107,7 +107,7 @@ private fun MealInfoPreview() {
         lastModifiedAt = null,
         isDeleted = false,
     )
-    val mealViewModel = MealViewModel(listOf(item))
+    val mealViewModel = MealViewModel().apply { addItems(listOf(item)) }
 
     AppTheme() {
         MealLayout(

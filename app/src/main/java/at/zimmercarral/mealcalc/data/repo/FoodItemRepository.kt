@@ -33,4 +33,11 @@ class FoodItemRepository(
         dao.observeAllItems().map { list ->
             list.filter { !it.isDeleted }.sortedBy { it.name }
         }
+
+    suspend fun backfillMissingTimestamps() {
+        val now = LocalDateTime.now()
+        dao.getAllItems()
+            .filter { it.lastModifiedAt == null }
+            .forEach { dao.updateOrInsert(it.copy(lastModifiedAt = now)) }
+    }
 }

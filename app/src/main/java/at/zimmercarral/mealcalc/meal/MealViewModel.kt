@@ -3,18 +3,17 @@ package at.zimmercarral.mealcalc.meal
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import at.zimmercarral.mealcalc.data.db.model.FoodItem
+import at.zimmercarral.mealcalc.meal.InsulinReminderManager
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
 import com.google.gson.reflect.TypeToken
 import java.time.LocalDateTime
 
-class MealViewModel(items: List<FoodItem>) : ViewModel() {
+class MealViewModel : ViewModel() {
     private val GSON = Gson()
     private var insulinReminderManager: InsulinReminderManager? = null
 
-    var mealItems = mutableStateListOf<FoodItem>().apply {
-        addAll(items)
-    }
+    var mealItems = mutableStateListOf<FoodItem>()
 
     fun setInsulinReminderManager(insulinReminderManager: InsulinReminderManager) {
         this.insulinReminderManager = insulinReminderManager

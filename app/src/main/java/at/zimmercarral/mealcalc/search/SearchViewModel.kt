@@ -5,6 +5,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.focus.FocusRequester
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
 import at.zimmercarral.mealcalc.data.db.model.FoodItem
 import at.zimmercarral.mealcalc.data.repo.FoodItemRepository
 import kotlinx.coroutines.launch
@@ -35,5 +37,11 @@ class SearchViewModel(repository: FoodItemRepository) : ViewModel() {
 
     fun focusOnQueryField() {
         searchFieldFocusRequester.value.requestFocus()
+    }
+
+    companion object {
+        fun factory(repository: FoodItemRepository) = viewModelFactory {
+            initializer { SearchViewModel(repository) }
+        }
     }
 }

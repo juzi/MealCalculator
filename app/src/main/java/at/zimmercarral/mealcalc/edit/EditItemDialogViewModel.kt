@@ -7,6 +7,8 @@ import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
 import at.zimmercarral.mealcalc.data.db.model.FoodItem
 import at.zimmercarral.mealcalc.data.repo.FoodItemRepository
 import kotlinx.coroutines.launch
@@ -168,5 +170,11 @@ class EditItemDialogViewModel(
 
     fun setInitialFocus(focus: Focus) {
         initialFocus.value = focus
+    }
+
+    companion object {
+        fun factory(repository: FoodItemRepository) = viewModelFactory {
+            initializer { EditItemDialogViewModel(repository) }
+        }
     }
 }

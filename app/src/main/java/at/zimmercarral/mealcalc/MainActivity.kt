@@ -11,8 +11,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.content.ContextCompat
-import at.zimmercarral.mealcalc.meal.InsulinReminderManager
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -26,44 +25,40 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
-import androidx.room.Room
-import at.zimmercarral.mealcalc.data.auth.AuthManager
 import at.zimmercarral.mealcalc.data.cloud.FirestoreFoodItemRepository
 import at.zimmercarral.mealcalc.data.cloud.FirestoreSyncService
-import at.zimmercarral.mealcalc.data.db.FoodItemDatabase
-import at.zimmercarral.mealcalc.data.db.dao.FoodItemDao
-import at.zimmercarral.mealcalc.data.repo.FoodItemRepository
 import at.zimmercarral.mealcalc.edit.EditItemDialogViewModel
 import at.zimmercarral.mealcalc.meal.MealViewModel
 import at.zimmercarral.mealcalc.search.SearchViewModel
 import at.zimmercarral.mealcalc.ui.theme.AppTheme
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.launch
-import java.time.LocalDateTime
 
 class MainActivity : ComponentActivity() {
     private val prefName = "prefs"
     private val stateKeyMealItems = "key_meal_items"
-    private var mealViewModel = MealViewModel(listOf())
+
+    private val app: MealCalcApplication
+        get() = application as MealCalcApplication
+
+    private val mealViewModel: MealViewModel by viewModels()
+
+    private val searchViewModel: SearchViewModel by viewModels {
+        SearchViewModel.factory(app.foodItemRepository)
+    }
+
+    private val editItemDialogViewModel: EditItemDialogViewModel by viewModels {
+        EditItemDialogViewModel.factory(app.foodItemRepository)
+    }
 
     @SuppressLint("StateFlowValueCalledInComposition")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val db = Room.databaseBuilder(
-            this.applicationContext,
-            FoodItemDatabase::class.java,
-            "food-items.db"
-        ).build()
-
-        val webClientId = getString(R.string.default_web_client_id)
-        val authManager = AuthManager(FirebaseAuth.getInstance(), webClientId)
-
-        val insulinReminderManager = InsulinReminderManager(this.applicationContext)
-        mealViewModel.setInsulinReminderManager(insulinReminderManager)
+        mealViewModel.setInsulinReminderManager(app.insulinReminderManager)
 
         var savedMealItems = savedInstanceState?.getString(stateKeyMealItems)
         if (savedMealItems?.isNotBlank() == true) {
@@ -76,12 +71,7 @@ class MainActivity : ComponentActivity() {
             }
         }
 
-        val dao = db.dao()
-        val repository = FoodItemRepository(dao)
-        val searchViewModel = SearchViewModel(repository)
-        val editItemDialogViewModel = EditItemDialogViewModel(repository)
-
-        lifecycleScope.launch { backfillMissingTimestamps(dao) }
+        lifecycleScope.launch { app.foodItemRepository.backfillMissingTimestamps() }
 
         enableEdgeToEdge()
         setContent {
@@ -116,10 +106,10 @@ class MainActivity : ComponentActivity() {
                     }
                 }
 
-                var user by remember { mutableStateOf<FirebaseUser?>(authManager.currentUser) }
-                DisposableEffect(authManager) {
-                    val listener = authManager.addAuthStateListener { user = it }
-                    onDispose { authManager.removeAuthStateListener(listener) }
+                var user by remember { mutableStateOf<FirebaseUser?>(app.authManager.currentUser) }
+                DisposableEffect(app.authManager) {
+                    val listener = app.authManager.addAuthStateListener { user = it }
+                    onDispose { app.authManager.removeAuthStateListener(listener) }
                 }
 
                 val cloud = remember(user?.uid) {
@@ -127,14 +117,14 @@ class MainActivity : ComponentActivity() {
                         FirestoreFoodItemRepository(FirebaseFirestore.getInstance(), it)
                     }
                 }
-                LaunchedEffect(cloud) { repository.setCloud(cloud) }
+                LaunchedEffect(cloud) { app.foodItemRepository.setCloud(cloud) }
 
                 DisposableEffect(cloud) {
                     val current = cloud
                     if (current == null) {
                         onDispose { }
                     } else {
-                        val service = FirestoreSyncService(dao, current)
+                        val service = FirestoreSyncService(app.foodItemDao, current)
                         service.start()
                         onDispose { service.stop() }
                     }
@@ -143,7 +133,7 @@ class MainActivity : ComponentActivity() {
                 val onSignIn: () -> Unit = {
                     scope.launch {
                         try {
-                            authManager.signInWithGoogle(this@MainActivity)
+                            app.authManager.signInWithGoogle(this@MainActivity)
                         } catch (e: Exception) {
                             val msg = e.localizedMessage ?: e.javaClass.simpleName
                             snackbarHostState.showSnackbar(
@@ -152,7 +142,7 @@ class MainActivity : ComponentActivity() {
                         }
                     }
                 }
-                val onSignOut: () -> Unit = { authManager.signOut() }
+                val onSignOut: () -> Unit = { app.authManager.signOut() }
 
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
@@ -170,13 +160,6 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-    }
-
-    private suspend fun backfillMissingTimestamps(dao: FoodItemDao) {
-        val now = LocalDateTime.now()
-        dao.getAllItems()
-            .filter { it.lastModifiedAt == null }
-            .forEach { dao.updateOrInsert(it.copy(lastModifiedAt = now)) }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
