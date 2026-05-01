@@ -16,13 +16,14 @@ fun MealList(
     foodItems: List<FoodItem>,
     onEditItem: (Int) -> Unit,
     onAddItem: (FoodItem) -> Unit,
-    onDeleteItem: (FoodItem) -> Unit
+    onDeleteItem: (FoodItem) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
 
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(10.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
+        modifier = modifier
             .fillMaxHeight(0.7f)
             .padding(start = 15.dp)
     ) {

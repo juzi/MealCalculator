@@ -31,9 +31,10 @@ fun MainLayout(
     isSignedIn: Boolean,
     onSignIn: () -> Unit,
     onSignOut: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     Column(verticalArrangement = Arrangement.Top,
-        modifier = Modifier
+        modifier = modifier
             .padding(innerPadding)
             .fillMaxSize()
             .background(color = colorScheme.surfaceContainer)

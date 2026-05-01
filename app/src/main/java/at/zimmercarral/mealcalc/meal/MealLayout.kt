@@ -30,7 +30,8 @@ import at.zimmercarral.mealcalc.ui.theme.robotoFamily
 fun MealLayout(
     mealViewModel: MealViewModel,
     onEditItem: (Int) -> Unit,
-    onAddNewItem: () -> Unit = {}
+    modifier: Modifier = Modifier,
+    onAddNewItem: () -> Unit = {},
 ) {
     val mealDeleted = stringResource(R.string.meal_deleted)
     val undo = stringResource(R.string.undo)
@@ -52,7 +53,7 @@ fun MealLayout(
     }
 
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize(),
         verticalArrangement = Arrangement.SpaceBetween
     ) {

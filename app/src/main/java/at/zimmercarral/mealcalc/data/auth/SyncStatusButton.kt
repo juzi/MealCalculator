@@ -14,6 +14,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import at.zimmercarral.mealcalc.R
 
@@ -22,9 +23,10 @@ fun SyncStatusButton(
     isSignedIn: Boolean,
     onSignIn: () -> Unit,
     onSignOut: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     var menuExpanded by remember { mutableStateOf(false) }
-    Box {
+    Box(modifier = modifier) {
         IconButton(onClick = {
             if (isSignedIn) menuExpanded = true else onSignIn()
         }) {

@@ -16,6 +16,7 @@ import androidx.compose.material.icons.rounded.Clear
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
@@ -65,11 +66,12 @@ fun SearchBar(
                 placeholder = { Text(stringResource(R.string.search_in_database)) },
                 leadingIcon = {
                     if (searchViewModel.expanded.value) {
-                        Icon(imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
-                            contentDescription = stringResource(R.string.back),
-                            modifier = Modifier
-                                .clickable { searchViewModel.expanded.value = false }
-                        )
+                        IconButton(onClick = { searchViewModel.expanded.value = false }) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
+                                contentDescription = stringResource(R.string.back),
+                            )
+                        }
                     } else {
                         Icon(imageVector = Icons.Rounded.Search,
                             contentDescription = stringResource(R.string.search_item))
@@ -77,11 +79,12 @@ fun SearchBar(
                 },
                 trailingIcon = if (searchViewModel.expanded.value) {
                     {
-                        Icon(
-                            modifier = Modifier.clickable { searchViewModel.setSearchQuery("") },
-                            imageVector = Icons.Rounded.Clear,
-                            contentDescription = "Clear",
-                        )
+                        IconButton(onClick = { searchViewModel.setSearchQuery("") }) {
+                            Icon(
+                                imageVector = Icons.Rounded.Clear,
+                                contentDescription = stringResource(R.string.clear),
+                            )
+                        }
                     }
                 } else null,
                 colors = SearchBarDefaults.inputFieldColors(),

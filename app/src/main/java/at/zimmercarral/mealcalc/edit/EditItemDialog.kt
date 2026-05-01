@@ -102,8 +102,9 @@ fun EditItemDialog(
 fun AddOrUpdateButton(
     editItemDialogViewModel: EditItemDialogViewModel,
     onAddOrUpdateItem: (FoodItem) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
-    Column(modifier = Modifier
+    Column(modifier = modifier
         .padding(top = 10.dp, start = 50.dp),
         verticalArrangement = Arrangement.Center
     ) {
