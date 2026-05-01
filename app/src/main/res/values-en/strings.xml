@@ -35,8 +35,4 @@
     <string name="sync_enabled">Syncing with Google</string>
     <string name="sign_out">Sign out</string>
     <string name="sign_in_failed">Sign-in failed: %s</string>
-    <string name="insulin_reminder_title">Don\'t forget!</string>
-    <string name="insulin_reminder_text">Pump insulin for the meal, then delete it from the list.</string>
-    <string name="insulin_notification_channel_name">Insulin reminders</string>
-    <string name="insulin_notification_channel_description">Reminders to pump insulin after a meal.</string>
 </resources>

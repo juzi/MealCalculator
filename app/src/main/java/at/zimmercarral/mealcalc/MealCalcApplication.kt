@@ -6,7 +6,6 @@ import at.zimmercarral.mealcalc.data.auth.AuthManager
 import at.zimmercarral.mealcalc.data.db.FoodItemDatabase
 import at.zimmercarral.mealcalc.data.db.dao.FoodItemDao
 import at.zimmercarral.mealcalc.data.repo.FoodItemRepository
-import at.zimmercarral.mealcalc.meal.InsulinReminderManager
 import com.google.firebase.auth.FirebaseAuth
 
 class MealCalcApplication : Application() {
@@ -22,6 +21,4 @@ class MealCalcApplication : Application() {
     val authManager: AuthManager by lazy {
         AuthManager(FirebaseAuth.getInstance(), getString(R.string.default_web_client_id))
     }
-
-    val insulinReminderManager: InsulinReminderManager by lazy { InsulinReminderManager(this) }
 }

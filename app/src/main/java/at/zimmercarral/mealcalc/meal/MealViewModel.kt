@@ -11,13 +11,8 @@ import java.time.LocalDateTime
 
 class MealViewModel : ViewModel() {
     private val GSON = Gson()
-    private var insulinReminderManager: InsulinReminderManager? = null
 
     var mealItems = mutableStateListOf<FoodItem>()
-
-    fun setInsulinReminderManager(insulinReminderManager: InsulinReminderManager) {
-        this.insulinReminderManager = insulinReminderManager
-    }
 
     fun addItems(items: List<FoodItem>) {
         items.forEach(this::addOrUpdateItem)
@@ -30,7 +25,6 @@ class MealViewModel : ViewModel() {
         } else {
             mealItems.add(item)
         }
-        insulinReminderManager?.startOrResetTimer()
     }
 
     private fun updateItemAt(index: Int, newItem: FoodItem) {
@@ -55,14 +49,10 @@ class MealViewModel : ViewModel() {
 
     fun removeItem(item: FoodItem) {
         mealItems.remove(item)
-        if (mealItems.isEmpty()) {
-            insulinReminderManager?.cancelTimer()
-        }
     }
 
     fun removeAllItems() {
         mealItems.removeAll(mealItems)
-        insulinReminderManager?.cancelTimer()
     }
 
     fun getItemsAsJson(): String {
