@@ -3,6 +3,9 @@ package at.zimmercarral.mealcalc.data.repo
 import at.zimmercarral.mealcalc.data.cloud.FirestoreFoodItemRepository
 import at.zimmercarral.mealcalc.data.db.dao.FoodItemDao
 import at.zimmercarral.mealcalc.data.db.model.FoodItem
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+import java.time.LocalDateTime
 
 class FoodItemRepository(
     private val dao: FoodItemDao,
@@ -15,16 +18,19 @@ class FoodItemRepository(
         this.cloud = cloud
     }
 
-    fun upsert(item: FoodItem) {
+    suspend fun upsert(item: FoodItem) {
         dao.updateOrInsert(item)
         cloud?.upsert(item)
     }
 
-    fun delete(item: FoodItem) {
-        val tombstone = item.copy(isDeleted = true, lastModifiedAt = java.time.LocalDateTime.now())
+    suspend fun delete(item: FoodItem) {
+        val tombstone = item.copy(isDeleted = true, lastModifiedAt = LocalDateTime.now())
         dao.deleteItem(item)
         cloud?.upsert(tombstone)
     }
 
-    fun getAll(): List<FoodItem> = dao.getAllItems()
+    fun observeVisibleSorted(): Flow<List<FoodItem>> =
+        dao.observeAllItems().map { list ->
+            list.filter { !it.isDeleted }.sortedBy { it.name }
+        }
 }

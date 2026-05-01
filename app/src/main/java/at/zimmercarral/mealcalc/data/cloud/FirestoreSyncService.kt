@@ -4,32 +4,40 @@ import android.util.Log
 import at.zimmercarral.mealcalc.data.db.dao.FoodItemDao
 import at.zimmercarral.mealcalc.data.db.model.FoodItem
 import com.google.firebase.firestore.ListenerRegistration
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 
 class FirestoreSyncService(
     private val dao: FoodItemDao,
     private val cloud: FirestoreFoodItemRepository,
 ) {
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private var listener: ListenerRegistration? = null
     private var hasPushedLocalOnly = false
 
-    fun start(onItemsChanged: (List<FoodItem>) -> Unit) {
+    fun start() {
         listener?.remove()
         listener = cloud.listen { remoteItems ->
-            applyRemote(remoteItems)
-            if (!hasPushedLocalOnly) {
-                pushLocalOnly(remoteItems)
-                hasPushedLocalOnly = true
+            scope.launch {
+                applyRemote(remoteItems)
+                if (!hasPushedLocalOnly) {
+                    pushLocalOnly(remoteItems)
+                    hasPushedLocalOnly = true
+                }
             }
-            onItemsChanged(dao.getAllItems())
         }
     }
 
     fun stop() {
         listener?.remove()
         listener = null
+        scope.cancel()
     }
 
-    private fun applyRemote(remoteItems: List<FoodItem>) {
+    private suspend fun applyRemote(remoteItems: List<FoodItem>) {
         val localByUuid = dao.getAllItems().associateBy { it.uuid }
         remoteItems.forEach { remote ->
             val local = localByUuid[remote.uuid]
@@ -43,7 +51,7 @@ class FirestoreSyncService(
         }
     }
 
-    private fun pushLocalOnly(remoteItems: List<FoodItem>) {
+    private suspend fun pushLocalOnly(remoteItems: List<FoodItem>) {
         val remoteUuids = remoteItems.map { it.uuid }.toSet()
         val locals = dao.getAllItems()
         locals.filter { it.uuid !in remoteUuids }.forEach {

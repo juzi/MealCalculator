@@ -27,19 +27,14 @@ data class FoodItem(
     val amount: Int,
 
     @ColumnInfo("lastModifiedAt")
-    var lastModifiedAt: LocalDateTime?,
+    val lastModifiedAt: LocalDateTime?,
 
     @ColumnInfo("isDeleted")
     val isDeleted: Boolean
 
 ) {
     override fun toString(): String {
-        val dateTime = if (lastModifiedAt != null) {
-            lastModifiedAt
-        } else {
-            LocalDateTime.now()
-        }
-
+        val dateTime = lastModifiedAt ?: LocalDateTime.now()
         return "FoodItem(%s, %.1f, %.1f, %.1f, %d, %s, %b)".format(name,
             fatPer100g,
             carbsPer100g,
@@ -49,6 +44,8 @@ data class FoodItem(
             isDeleted)
     }
 
+    // equals/hashCode deliberately ignore lastModifiedAt: two items with the same
+    // content but different timestamps are treated as the same item by the sync layer.
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
@@ -64,5 +61,16 @@ data class FoodItem(
         if (isDeleted != other.isDeleted) return false
 
         return true
+    }
+
+    override fun hashCode(): Int {
+        var result = uuid.hashCode()
+        result = 31 * result + name.hashCode()
+        result = 31 * result + fatPer100g.hashCode()
+        result = 31 * result + carbsPer100g.hashCode()
+        result = 31 * result + proteinPer100g.hashCode()
+        result = 31 * result + amount
+        result = 31 * result + isDeleted.hashCode()
+        return result
     }
 }

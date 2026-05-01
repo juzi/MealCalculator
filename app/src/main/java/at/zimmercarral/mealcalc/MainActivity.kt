@@ -26,13 +26,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.lifecycleScope
 import androidx.room.Room
 import at.zimmercarral.mealcalc.data.auth.AuthManager
 import at.zimmercarral.mealcalc.data.cloud.FirestoreFoodItemRepository
 import at.zimmercarral.mealcalc.data.cloud.FirestoreSyncService
 import at.zimmercarral.mealcalc.data.db.FoodItemDatabase
 import at.zimmercarral.mealcalc.data.db.dao.FoodItemDao
-import at.zimmercarral.mealcalc.data.db.model.FoodItem
 import at.zimmercarral.mealcalc.data.repo.FoodItemRepository
 import at.zimmercarral.mealcalc.edit.EditItemDialogViewModel
 import at.zimmercarral.mealcalc.meal.MealViewModel
@@ -57,7 +57,7 @@ class MainActivity : ComponentActivity() {
             this.applicationContext,
             FoodItemDatabase::class.java,
             "food-items.db"
-        ).allowMainThreadQueries().build()
+        ).build()
 
         val webClientId = getString(R.string.default_web_client_id)
         val authManager = AuthManager(FirebaseAuth.getInstance(), webClientId)
@@ -78,11 +78,10 @@ class MainActivity : ComponentActivity() {
 
         val dao = db.dao()
         val repository = FoodItemRepository(dao)
-        val initialItems = fixModificationDate(dao.getAllItems(), dao)
-            .filter { !it.isDeleted }
-            .sortedBy { it.name }
-        val searchViewModel = SearchViewModel(initialItems)
+        val searchViewModel = SearchViewModel(repository)
         val editItemDialogViewModel = EditItemDialogViewModel(repository)
+
+        lifecycleScope.launch { backfillMissingTimestamps(dao) }
 
         enableEdgeToEdge()
         setContent {
@@ -136,10 +135,7 @@ class MainActivity : ComponentActivity() {
                         onDispose { }
                     } else {
                         val service = FirestoreSyncService(dao, current)
-                        service.start { items ->
-                            val visible = items.filter { !it.isDeleted }.sortedBy { it.name }
-                            searchViewModel.setItems(visible)
-                        }
+                        service.start()
                         onDispose { service.stop() }
                     }
                 }
@@ -176,17 +172,11 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun fixModificationDate(
-        items: List<FoodItem>,
-        dao: FoodItemDao,
-    ): List<FoodItem> {
-        items.forEach {
-            if (it.lastModifiedAt == null) {
-                it.lastModifiedAt = LocalDateTime.now()
-                dao.updateOrInsert(it)
-            }
-        }
-        return items
+    private suspend fun backfillMissingTimestamps(dao: FoodItemDao) {
+        val now = LocalDateTime.now()
+        dao.getAllItems()
+            .filter { it.lastModifiedAt == null }
+            .forEach { dao.updateOrInsert(it.copy(lastModifiedAt = now)) }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

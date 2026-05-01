@@ -6,8 +6,10 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import at.zimmercarral.mealcalc.data.db.model.FoodItem
 import at.zimmercarral.mealcalc.data.repo.FoodItemRepository
+import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.util.UUID
 
@@ -79,7 +81,10 @@ class EditItemDialogViewModel(
     }
 
     fun saveItem() {
-        repository.upsert(getFoodItem())
+        val item = getFoodItem()
+        viewModelScope.launch {
+            repository.upsert(item)
+        }
     }
 
     private fun zeroFloatIfEmpty(value: String): Float {
