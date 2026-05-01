@@ -60,7 +60,7 @@ fun SearchListItem(
         .background(color = backgroundColor)
         .padding(bottom = 6.dp,
             start = 8.dp,
-            end = 5.dp), // Re-added small start padding for individual items
+            end = 8.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically // Align items vertically
     ) {
