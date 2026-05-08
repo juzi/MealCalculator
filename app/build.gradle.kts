@@ -40,6 +40,13 @@ android {
     buildFeatures {
         compose = true
     }
+    testOptions {
+        unitTests.isReturnDefaultValues = true
+        // Gson uses reflection on java.time internals; open the module for tests.
+        unitTests.all {
+            it.jvmArgs("--add-opens=java.base/java.time=ALL-UNNAMED")
+        }
+    }
 }
 
 dependencies {
@@ -68,6 +75,7 @@ dependencies {
     ksp(libs.androidx.room.compiler)
 // ksp(libs.androidx.hilt.compiler)
     testImplementation(libs.junit)
+    testImplementation(libs.kotlinx.coroutines.test)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
