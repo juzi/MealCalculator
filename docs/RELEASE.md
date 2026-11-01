@@ -182,7 +182,9 @@ production access. Start this early.
      DebugAppCheckProvider`). Add it under App Check → *Manage debug tokens*.
    - Watch the App Check metrics for Cloud Firestore for a few days. When nearly
      all requests are verified, click **Enforce**. Unverified clients (old
-     versions, modified apps) are then rejected.
+     versions, modified apps) are then rejected. That includes the old
+     `at.zimmercarral.mealcalc` build, which has no App Check: move to the
+     new package on all your devices before enforcing.
 3. **Test on a real device** with a throwaway Google account: sign in, sync,
    *Delete account…*. Then check in the Firebase console that the user and their
    `users/{uid}/foodItems` documents are gone.
