@@ -84,6 +84,13 @@ not sign in until the Firebase project is configured. Do this once:
    client" error, the file does not contain a web OAuth client — re-do
    step 6, redownload, and rebuild.
 
+## Releasing
+
+See [docs/RELEASE.md](docs/RELEASE.md) for signing, Firebase/Play Console setup,
+App Check, the Data safety answers and the store listing texts. Store graphics
+are in [`store/`](store). The privacy policy and account deletion pages are in
+`hosting/public/` and are deployed with `firebase deploy --only hosting`.
+
 ## Build and run
 
     ./gradlew assembleDebug
