@@ -5,6 +5,14 @@ the Firebase project `mealcalculator-584e6` and the Play Console developer accou
 
 Steps marked *(once)* are only needed for the first release.
 
+**Status (2026-11-01):** done: the Firebase Android app
+`1:94679021901:android:c5dd0bc546175f0d0b9f04` is registered with the debug key's
+SHA-1/SHA-256; the App Check and Play Integrity APIs are enabled; Play Integrity
+is registered as the App Check provider; an emulator debug token is registered.
+App Check is **not enforced**. Still open: 1.2–1.4, 2–4, and in 5 the Play
+fingerprints, the Play Console Play Integrity link, debug tokens for your own
+devices and enforcement.
+
 ## 1. Firebase *(once)*
 
 1. **Register the Android app.** Firebase console → Project settings → *Add app* →
@@ -176,8 +184,8 @@ production access. Start this early.
 2. **App Check.**
    - Play Console → App integrity → Play Integrity API: link the Google Cloud
      project `mealcalculator-584e6`.
-   - Firebase console → App Check → Apps: register the Android app with the
-     *Play Integrity* provider (needs the app signing key's SHA-256).
+   - The *Play Integrity* provider is already registered in Firebase App Check.
+     It only works once the app signing key's SHA-256 (step 1 above) is added.
    - Debug builds log a debug token on first launch (`adb logcat | grep
      DebugAppCheckProvider`). Add it under App Check → *Manage debug tokens*.
    - Watch the App Check metrics for Cloud Firestore for a few days. When nearly
