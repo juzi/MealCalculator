@@ -35,4 +35,11 @@
     <string name="sync_enabled">Synchronisation mit Google</string>
     <string name="sign_out">Abmelden</string>
     <string name="sign_in_failed">Anmelden fehlgeschlagen: %s</string>
+    <string name="delete_account">Konto löschen…</string>
+    <string name="delete_account_title">Konto löschen?</string>
+    <string name="delete_account_message">Das Konto und alle in der Cloud gespeicherten Lebensmittel werden dauerhaft gelöscht. Lebensmittel auf diesem Gerät bleiben erhalten. Zur Bestätigung ist eine erneute Anmeldung mit Google nötig.</string>
+    <string name="delete_account_confirm">Löschen</string>
+    <string name="cancel">Abbrechen</string>
+    <string name="account_deleted">Konto und Cloud-Daten gelöscht</string>
+    <string name="delete_account_failed">Löschen des Kontos fehlgeschlagen: %s</string>
 </resources>

@@ -34,4 +34,11 @@
     <string name="sync_enabled">Syncing with Google</string>
     <string name="sign_out">Sign out</string>
     <string name="sign_in_failed">Sign-in failed: %s</string>
+    <string name="delete_account">Delete account…</string>
+    <string name="delete_account_title">Delete account?</string>
+    <string name="delete_account_message">Your account and all food items stored in the cloud will be permanently deleted. Food items on this device are kept. To confirm, you will be asked to sign in with Google again.</string>
+    <string name="delete_account_confirm">Delete</string>
+    <string name="cancel">Cancel</string>
+    <string name="account_deleted">Account and cloud data deleted</string>
+    <string name="delete_account_failed">Account deletion failed: %s</string>
 </resources>

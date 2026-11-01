@@ -31,6 +31,7 @@ fun MainLayout(
     isSignedIn: Boolean,
     onSignIn: () -> Unit,
     onSignOut: () -> Unit,
+    onDeleteAccount: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(verticalArrangement = Arrangement.Top,
@@ -63,6 +64,7 @@ fun MainLayout(
                     isSignedIn = isSignedIn,
                     onSignIn = onSignIn,
                     onSignOut = onSignOut,
+                    onDeleteAccount = onDeleteAccount,
                 )
             }
         }

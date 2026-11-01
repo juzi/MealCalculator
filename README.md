@@ -18,6 +18,11 @@ devices and reinstalls.
 - **Conflict resolution** — last-write-wins on `lastModifiedAt`. Deletes are
   soft (an item with `isDeleted = true` in Firestore causes a hard delete in
   Room).
+- **Account deletion** — *Delete account…* in the sync menu (required by
+  Google Play). After a confirmation dialog the user re-authenticates with
+  Google, then all documents under `users/{uid}/foodItems` are hard-deleted
+  and the Firebase account is deleted. Food items in the local Room database
+  are kept.
 
 The local-network MySQL/REST sync that earlier versions used has been removed.
 

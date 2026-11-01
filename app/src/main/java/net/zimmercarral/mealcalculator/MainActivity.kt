@@ -26,6 +26,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.core.content.ContextCompat
+import androidx.credentials.exceptions.GetCredentialCancellationException
 import androidx.lifecycle.lifecycleScope
 import net.zimmercarral.mealcalculator.data.cloud.FirestoreFoodItemRepository
 import net.zimmercarral.mealcalculator.data.cloud.FirestoreSyncService
@@ -141,6 +142,24 @@ class MainActivity : ComponentActivity() {
                     }
                 }
                 val onSignOut: () -> Unit = { app.authManager.signOut() }
+                val onDeleteAccount: () -> Unit = {
+                    scope.launch {
+                        try {
+                            app.authManager.deleteAccount(this@MainActivity) { uid ->
+                                FirestoreFoodItemRepository(FirebaseFirestore.getInstance(), uid)
+                                    .deleteAll()
+                            }
+                            snackbarHostState.showSnackbar(getString(R.string.account_deleted))
+                        } catch (_: GetCredentialCancellationException) {
+                            // User closed the Google account picker: nothing was deleted.
+                        } catch (e: Exception) {
+                            val msg = e.localizedMessage ?: e.javaClass.simpleName
+                            snackbarHostState.showSnackbar(
+                                getString(R.string.delete_account_failed, msg)
+                            )
+                        }
+                    }
+                }
 
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
@@ -154,6 +173,7 @@ class MainActivity : ComponentActivity() {
                         isSignedIn = user != null,
                         onSignIn = onSignIn,
                         onSignOut = onSignOut,
+                        onDeleteAccount = onDeleteAccount,
                     )
                 }
             }
