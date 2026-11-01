@@ -37,7 +37,7 @@ not sign in until the Firebase project is configured. Do this once:
 
 2. **Add an Android app**
    In project settings → *Your apps* → *Add app* → Android.
-   - Package name: `at.zimmercarral.mealcalc`
+   - Package name: `net.zimmercarral.mealcalculator`
    - Nickname: anything (e.g. `MealCalculator dev`)
    - Debug signing certificate SHA-1: run
 
@@ -99,7 +99,7 @@ whole project.
 
 ## Project layout
 
-    app/src/main/java/at/zimmercarral/mealcalc/
+    app/src/main/java/net/zimmercarral/mealcalculator/
       MainActivity.kt              # gates UI on FirebaseAuth state
       MainLayout.kt                # main composable (search, edit, meal)
       data/

@@ -14,11 +14,11 @@ kotlin {
 }
 
 android {
-    namespace = "at.zimmercarral.mealcalc"
+    namespace = "net.zimmercarral.mealcalculator"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "at.zimmercarral.mealcalc"
+        applicationId = "net.zimmercarral.mealcalculator"
         minSdk = 31
         targetSdk = 36
         versionCode = 1
