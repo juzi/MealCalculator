@@ -1,6 +1,5 @@
 package net.zimmercarral.mealcalculator.edit
 
-import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.text.TextRange
@@ -56,18 +55,9 @@ class EditItemDialogViewModel(
     }
 
     fun selectAllAmountText() {
-        Log.d("ViewModelLog",
-            "selectAllAmountText called. Current amount TextFieldValue: ${amount.value}") // Log the whole TextFieldValue
         val currentText = amount.value.text
         if (currentText.isNotEmpty()) {
-            val newSelection = TextRange(0, currentText.length)
-            amount.value = amount.value.copy(
-                selection = newSelection
-            )
-            // Log AFTER attempting to update
-            Log.d("ViewModelLog", "New amount TextFieldValue after selection: ${amount.value}")
-        } else {
-            Log.d("ViewModelLog", "Amount text is empty, not attempting selection.")
+            amount.value = amount.value.copy(selection = TextRange(0, currentText.length))
         }
     }
 

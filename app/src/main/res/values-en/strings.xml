@@ -2,7 +2,6 @@
 <resources>
     <string name="app_name">MealCalculator</string>
     <string name="clear_values">Empty all fields</string>
-    <string name="save_item">Save or update item in database</string>
     <string name="add_item_to_meal">Add item to meal</string>
     <string name="clear_menu">Delete meal</string>
     <string name="meal_title">My Meal</string>
@@ -25,7 +24,6 @@
     <string name="undo">Undo</string>
     <string name="item_was_deleted">%s was deleted!</string>
     <string name="gram">gr</string>
-    <string name="plus">together with</string>
     <string name="edit_item_before_adding">Edit item before adding</string>
     <string name="add_without_editing">add to meal</string>
     <string name="search_in_database">Search item in database...</string>

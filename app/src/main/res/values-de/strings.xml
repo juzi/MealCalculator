@@ -21,11 +21,9 @@
     <string name="meal_deleted">Mahlzeit wurde gelöscht!</string>
     <string name="undo">Rückgängig</string>
     <string name="add_item_to_meal">Zur Mahlzeit hinzufügen</string>
-    <string name="save_item">Änderungen speichern</string>
     <string name="search_item">Suchen in Datenbank</string>
     <string name="item_was_deleted">%s wurde gelöscht!</string>
     <string name="gram">gr</string>
-    <string name="plus">zusammen mit</string>
     <string name="edit_item_before_adding">Vor Hinzufügen bearbeiten</string>
     <string name="add_without_editing">Zur Mahlzeit hinzufügen</string>
     <string name="search_in_database">Suche in Datenbank...</string>

@@ -65,7 +65,6 @@ fun MealItem(
             .pointerInput(Unit) {
                 detectTapGestures(
                     onLongPress = {
-                        println("*** onLongPress on $index")
                         onEditItem(index)
                     }
                 )

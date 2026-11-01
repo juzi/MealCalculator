@@ -38,18 +38,12 @@ fun MealLayout(
     val scope = rememberCoroutineScope()
 
     val calculatedValues = remember(mealViewModel.mealItems.toList()) {
-        if (!mealViewModel.mealItems.isEmpty()) {
-            mealViewModel.mealItems
-                .map {
-                    itemCalculator.calculateValues(it.fatPer100g, it.carbsPer100g,
-                        it.proteinPer100g, it.amount)
-                }
-                .reduce { acc, calculatedValues ->
-                    acc.add(calculatedValues)
-                }
-        } else {
-            CalculatedValues(0f, 0f, 0f, 0f)
-        }
+        mealViewModel.mealItems
+            .map {
+                itemCalculator.calculateValues(it.fatPer100g, it.carbsPer100g,
+                    it.proteinPer100g, it.amount)
+            }
+            .fold(CalculatedValues()) { total, item -> total + item }
     }
 
     Column(

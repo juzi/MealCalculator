@@ -1,16 +1,11 @@
 package net.zimmercarral.mealcalculator
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
@@ -25,7 +20,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.core.content.ContextCompat
 import androidx.credentials.exceptions.GetCredentialCancellationException
 import androidx.lifecycle.lifecycleScope
 import net.zimmercarral.mealcalculator.data.cloud.FirestoreFoodItemRepository
@@ -78,19 +72,6 @@ class MainActivity : ComponentActivity() {
                 val snackbarHostState = remember { SnackbarHostState() }
                 val scope = rememberCoroutineScope()
 
-                val notificationPermissionLauncher = rememberLauncherForActivityResult(
-                    contract = ActivityResultContracts.RequestPermission(),
-                ) { /* reminder silently no-ops if denied */ }
-                LaunchedEffect(Unit) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
-                        ContextCompat.checkSelfPermission(
-                            this@MainActivity,
-                            Manifest.permission.POST_NOTIFICATIONS,
-                        ) != PackageManager.PERMISSION_GRANTED
-                    ) {
-                        notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
-                    }
-                }
                 ObserveAsEvents(flow = SnackbarController.events, snackbarHostState) { event ->
                     scope.launch {
                         snackbarHostState.currentSnackbarData?.dismiss()

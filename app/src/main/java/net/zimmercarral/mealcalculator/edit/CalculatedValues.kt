@@ -1,16 +1,14 @@
 package net.zimmercarral.mealcalculator.edit
 
+/** Grams of each macronutrient in an eaten amount of food. */
 data class CalculatedValues(
-    var calculatedBEs: Float,
-    var calculatedFPEs: Float,
-    var calculatedBEGrams: Float,
-    var calculatedFPEGrams: Float
+    val carbs: Float = 0f,
+    val fat: Float = 0f,
+    val protein: Float = 0f,
 ) {
-    fun add(calculatedValues: CalculatedValues): CalculatedValues {
-        calculatedBEs += calculatedValues.calculatedBEs
-        calculatedFPEs += calculatedValues.calculatedFPEs
-        calculatedBEGrams += calculatedValues.calculatedBEGrams
-        calculatedFPEGrams += calculatedValues.calculatedFPEGrams
-        return this
-    }
+    operator fun plus(other: CalculatedValues) = CalculatedValues(
+        carbs = carbs + other.carbs,
+        fat = fat + other.fat,
+        protein = protein + other.protein,
+    )
 }

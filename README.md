@@ -1,8 +1,10 @@
 # MealCalculator
 
-An Android app for tracking food items with macros (fat, carbs, protein) and an
-insulin-pump reminder, intended for diabetics. Food items are stored locally in
-Room/SQLite and synced to Cloud Firestore so they follow the user across
+An Android app that adds up the nutritional values of a meal. Food items are
+saved with their carbs, fat and protein per 100 g; add items with the amount
+eaten and the app shows the total grams of carbs, fat and protein for the
+meal. Food items are stored locally in Room/SQLite and, after an optional
+Google sign-in, synced to Cloud Firestore so they follow the user across
 devices and reinstalls.
 
 ## Architecture
@@ -13,8 +15,8 @@ devices and reinstalls.
   `users/{uid}/foodItems/{uuid}`. A snapshot listener mirrors remote changes
   into Room; writes go to Room first, then Firestore.
 - **Auth** — Firebase Authentication with Google Sign-In via the modern
-  Credential Manager API. The app shows a sign-in screen on first launch and
-  whenever the user is signed out.
+  Credential Manager API. Signing in is optional: the app works fully
+  offline, and the cloud icon in the toolbar signs in to enable sync.
 - **Conflict resolution** — last-write-wins on `lastModifiedAt`. Deletes are
   soft (an item with `isDeleted = true` in Firestore causes a hard delete in
   Room).
@@ -28,7 +30,7 @@ The local-network MySQL/REST sync that earlier versions used has been removed.
 
 ## Prerequisites
 
-- Android Studio (current stable), Android SDK 35
+- Android Studio (current stable), Android SDK 36
 - JDK 17
 - A Google account for the Firebase project
 
@@ -89,8 +91,7 @@ not sign in until the Firebase project is configured. Do this once:
 
 Or open the project in Android Studio and Run.
 
-On first launch the user sees a *Sign in with Google* button. After signing
-in, the snapshot listener pulls any existing food items from Firestore and
+Tapping the cloud icon starts *Sign in with Google*. After signing in, the snapshot listener pulls any existing food items from Firestore and
 pushes any local-only items up. Subsequent edits (add/update via the edit
 dialog) write to Room and Firestore in lock-step.
 
@@ -105,11 +106,11 @@ whole project.
 ## Project layout
 
     app/src/main/java/net/zimmercarral/mealcalculator/
-      MainActivity.kt              # gates UI on FirebaseAuth state
+      MainActivity.kt              # wires auth, sync and account deletion into the UI
       MainLayout.kt                # main composable (search, edit, meal)
       data/
         auth/AuthManager.kt        # Credential Manager + FirebaseAuth bridge
-        auth/SignInScreen.kt       # Compose sign-in UI
+        auth/SyncStatusButton.kt   # cloud icon: sign in / sign out / delete account
         cloud/FirestoreFoodItem.kt # DTO + mapping to/from FoodItem
         cloud/FirestoreFoodItemRepository.kt  # snapshot listener + upsert
         cloud/FirestoreSyncService.kt         # listener-driven Room mirror
@@ -119,10 +120,9 @@ whole project.
 
 ## Removing a user
 
-Firestore data lives at `users/{uid}/foodItems/*`. To wipe a user, delete
-their document subtree (Firebase console or CLI). Anonymous-account-style
-data loss is not a concern here because every user is identified by a real
-Google account.
+Users delete their own account in the app (see *Account deletion* above).
+To remove a user manually, delete their `users/{uid}/foodItems/*` subtree
+and the user under *Authentication* in the Firebase console.
 
 ## Troubleshooting
 

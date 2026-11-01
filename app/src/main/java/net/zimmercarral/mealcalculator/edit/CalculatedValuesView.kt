@@ -1,29 +1,32 @@
 package net.zimmercarral.mealcalculator.edit
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.TextUnit
-import androidx.compose.ui.unit.TextUnitType
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import net.zimmercarral.mealcalculator.R
 import net.zimmercarral.mealcalculator.ui.CarbsIcon
 import net.zimmercarral.mealcalculator.ui.FatIcon
@@ -33,12 +36,14 @@ val itemCalculator = ItemCalculator()
 
 @Composable
 fun CalculatedValuesView(editItemDialogViewModel: EditItemDialogViewModel) {
-    val calculatedValues = remember(editItemDialogViewModel.getFoodItem()) {
+    val foodItem = editItemDialogViewModel.getFoodItem()
+    val calculatedValues = remember(foodItem) {
         itemCalculator.calculateValues(
-            editItemDialogViewModel.getFoodItem().fatPer100g,
-            editItemDialogViewModel.getFoodItem().carbsPer100g,
-            editItemDialogViewModel.getFoodItem().proteinPer100g,
-            editItemDialogViewModel.getFoodItem().amount)
+            foodItem.fatPer100g,
+            foodItem.carbsPer100g,
+            foodItem.proteinPer100g,
+            foodItem.amount,
+        )
     }
     Card(
         modifier = Modifier
@@ -47,73 +52,58 @@ fun CalculatedValuesView(editItemDialogViewModel: EditItemDialogViewModel) {
             .border(width = 1.dp, color = colorScheme.primary,
                 shape = CardDefaults.outlinedShape),
     ) {
-        Row(
-            modifier = Modifier
-                .background(color = colorScheme.surfaceContainer)
-                .fillMaxWidth()
-                .height(60.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-        ) {
-            Row(
-                modifier = Modifier
-                    .padding(start = 15.dp, end = 10.dp, top = 10.dp, bottom = 10.dp),
-            ) {
-                Icon(
-                    imageVector = CarbsIcon,
-                    contentDescription = stringResource(R.string.label_carbs),
-                    modifier = Modifier.size(34.dp),
-                    tint = colorScheme.primary,
-                )
-                Text(modifier = Modifier
-                    .padding(start = 10.dp, end = 10.dp, top = 10.dp),
-                    color = colorScheme.onBackground,
-                    fontFamily = FontFamily.SansSerif,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = TextUnit(20f, TextUnitType.Sp),
-                    maxLines = 1,
-                    text = "%.0f ".format(calculatedValues.calculatedBEGrams)
-                            + stringResource(R.string.gram)
-                )
-            }
-            Row(
-                modifier = Modifier
-                    .padding(start = 15.dp, end = 10.dp, top = 10.dp, bottom = 10.dp),
-            ) {
-                Icon(
-                    modifier = Modifier
-                        .padding(top = 5.dp)
-                        .size(27.dp),
-                    imageVector = FatIcon,
-                    contentDescription = stringResource(R.string.label_fat),
-                    tint = colorScheme.primary,
-                )
-                Icon(
-                    modifier = Modifier
-                        .padding(start = 4.dp, top = 8.dp)
-                        .size(25.dp),
-                    imageVector = Icons.Rounded.Add,
-                    contentDescription = stringResource(R.string.plus),
-                    tint = colorScheme.primary,
-                )
-                Icon(
-                    modifier = Modifier
-                        .size(38.dp),
-                    imageVector = ProteinIcon,
-                    contentDescription = stringResource(R.string.label_protein),
-                    tint = colorScheme.primary,
-                )
-                Text(modifier = Modifier
-                    .padding(start = 10.dp, end = 5.dp, top = 10.dp),
-                    color = colorScheme.onBackground,
-                    fontFamily = FontFamily.SansSerif,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = TextUnit(20f, TextUnitType.Sp),
-                    maxLines = 1,
-                    text = "%.0f ".format(calculatedValues.calculatedFPEGrams)
-                            + stringResource(R.string.gram)
-                )
-            }
-        }
+        NutrientTotalsRow(calculatedValues)
     }
 }
 
+/** Grams of carbs, fat and protein side by side. */
+@Composable
+fun NutrientTotalsRow(values: CalculatedValues, modifier: Modifier = Modifier) {
+    Row(
+        modifier = modifier
+            .background(color = colorScheme.surfaceContainer)
+            .fillMaxWidth()
+            .height(60.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        NutrientTotal(CarbsIcon, R.string.label_carbs, 30.dp, values.carbs,
+            Modifier.weight(1f))
+        VerticalDivider(modifier = Modifier.fillMaxHeight(0.6f))
+        NutrientTotal(FatIcon, R.string.label_fat, 24.dp, values.fat,
+            Modifier.weight(1f))
+        VerticalDivider(modifier = Modifier.fillMaxHeight(0.6f))
+        NutrientTotal(ProteinIcon, R.string.label_protein, 32.dp, values.protein,
+            Modifier.weight(1f))
+    }
+}
+
+@Composable
+private fun NutrientTotal(
+    icon: ImageVector,
+    @StringRes label: Int,
+    iconSize: Dp,
+    grams: Float,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Icon(
+            imageVector = icon,
+            contentDescription = stringResource(label),
+            modifier = Modifier.size(iconSize),
+            tint = colorScheme.primary,
+        )
+        Text(
+            modifier = Modifier.padding(start = 6.dp),
+            color = colorScheme.onBackground,
+            fontFamily = FontFamily.SansSerif,
+            fontWeight = FontWeight.Bold,
+            fontSize = 18.sp,
+            maxLines = 1,
+            text = "%.0f ".format(grams) + stringResource(R.string.gram),
+        )
+    }
+}
