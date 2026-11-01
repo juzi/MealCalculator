@@ -5,6 +5,7 @@ import androidx.credentials.ClearCredentialStateRequest
 import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialRequest
+import androidx.credentials.exceptions.NoCredentialException
 import com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.firebase.auth.AuthCredential
@@ -65,7 +66,11 @@ class AuthManager(
         val option = GetSignInWithGoogleOption.Builder(webClientId).build()
         val request = GetCredentialRequest.Builder().addCredentialOption(option).build()
 
-        val response = credentialManager.getCredential(activityContext, request)
+        val response = try {
+            credentialManager.getCredential(activityContext, request)
+        } catch (e: NoCredentialException) {
+            throw NoGoogleAccountException(e)
+        }
         val cred = response.credential
         check(
             cred is CustomCredential &&
@@ -75,3 +80,7 @@ class AuthManager(
         return GoogleAuthProvider.getCredential(googleCred.idToken, null)
     }
 }
+
+/** Thrown when Google sign-in is requested but the device has no Google account. */
+class NoGoogleAccountException(cause: Throwable) :
+    Exception("No Google account on this device", cause)

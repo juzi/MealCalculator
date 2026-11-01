@@ -20,8 +20,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.core.content.edit
 import androidx.credentials.exceptions.GetCredentialCancellationException
 import androidx.lifecycle.lifecycleScope
+import net.zimmercarral.mealcalculator.data.auth.NoGoogleAccountException
 import net.zimmercarral.mealcalculator.data.cloud.FirestoreFoodItemRepository
 import net.zimmercarral.mealcalculator.data.cloud.FirestoreSyncService
 import net.zimmercarral.mealcalculator.edit.EditItemDialogViewModel
@@ -114,6 +116,10 @@ class MainActivity : ComponentActivity() {
                     scope.launch {
                         try {
                             app.authManager.signInWithGoogle(this@MainActivity)
+                        } catch (_: GetCredentialCancellationException) {
+                            // User closed the Google account picker.
+                        } catch (_: NoGoogleAccountException) {
+                            snackbarHostState.showSnackbar(getString(R.string.no_google_account))
                         } catch (e: Exception) {
                             val msg = e.localizedMessage ?: e.javaClass.simpleName
                             snackbarHostState.showSnackbar(
@@ -133,6 +139,8 @@ class MainActivity : ComponentActivity() {
                             snackbarHostState.showSnackbar(getString(R.string.account_deleted))
                         } catch (_: GetCredentialCancellationException) {
                             // User closed the Google account picker: nothing was deleted.
+                        } catch (_: NoGoogleAccountException) {
+                            snackbarHostState.showSnackbar(getString(R.string.no_google_account))
                         } catch (e: Exception) {
                             val msg = e.localizedMessage ?: e.javaClass.simpleName
                             snackbarHostState.showSnackbar(
@@ -170,10 +178,8 @@ class MainActivity : ComponentActivity() {
     override fun onPause() {
         super.onPause()
 
-        val sharedPrefs = getSharedPreferences(prefName, Context.MODE_PRIVATE)
-        val editor = sharedPrefs?.edit()
-        val json = mealViewModel.getItemsAsJson()
-        editor?.putString(stateKeyMealItems, json)
-        editor?.apply()
+        getSharedPreferences(prefName, Context.MODE_PRIVATE).edit {
+            putString(stateKeyMealItems, mealViewModel.getItemsAsJson())
+        }
     }
 }

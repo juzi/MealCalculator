@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">MealCalculator</string>
-    <string name="clear_values">Alle Felder leeren</string>
     <string name="clear_menu">Mahlzeit löschen</string>
     <string name="meal_title">Meine Mahlzeit</string>
     <string name="label_fat">Fett</string>
     <string name="label_carbs">Kohlenhydrate</string>
     <string name="label_protein">Eiweiß</string>
     <string name="label_amount">Menge</string>
-    <string name="edit_name">Name bearbeiten</string>
     <string name="label_name">Name</string>
     <string name="carbs_description">Gramm Kohlenhydrate pro 100gr.</string>
     <string name="fat_description">Gramm Fett pro 100gr</string>
@@ -17,16 +15,13 @@
     <string name="clear">löschen</string>
     <string name="add_item">Hinzufügen</string>
     <string name="update_item">Aktualisieren</string>
-    <string name="carbs">Kohlenhydrate</string>
     <string name="meal_deleted">Mahlzeit wurde gelöscht!</string>
     <string name="undo">Rückgängig</string>
-    <string name="add_item_to_meal">Zur Mahlzeit hinzufügen</string>
     <string name="search_item">Suchen in Datenbank</string>
     <string name="item_was_deleted">%s wurde gelöscht!</string>
     <string name="gram">gr</string>
-    <string name="edit_item_before_adding">Vor Hinzufügen bearbeiten</string>
     <string name="add_without_editing">Zur Mahlzeit hinzufügen</string>
-    <string name="search_in_database">Suche in Datenbank...</string>
+    <string name="search_in_database">Suche in Datenbank…</string>
     <string name="clear_item_name">Name löschen</string>
     <string name="back">Zurück</string>
     <string name="sync_disabled">Keine Synchronisation - Tippen zum Anmelden</string>
@@ -40,4 +35,5 @@
     <string name="cancel">Abbrechen</string>
     <string name="account_deleted">Konto und Cloud-Daten gelöscht</string>
     <string name="delete_account_failed">Löschen des Kontos fehlgeschlagen: %s</string>
+    <string name="no_google_account">Kein Google-Konto auf diesem Gerät. Zum Anmelden in den Systemeinstellungen ein Konto hinzufügen.</string>
 </resources>
