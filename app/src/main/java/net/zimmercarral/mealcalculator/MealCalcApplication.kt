@@ -10,6 +10,11 @@ import com.google.firebase.auth.FirebaseAuth
 
 class MealCalcApplication : Application() {
 
+    override fun onCreate() {
+        super.onCreate()
+        installAppCheck()
+    }
+
     private val database: FoodItemDatabase by lazy {
         Room.databaseBuilder(this, FoodItemDatabase::class.java, "food-items.db").build()
     }
