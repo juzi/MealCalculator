@@ -5,20 +5,21 @@ the Firebase project `mealcalculator-584e6` and the Play Console developer accou
 
 Steps marked *(once)* are only needed for the first release.
 
-**Status (2026-11-01):** done: the Firebase Android app
-`1:94679021901:android:c5dd0bc546175f0d0b9f04` is registered with the debug key's
-SHA-1/SHA-256; the App Check and Play Integrity APIs are enabled; Play Integrity
-is registered as the App Check provider; an emulator debug token is registered.
-App Check is **not enforced**. Still open: 1.2–1.4, 2–4, and in 5 the Play
-fingerprints, the Play Console Play Integrity link, debug tokens for your own
-devices and enforcement.
+**Status (2026-11-07):** done: Firebase setup (1), upload key (2), Play Console app
+setup (3), and version 1.0.0 (versionCode 1) uploaded to closed testing and sent for
+review. The Firebase Android app `1:94679021901:android:c5dd0bc546175f0d0b9f04` has
+the SHA-1/SHA-256 of the debug key, the upload key and the Play app signing key.
+Play Integrity is registered as the App Check provider; an emulator debug token is
+registered. App Check is **not enforced**. Still open in 5: the Play Console Play
+Integrity link, debug tokens for your own devices, the real-device test and
+enforcement. Then 12 testers for 14 days and the production access application.
 
 ## 1. Firebase *(once)*
 
 1. **Register the Android app.** Firebase console → Project settings → *Add app* →
    Android, package name `net.zimmercarral.mealcalculator`. Add the debug SHA-1
-   from `./gradlew signingReport`. Download `google-services.json` to `app/`.
-   (The old `at.zimmercarral.mealcalc` app entry can be deleted afterwards.)
+   from `./gradlew signingReport`. Download `google-services.json` to `app/`. (The old
+   `at.zimmercarral.mealcalc` app entry can be deleted afterwards.)
 2. **Google sign-in support email.** Authentication → Sign-in method → Google:
    support email `jzimmer1000@gmail.com`.
 3. **OAuth consent screen.** Google Cloud console (same project) → *Google Auth
@@ -34,8 +35,8 @@ devices and enforcement.
        firebase deploy --only hosting,firestore:rules
 
    The pages are then live at:
-   - https://mealcalculator-584e6.web.app/privacy
-   - https://mealcalculator-584e6.web.app/delete-account
+    - https://mealcalculator-584e6.web.app/privacy
+    - https://mealcalculator-584e6.web.app/delete-account
 
 ## 2. Upload key and signing *(once)*
 
@@ -62,17 +63,17 @@ type *App*, *Free*.
 
 ### App content
 
-| Section | Answer |
-|---|---|
-| Privacy policy | `https://mealcalculator-584e6.web.app/privacy` |
-| App access | All functionality is available without special access. Sign-in is optional and uses the reviewer's own Google account. |
-| Ads | No ads |
-| Content rating | IARC questionnaire, category *Utility/Productivity*, answer *No* everywhere. Expected rating: Everyone / PEGI 3 |
-| Target audience | 18 and over. This does not restrict who can download the app and avoids the Families policy requirements. |
-| News app | No |
-| Health apps | Tick only **Nutrition and weight management**. The app is not a medical device and makes no medical claims. |
-| Government app / Financial features | No / none |
-| Data safety | see below |
+| Section                             | Answer                                                                                                                 |
+|-------------------------------------|------------------------------------------------------------------------------------------------------------------------|
+| Privacy policy                      | `https://mealcalculator-584e6.web.app/privacy`                                                                         |
+| App access                          | All functionality is available without special access. Sign-in is optional and uses the reviewer's own Google account. |
+| Ads                                 | No ads                                                                                                                 |
+| Content rating                      | IARC questionnaire, category *Utility/Productivity*, answer *No* everywhere. Expected rating: Everyone / PEGI 3        |
+| Target audience                     | 18 and over. This does not restrict who can download the app and avoids the Families policy requirements.              |
+| News app                            | No                                                                                                                     |
+| Health apps                         | Tick only **Nutrition and weight management**. The app is not a medical device and makes no medical claims.            |
+| Government app / Financial features | No / none                                                                                                              |
+| Data safety                         | see below                                                                                                              |
 
 ### Data safety
 
@@ -84,7 +85,8 @@ before submitting; it lists what each Firebase SDK collects.
 - **Is all data encrypted in transit?** Yes.
 - **Can users request data deletion?** Yes, in the app and at
   `https://mealcalculator-584e6.web.app/delete-account`.
-- **Shared with third parties:** none. Firebase acts as a service provider, which does not count as sharing.
+- **Shared with third parties:** none. Firebase acts as a service provider, which does not count as
+  sharing.
 - **Collected** (all *optional*, only when the user signs in to sync):
 
   | Data type | Purposes |
@@ -94,7 +96,8 @@ before submitting; it lists what each Firebase SDK collects.
   | Personal info → User IDs | App functionality, Account management |
   | App activity → Other user-generated content (food items) | App functionality |
 
-  Data is processed ephemerally: No. Collection is required: No, users can choose (sign-in is optional).
+  Data is processed ephemerally: No. Collection is required: No, users can choose (sign-in is
+  optional).
 
 ### Store listing
 
@@ -102,9 +105,12 @@ Category **Food & Drink**. Contact email `jzimmer1000@gmail.com`. Website
 `https://mealcalculator-584e6.web.app`.
 
 Graphics are in [`store/`](../store):
+
 - App icon: `store/icon-512.png` (512×512)
 - Feature graphic: `store/feature-graphic.png` (1024×500)
-- Phone screenshots: `store/screenshots/*.png` (1080×2160)
+- Phone screenshots: `store/screenshots/*.png` (1080×1920, 9:16, the format the Play Console
+  requires).
+  The unframed originals are in `store/raw-screenshots/`.
 
 **English (en-US)**
 
@@ -176,23 +182,23 @@ production access. Start this early.
 
 ## 5. After the first upload *(once)*
 
-1. **Add both SHA fingerprints to Firebase.** Play Console → Test and release →
-   *App integrity* → App signing: copy the SHA-1 and SHA-256 of the **app signing
+1. **Add both SHA fingerprints to Firebase.** Play Console → *Protected with Play* →
+   Play Store protection → Play app signing: copy the SHA-1 and SHA-256 of the **app signing
    key** and of the **upload key** into the Firebase Android app. Without the
    app signing key's SHA-1, Google sign-in fails in the version installed from
    Play.
 2. **App Check.**
-   - Play Console → App integrity → Play Integrity API: link the Google Cloud
-     project `mealcalculator-584e6`.
-   - The *Play Integrity* provider is already registered in Firebase App Check.
-     It only works once the app signing key's SHA-256 (step 1 above) is added.
-   - Debug builds log a debug token on first launch (`adb logcat | grep
-     DebugAppCheckProvider`). Add it under App Check → *Manage debug tokens*.
-   - Watch the App Check metrics for Cloud Firestore for a few days. When nearly
-     all requests are verified, click **Enforce**. Unverified clients (old
-     versions, modified apps) are then rejected. That includes the old
-     `at.zimmercarral.mealcalc` build, which has no App Check: move to the
-     new package on all your devices before enforcing.
-3. **Test on a real device** with a throwaway Google account: sign in, sync,
-   *Delete account…*. Then check in the Firebase console that the user and their
+    - Play Console → *Protected with Play* → Play Integrity API → Get started: link
+      the Google Cloud project `mealcalculator-584e6`.
+    - The *Play Integrity* provider is already registered in Firebase App Check.
+      It only works once the app signing key's SHA-256 (step 1 above) is added.
+    - Debug builds log a debug token on first launch (`adb logcat | grep
+      DebugAppCheckProvider`). Add it under App Check → *Manage debug tokens*.
+    - Watch the App Check metrics for Cloud Firestore for a few days. When nearly
+      all requests are verified, click **Enforce**. Unverified clients (old
+      versions, modified apps) are then rejected. That includes the old
+      `at.zimmercarral.mealcalc` build, which has no App Check: move to the
+      new package on all your devices before enforcing.
+3. **Test on a real device** with a throwaway Google account: sign in, sync, *Delete account…*. Then
+   check in the Firebase console that the user and their
    `users/{uid}/foodItems` documents are gone.
