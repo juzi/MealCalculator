@@ -7,6 +7,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -19,8 +20,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.core.content.edit
 import androidx.credentials.exceptions.GetCredentialCancellationException
 import androidx.lifecycle.lifecycleScope
@@ -29,6 +32,7 @@ import net.zimmercarral.mealcalculator.data.cloud.FirestoreFoodItemRepository
 import net.zimmercarral.mealcalculator.data.cloud.FirestoreSyncService
 import net.zimmercarral.mealcalculator.data.cloud.SyncState
 import net.zimmercarral.mealcalculator.edit.EditItemDialogViewModel
+import net.zimmercarral.mealcalculator.help.HelpScreen
 import net.zimmercarral.mealcalculator.meal.MealViewModel
 import net.zimmercarral.mealcalculator.search.SearchViewModel
 import net.zimmercarral.mealcalculator.ui.theme.AppTheme
@@ -40,6 +44,7 @@ import kotlinx.coroutines.launch
 class MainActivity : ComponentActivity() {
     private val prefName = "prefs"
     private val stateKeyMealItems = "key_meal_items"
+    private val prefKeyHelpSeen = "key_help_seen"
 
     private val app: MealCalcApplication
         get() = application as MealCalcApplication
@@ -131,6 +136,12 @@ class MainActivity : ComponentActivity() {
                         }
                     }
                 }
+                // The walkthrough opens by itself until the user has closed it once.
+                val prefs = remember { getSharedPreferences(prefName, Context.MODE_PRIVATE) }
+                var showHelp by rememberSaveable {
+                    mutableStateOf(!prefs.getBoolean(prefKeyHelpSeen, false))
+                }
+
                 val onSignOut: () -> Unit = { app.authManager.signOut() }
                 val onDeleteAccount: () -> Unit = {
                     scope.launch {
@@ -153,20 +164,32 @@ class MainActivity : ComponentActivity() {
                     }
                 }
 
-                Scaffold(
-                    modifier = Modifier.fillMaxSize(),
-                    snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
-                ) { innerPadding ->
-                    MainLayout(
-                        innerPadding = innerPadding,
-                        editItemDialogViewModel = editItemDialogViewModel,
-                        mealViewModel = mealViewModel,
-                        searchViewModel = searchViewModel,
-                        syncState = syncState,
-                        onSignIn = onSignIn,
-                        onSignOut = onSignOut,
-                        onDeleteAccount = onDeleteAccount,
-                    )
+                Box(modifier = Modifier.fillMaxSize()) {
+                    Scaffold(
+                        // While the help covers the screen, hide the screen below from TalkBack.
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .then(if (showHelp) Modifier.clearAndSetSemantics { } else Modifier),
+                        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+                    ) { innerPadding ->
+                        MainLayout(
+                            innerPadding = innerPadding,
+                            editItemDialogViewModel = editItemDialogViewModel,
+                            mealViewModel = mealViewModel,
+                            searchViewModel = searchViewModel,
+                            syncState = syncState,
+                            onSignIn = onSignIn,
+                            onSignOut = onSignOut,
+                            onDeleteAccount = onDeleteAccount,
+                            onShowHelp = { showHelp = true },
+                        )
+                    }
+                    if (showHelp) {
+                        HelpScreen(onDismiss = {
+                            showHelp = false
+                            prefs.edit { putBoolean(prefKeyHelpSeen, true) }
+                        })
+                    }
                 }
             }
         }
