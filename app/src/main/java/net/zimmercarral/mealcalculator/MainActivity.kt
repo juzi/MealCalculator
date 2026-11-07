@@ -14,6 +14,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -26,12 +27,14 @@ import androidx.lifecycle.lifecycleScope
 import net.zimmercarral.mealcalculator.data.auth.NoGoogleAccountException
 import net.zimmercarral.mealcalculator.data.cloud.FirestoreFoodItemRepository
 import net.zimmercarral.mealcalculator.data.cloud.FirestoreSyncService
+import net.zimmercarral.mealcalculator.data.cloud.SyncState
 import net.zimmercarral.mealcalculator.edit.EditItemDialogViewModel
 import net.zimmercarral.mealcalculator.meal.MealViewModel
 import net.zimmercarral.mealcalculator.search.SearchViewModel
 import net.zimmercarral.mealcalculator.ui.theme.AppTheme
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
@@ -101,16 +104,16 @@ class MainActivity : ComponentActivity() {
                 }
                 LaunchedEffect(cloud) { app.foodItemRepository.setCloud(cloud) }
 
-                DisposableEffect(cloud) {
-                    val current = cloud
-                    if (current == null) {
-                        onDispose { }
-                    } else {
-                        val service = FirestoreSyncService(app.foodItemDao, current)
-                        service.start()
-                        onDispose { service.stop() }
-                    }
+                val syncService = remember(cloud) {
+                    cloud?.let { FirestoreSyncService(app.foodItemDao, it) }
                 }
+                DisposableEffect(syncService) {
+                    syncService?.start()
+                    onDispose { syncService?.stop() }
+                }
+                val syncState by remember(syncService) {
+                    syncService?.state ?: MutableStateFlow(SyncState.SIGNED_OUT)
+                }.collectAsState()
 
                 val onSignIn: () -> Unit = {
                     scope.launch {
@@ -159,7 +162,7 @@ class MainActivity : ComponentActivity() {
                         editItemDialogViewModel = editItemDialogViewModel,
                         mealViewModel = mealViewModel,
                         searchViewModel = searchViewModel,
-                        isSignedIn = user != null,
+                        syncState = syncState,
                         onSignIn = onSignIn,
                         onSignOut = onSignOut,
                         onDeleteAccount = onDeleteAccount,

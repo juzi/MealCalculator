@@ -2,13 +2,16 @@ package net.zimmercarral.mealcalculator.data.auth
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Cloud
+import androidx.compose.material.icons.rounded.CloudDone
 import androidx.compose.material.icons.rounded.CloudOff
+import androidx.compose.material.icons.rounded.CloudSync
+import androidx.compose.material.icons.rounded.SyncProblem
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -20,10 +23,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import net.zimmercarral.mealcalculator.R
+import net.zimmercarral.mealcalculator.data.cloud.SyncState
 
 @Composable
 fun SyncStatusButton(
-    isSignedIn: Boolean,
+    syncState: SyncState,
     onSignIn: () -> Unit,
     onSignOut: () -> Unit,
     onDeleteAccount: () -> Unit,
@@ -31,15 +35,25 @@ fun SyncStatusButton(
 ) {
     var menuExpanded by remember { mutableStateOf(false) }
     var confirmDelete by remember { mutableStateOf(false) }
+    val isSignedIn = syncState != SyncState.SIGNED_OUT
+    val (icon, description) = when (syncState) {
+        SyncState.SIGNED_OUT -> Icons.Rounded.CloudOff to R.string.sync_disabled
+        SyncState.PENDING -> Icons.Rounded.CloudSync to R.string.sync_pending
+        SyncState.SYNCED -> Icons.Rounded.CloudDone to R.string.sync_done
+        SyncState.ERROR -> Icons.Rounded.SyncProblem to R.string.sync_error
+    }
     Box(modifier = modifier) {
         IconButton(onClick = {
             if (isSignedIn) menuExpanded = true else onSignIn()
         }) {
             Icon(
-                imageVector = if (isSignedIn) Icons.Rounded.Cloud else Icons.Rounded.CloudOff,
-                contentDescription = stringResource(
-                    if (isSignedIn) R.string.sync_enabled else R.string.sync_disabled
-                ),
+                imageVector = icon,
+                contentDescription = stringResource(description),
+                tint = if (syncState == SyncState.ERROR) {
+                    MaterialTheme.colorScheme.error
+                } else {
+                    LocalContentColor.current
+                },
             )
         }
         DropdownMenu(

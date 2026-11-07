@@ -25,7 +25,9 @@
     <string name="clear_item_name">Name löschen</string>
     <string name="back">Zurück</string>
     <string name="sync_disabled">Keine Synchronisation - Tippen zum Anmelden</string>
-    <string name="sync_enabled">Synchronisation mit Google</string>
+    <string name="sync_pending">Warte auf Synchronisation mit Google</string>
+    <string name="sync_done">Mit Google synchronisiert</string>
+    <string name="sync_error">Synchronisation mit Google fehlgeschlagen</string>
     <string name="sign_out">Abmelden</string>
     <string name="sign_in_failed">Anmelden fehlgeschlagen: %s</string>
     <string name="delete_account">Konto löschen…</string>

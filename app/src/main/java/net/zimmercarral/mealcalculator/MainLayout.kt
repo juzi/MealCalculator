@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import net.zimmercarral.mealcalculator.data.auth.SyncStatusButton
+import net.zimmercarral.mealcalculator.data.cloud.SyncState
 import net.zimmercarral.mealcalculator.edit.EditItemDialog
 import net.zimmercarral.mealcalculator.edit.EditItemDialogViewModel
 import net.zimmercarral.mealcalculator.edit.Focus
@@ -28,7 +29,7 @@ fun MainLayout(
     editItemDialogViewModel: EditItemDialogViewModel,
     mealViewModel: MealViewModel,
     searchViewModel: SearchViewModel,
-    isSignedIn: Boolean,
+    syncState: SyncState,
     onSignIn: () -> Unit,
     onSignOut: () -> Unit,
     onDeleteAccount: () -> Unit,
@@ -61,7 +62,7 @@ fun MainLayout(
             )
             if (!searchViewModel.expanded.value) {
                 SyncStatusButton(
-                    isSignedIn = isSignedIn,
+                    syncState = syncState,
                     onSignIn = onSignIn,
                     onSignOut = onSignOut,
                     onDeleteAccount = onDeleteAccount,
