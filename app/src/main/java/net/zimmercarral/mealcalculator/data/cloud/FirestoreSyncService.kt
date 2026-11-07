@@ -8,6 +8,11 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class FirestoreSyncService(
@@ -18,17 +23,30 @@ class FirestoreSyncService(
     private var listener: ListenerRegistration? = null
     private var hasPushedLocalOnly = false
 
+    private val listenerState = MutableStateFlow(SyncState.PENDING)
+
+    /** The current sync state; brief [SyncState.PENDING] phases are hidden. */
+    val state: StateFlow<SyncState> =
+        combine(listenerState, cloud.writeFailed) { state, writeFailed ->
+            if (writeFailed) SyncState.ERROR else state
+        }
+            .hideBriefPending()
+            .stateIn(scope, SharingStarted.Eagerly, SyncState.PENDING)
+
     fun start() {
         listener?.remove()
-        listener = cloud.listen { remoteItems ->
-            scope.launch {
-                applyRemote(remoteItems)
-                if (!hasPushedLocalOnly) {
-                    pushLocalOnly(remoteItems)
-                    hasPushedLocalOnly = true
+        listener = cloud.listen(
+            onChange = { remoteItems ->
+                scope.launch {
+                    applyRemote(remoteItems)
+                    if (!hasPushedLocalOnly) {
+                        pushLocalOnly(remoteItems)
+                        hasPushedLocalOnly = true
+                    }
                 }
-            }
-        }
+            },
+            onSyncState = { listenerState.value = it },
+        )
     }
 
     fun stop() {
