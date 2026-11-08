@@ -174,7 +174,29 @@ Graphics are in [`store/`](../store):
    Output: `app/build/outputs/bundle/release/app-release.aab`.
    R8 mapping file for crash deobfuscation:
    `app/build/outputs/mapping/release/mapping.txt` (Play uploads it from the bundle).
-3. Upload to a testing track in the Play Console.
+3. Write the release notes. Play shows them as *What's new* on the store page and
+   in the update list. List the changes users notice since the last release:
+
+       git log --oneline $(git describe --tags --abbrev=0)..HEAD
+
+   Write them in English and German, max 500 characters per language. Use the
+   names the app uses for buttons and screens (`app/src/main/res/values*/strings.xml`).
+   Each language goes in its own tag. The tags must match the store listing
+   languages; a language without a tag gets the en-US text.
+
+       <en-US>
+       • New help walkthrough: learn how to create foods, …
+       </en-US>
+       <de-DE>
+       • Neue Hilfe: erklärt, wie man Lebensmittel anlegt, …
+       </de-DE>
+
+4. Upload to a testing track: Play Console → the track → *Create new release*. Upload
+   the `.aab`, paste the release notes, then *Next* → *Save* → *Send for review*.
+5. Commit and push the version bump, then create a GitHub release for it with the
+   same notes. The tag is `v` + `versionName`:
+
+       gh release create v1.1.0 --target main --title 1.1.0 --notes-file notes.md
 
 **First release, new personal developer account:** Play requires a *closed test*
 with at least 12 testers who stay opted in for 14 days before you can apply for
